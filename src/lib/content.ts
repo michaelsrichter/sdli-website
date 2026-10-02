@@ -4,7 +4,9 @@ import type { ImageMetadata } from 'astro';
 import {
   admissionOf,
   admissionText,
+  hostOf,
   nextConfirmed,
+  sdliFirst,
   partition,
   resolveOccurrences,
   type Occurrence,
@@ -12,14 +14,16 @@ import {
   type RawSeries,
 } from './event-core';
 import type { CalendarEvent } from './calendar';
-import { EVENT_TYPE_LABELS, EXPERIENCE_LABELS } from './schemas';
+import { EVENT_TYPE_LABELS, EXPERIENCE_LABELS, type EventHost } from './schemas';
 import { formatDateLong, formatTime, formatTimeRange } from './time';
 import type { ShareInput } from './share';
+import { linksOf, type ExternalLink } from './links';
 
 export type Venue = CollectionEntry<'venues'>;
 export type Person = CollectionEntry<'instructors'> | CollectionEntry<'performers'>;
 export type Style = CollectionEntry<'styles'>;
 export type Settings = CollectionEntry<'settings'>['data'];
+export type Organizer = CollectionEntry<'organizers'>;
 
 export function buildNow(): Date {
   const fixed = process.env.BUILD_NOW;
@@ -30,10 +34,31 @@ export interface PersonRef {
   name: string;
   href?: string | undefined;
   kind?: 'instructor' | 'dj' | 'band' | undefined;
+  /** Their own website and social pages, website first. */
+  links: ExternalLink[];
+}
+
+export interface ContactInfo {
+  name?: string | undefined;
+  phone?: string | undefined;
+  phoneAlt?: string | undefined;
+  email?: string | undefined;
+  website?: string | undefined;
+  facebookUrl?: string | undefined;
+  instagramUrl?: string | undefined;
+  /** Organizer website and social pages, website first. */
+  links: ExternalLink[];
 }
 
 export interface ResolvedEvent extends Occurrence {
   url: string;
+  host: EventHost;
+  organizerEntry?: Organizer | undefined;
+  /** Who to contact about this event (event fields first, then the organizer). */
+  contact: ContactInfo;
+  infoUrl?: string | undefined;
+  /** Where a community listing came from (attribution), e.g. The Dance Calendar. */
+  listing?: { name: string; url?: string | undefined } | undefined;
   venueEntry?: Venue | undefined;
   location: {
     name?: string | undefined;
@@ -54,6 +79,8 @@ export interface ResolvedEvent extends Occurrence {
   typeLabels: string[];
   experienceLabel: string;
   partnerRequired: boolean;
+  /** Only true when known: always for SDLI events, and for community events whose listing says so. */
+  noPartnerNeeded: boolean;
   beginnerFriendly: boolean;
   hasLesson: boolean;
   admission: ReturnType<typeof admissionOf>;
@@ -83,13 +110,15 @@ export async function getSettings(): Promise<Settings> {
 }
 
 async function lookup() {
-  const [venues, instructors, performers, styles] = await Promise.all([
+  const [venues, instructors, performers, styles, organizers] = await Promise.all([
     getCollection('venues'),
     getCollection('instructors'),
     getCollection('performers'),
     getCollection('styles'),
+    getCollection('organizers'),
   ]);
   return {
+    organizers: new Map(organizers.map((o) => [o.id, o])),
     venues: new Map(venues.map((v) => [v.id, v])),
     people: new Map<string, Person>([...instructors.map((p) => [p.id, p] as const), ...performers.map((p) => [p.id, p] as const)]),
     styles: new Map(styles.map((s) => [s.id, s])),
@@ -98,8 +127,8 @@ async function lookup() {
 
 function personRef(people: Map<string, Person>, nameOrId: string): PersonRef {
   const p = people.get(nameOrId);
-  if (p) return { name: p.data.name, href: `/performers/${p.id}/`, kind: p.data.kind };
-  return { name: nameOrId };
+  if (p) return { name: p.data.name, href: `/performers/${p.id}/`, kind: p.data.kind, links: linksOf(p.data) };
+  return { name: nameOrId, links: [] };
 }
 
 export async function getAllEvents(): Promise<ResolvedEvent[]> {
@@ -117,6 +146,20 @@ export async function getAllEvents(): Promise<ResolvedEvent[]> {
       for (const id of d.danceStyles ?? []) {
         if (!refs.styles.has(id)) throw new Error(`Event "${o.slug}" uses unknown dance style "${id}".`);
       }
+      const organizerEntry = d.organizer ? refs.organizers.get(d.organizer) : undefined;
+      if (d.organizer && !organizerEntry) throw new Error(`Event "${o.slug}" refers to unknown organizer "${d.organizer}".`);
+      const host = hostOf(o);
+      const od = organizerEntry?.data;
+      const contact: ContactInfo = {
+        name: d.contactName ?? od?.name,
+        phone: d.contactPhone ?? od?.phone,
+        phoneAlt: d.contactPhone ? undefined : od?.phoneAlt,
+        email: d.contactEmail ?? od?.email,
+        website: od?.website,
+        facebookUrl: d.facebookEventUrl ?? od?.facebookUrl,
+        instagramUrl: od?.instagramUrl,
+        links: linksOf({ website: od?.website, facebookUrl: d.facebookEventUrl ?? od?.facebookUrl, instagramUrl: od?.instagramUrl, moreLinks: od?.moreLinks }),
+      };
       const venue = d.venue ? refs.venues.get(d.venue) : undefined;
       if (d.venue && !venue) throw new Error(`Event "${o.slug}" refers to unknown venue "${d.venue}".`);
       const loc = {
@@ -154,6 +197,11 @@ export async function getAllEvents(): Promise<ResolvedEvent[]> {
       return {
         ...o,
         url: `/events/${o.slug}/`,
+        host,
+        organizerEntry,
+        contact,
+        infoUrl: d.infoUrl,
+        listing: d.sourceName ? { name: d.sourceName, url: d.sourceUrl } : undefined,
         venueEntry: venue,
         location: {
           ...loc,
@@ -168,7 +216,8 @@ export async function getAllEvents(): Promise<ResolvedEvent[]> {
         typeLabels: (d.eventTypes ?? []).map((t) => EVENT_TYPE_LABELS[t]),
         experienceLabel: EXPERIENCE_LABELS[d.experienceLevel ?? 'all-levels'],
         partnerRequired: d.partnerRequired ?? false,
-        beginnerFriendly: d.beginnerFriendly ?? true,
+        noPartnerNeeded: host === 'sdli' ? !(d.partnerRequired ?? false) : d.partnerRequired === false,
+        beginnerFriendly: d.beginnerFriendly ?? host === 'sdli',
         hasLesson: Boolean(lesson),
         admission,
         admissionLine: admissionText(admission),
@@ -188,8 +237,11 @@ export async function getEventGroups() {
   const all = await getAllEvents();
   const now = buildNow();
   const { upcoming, past } = partition(all, now) as { upcoming: ResolvedEvent[]; past: ResolvedEvent[] };
-  const next = nextConfirmed(all, now) as ResolvedEvent | undefined;
-  return { all, upcoming, past, next, now };
+  /** Next confirmed SDLI dance: always the first thing visitors see. */
+  const next = nextConfirmed(all, now, 'sdli') as ResolvedEvent | undefined;
+  const upcomingSdli = upcoming.filter((e) => e.host === 'sdli');
+  const upcomingCommunity = upcoming.filter((e) => e.host === 'community');
+  return { all, upcoming, upcomingOrdered: sdliFirst(upcoming), upcomingSdli, upcomingCommunity, past, next, now };
 }
 
 export function scheduleLines(e: ResolvedEvent): { label: string; value: string }[] {
@@ -211,8 +263,12 @@ export function calendarEventOf(e: ResolvedEvent, site: URL | string): CalendarE
     e.details.summary ?? '',
     lines.join('\n'),
     `Admission: ${e.admissionLine}`,
-    e.beginnerFriendly ? 'Beginners welcome. No partner needed.' : '',
-    'Swing Dance Long Island 24-hour Dance Hotline: (631) 476-3707',
+    [e.beginnerFriendly && 'Beginners welcome.', e.noPartnerNeeded && 'No partner needed.'].filter(Boolean).join(' '),
+    e.host === 'sdli'
+      ? 'Swing Dance Long Island 24-hour Dance Hotline: (631) 476-3707'
+      : [e.contact.name && `Organizer: ${e.contact.name}`, e.contact.phone, e.contact.website ?? e.infoUrl, 'Community event listed by Swing Dance Long Island. Please confirm details with the organizer.']
+          .filter(Boolean)
+          .join('\n'),
   ].filter(Boolean);
   return {
     uid: `${e.slug}@sdli.org`,

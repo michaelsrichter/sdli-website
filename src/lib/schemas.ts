@@ -8,6 +8,9 @@ import { DATE_RE, LOCAL_DATETIME_RE, TIME_RE, isValidTimeZone, normaliseLocalVal
 export type ImageHelper<I extends z.ZodType = z.ZodType> = () => I;
 
 export const EVENT_STATUSES = ['draft', 'scheduled', 'cancelled', 'postponed', 'soldOut', 'completed'] as const;
+/** Who runs an event: an official Swing Dance Long Island event, or a community (non-SDLI) listing. */
+export const EVENT_HOSTS = ['sdli', 'community'] as const;
+export const HOST_LABELS: Record<(typeof EVENT_HOSTS)[number], string> = { sdli: 'SDLI event', community: 'Community event' };
 export const EVENT_TYPES = [
   'weekly-dance',
   'monthly-dance',
@@ -17,6 +20,10 @@ export const EVENT_TYPES = [
   'workshop',
   'special-event',
   'community-event',
+  'social-dance',
+  'practice',
+  'festival',
+  'class',
 ] as const;
 export const EXPERIENCE_LEVELS = ['all-levels', 'beginner', 'intermediate', 'advanced'] as const;
 
@@ -29,6 +36,10 @@ export const EVENT_TYPE_LABELS: Record<(typeof EVENT_TYPES)[number], string> = {
   workshop: 'Workshop',
   'special-event': 'Special event',
   'community-event': 'Community event',
+  'social-dance': 'Social dance',
+  practice: 'Practice party',
+  festival: 'Dance weekend',
+  class: 'Class',
 };
 export const EXPERIENCE_LABELS: Record<(typeof EXPERIENCE_LEVELS)[number], string> = {
   'all-levels': 'All levels welcome',
@@ -65,6 +76,13 @@ const money = opt(z.coerce.number().min(0, 'Prices cannot be negative.').max(100
 const url = opt(z.url({ message: 'Enter a full web address starting with https://' }));
 const email = opt(z.email({ message: 'Enter a valid email address.' }));
 const phone = opt(z.string().regex(/^[0-9()+.\-\s]{7,25}$/, 'Enter a phone number such as (631) 476-3707.'));
+/** Extra labelled links, e.g. a Meetup group or an events calendar. */
+const moreLinks = optList(
+  z.object({
+    label: z.string().min(2).max(40),
+    url: z.url({ message: 'Enter a full web address starting with https://' }),
+  }),
+);
 const seo = {
   seoTitle: opt(z.string().max(70, 'Keep SEO titles under 70 characters.')),
   seoDescription: opt(z.string().max(170, 'Keep SEO descriptions under 170 characters.')),
@@ -79,6 +97,16 @@ const imageWithAlt = <I extends z.ZodType>(image: ImageHelper<I>) =>
 
 /** Fields shared by one-time events, series templates and occurrence overrides. */
 const eventDetailFields = <I extends z.ZodType>(image: ImageHelper<I>) => ({
+  host: opt(z.enum(EVENT_HOSTS)),
+  /** Community organizer ID (organizers collection). SDLI events do not need one. */
+  organizer: opt(z.string()),
+  /** Organizer's page for this event, or where to find more information. */
+  infoUrl: url,
+  /** Where a community listing came from, e.g. "The Dance Calendar, October 2026". */
+  sourceName: opt(z.string()),
+  sourceUrl: url,
+  /** Plain-language repeat pattern shown on community listings, e.g. "Every Wednesday". */
+  cadence: opt(z.string()),
   summary: opt(z.string().max(300, 'Keep the summary under 300 characters.')),
   doorsTime: opt(timeField),
   lessonStartTime: opt(timeField),
@@ -212,8 +240,13 @@ export const venueSchema = <I extends z.ZodType>(image: ImageHelper<I>) =>
       latitude: opt(z.coerce.number().min(-90).max(90)),
       longitude: opt(z.coerce.number().min(-180).max(180)),
       directionsUrl: url,
+      /** Google Maps listing (photos, reviews, hours). */
+      googleMapsUrl: url,
+      facebookUrl: url,
       parkingNotes: opt(z.string()),
       accessibilityNotes: opt(z.string()),
+      /** Where facts such as parking came from, e.g. "Google Maps listing and reviews (October 2026)". */
+      factsSource: opt(z.string()),
       image: opt(image()),
       imageAlt: opt(z.string().min(3)),
       ...seo,
@@ -232,6 +265,11 @@ export const personSchema = <I extends z.ZodType>(image: ImageHelper<I>) =>
       role: opt(z.string()),
       website: url,
       facebookUrl: url,
+      instagramUrl: url,
+      youtubeUrl: url,
+      moreLinks,
+      /** Community organizer they run, e.g. "triple-step-swing". */
+      organizer: opt(z.string()),
       members: optList(z.string()),
       danceStyles: optList(z.string()),
       image: opt(image()),
@@ -248,9 +286,36 @@ export const personSchema = <I extends z.ZodType>(image: ImageHelper<I>) =>
 export const styleSchema = z.object({
   name: z.string(),
   order: z.coerce.number().int().default(50),
+  /** "swing" styles are danced at SDLI; "other" styles appear at community events. */
+  family: z.enum(['swing', 'other']).default('swing'),
   summary: z.string().max(240),
   description: opt(z.string()),
   tempo: opt(z.string()),
+});
+
+export const organizerSchema = z.object({
+  name: z.string().min(2),
+  shortName: opt(z.string()),
+  active: z.boolean().default(true),
+  website: url,
+  email: email,
+  phone: phone,
+  phoneAlt: phone,
+  facebookUrl: url,
+  instagramUrl: url,
+  moreLinks,
+  /** Main town, e.g. "Deer Park". */
+  town: opt(z.string()),
+  /** Usual venue ID. */
+  venue: opt(z.string()),
+  danceStyles: optList(z.string()),
+  /** One line describing what they run, e.g. "Wednesday Ballroom & Latin socials". */
+  tagline: opt(z.string().max(160)),
+  /** Classes they offer, shown under "Take a class". Leave empty if they only run dances. */
+  classes: opt(z.string().max(240)),
+  sourceName: opt(z.string()),
+  sourceUrl: url,
+  editorialReview: opt(z.string()),
 });
 
 export const pageSchema = <I extends z.ZodType>(image: ImageHelper<I>) =>
@@ -315,6 +380,7 @@ export const settingsSchema = <I extends z.ZodType>(image: ImageHelper<I>) =>
     }),
     newsletterUrl: url,
     facebookUrl: url,
+    facebookLabel: opt(z.string()),
     instagramUrl: url,
     youtubeUrl: url,
     membershipFee: z.coerce.number().min(0),
@@ -335,5 +401,6 @@ export const settingsSchema = <I extends z.ZodType>(image: ImageHelper<I>) =>
   });
 
 export type EventStatus = (typeof EVENT_STATUSES)[number];
+export type EventHost = (typeof EVENT_HOSTS)[number];
 export type EventType = (typeof EVENT_TYPES)[number];
 export type ExperienceLevel = (typeof EXPERIENCE_LEVELS)[number];

@@ -104,13 +104,14 @@ export function eventJsonLd(e: ResolvedEvent, s: Settings, site: URL | string, i
       }),
     );
   };
-  add(e.admission.nonMember, 'Non-member admission');
-  add(e.admission.member, 'SDLI member admission');
+  add(e.admission.nonMember, e.host === 'community' ? 'Admission' : 'Non-member admission');
+  add(e.admission.member, e.host === 'community' ? 'Member admission' : 'SDLI member admission');
   add(e.admission.student, 'Student admission');
+  const sameAs = (p: { links?: { url: string }[] }) => (p.links?.length ? p.links.map((l) => l.url) : undefined);
   const performers = [
-    ...(e.band ? [{ '@type': 'MusicGroup', name: e.band.name, url: e.band.href ? abs(e.band.href, site) : undefined }] : []),
-    ...e.djs.map((p) => ({ '@type': 'Person', name: p.name })),
-    ...e.instructors.map((p) => ({ '@type': 'Person', name: p.name, url: p.href ? abs(p.href, site) : undefined })),
+    ...(e.band ? [{ '@type': 'MusicGroup', name: e.band.name, url: e.band.href ? abs(e.band.href, site) : undefined, sameAs: sameAs(e.band) }] : []),
+    ...e.djs.map((p) => ({ '@type': 'Person', name: p.name, sameAs: sameAs(p) })),
+    ...e.instructors.map((p) => ({ '@type': 'Person', name: p.name, url: p.href ? abs(p.href, site) : undefined, sameAs: sameAs(p) })),
   ].map((p) => clean(p as Json));
   return clean({
     '@context': 'https://schema.org',
@@ -128,7 +129,18 @@ export function eventJsonLd(e: ResolvedEvent, s: Settings, site: URL | string, i
     offers,
     isAccessibleForFree: e.admission.free ? true : undefined,
     performer: performers,
-    organizer: { '@type': 'Organization', '@id': abs('/#organization', site), name: s.legalName, url: abs('/', site) },
+    organizer:
+      e.host === 'sdli'
+        ? { '@type': 'Organization', '@id': abs('/#organization', site), name: s.legalName, url: abs('/', site) }
+        : e.organizerEntry
+          ? clean({
+              '@type': 'Organization',
+              name: e.organizerEntry.data.name,
+              url: e.organizerEntry.data.website ?? e.infoUrl,
+              telephone: e.organizerEntry.data.phone,
+              email: e.organizerEntry.data.email,
+            })
+          : undefined,
     inLanguage: 'en-US',
   });
 }

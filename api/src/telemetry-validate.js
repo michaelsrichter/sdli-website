@@ -10,6 +10,7 @@ const EVENT_NAMES = new Set([
   'share_open',
   'copy_failed',
   'get_directions',
+  'outbound_click',
   'click_hotline',
   'click_email',
   'newsletter_click',
@@ -35,6 +36,7 @@ const PROP_KEYS = new Set([
   'rating',
   'nav',
   'mode',
+  'target',
 ]);
 const VITALS = new Set(['LCP', 'INP', 'CLS', 'FCP', 'TTFB']);
 const SAFE = /^[\w\-.,:/ #()&']{0,100}$/;

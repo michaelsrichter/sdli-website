@@ -37,6 +37,14 @@ test('accepts a valid telemetry batch and strips unknown fields', () => {
   assert.equal(r.batch.items[1].value, 1234);
 });
 
+test('accepts outbound link clicks with the destination site', () => {
+  const r = validate(
+    JSON.stringify({ v: 1, items: [{ name: 'outbound_click', props: { method: 'website', location: 'card', target: 'triplestepswing.com', url: 'https://x.y/?email=a@b.c' } }] }),
+  );
+  assert.equal(r.ok, true);
+  assert.deepEqual(r.batch.items[0].props, { method: 'website', location: 'card', target: 'triplestepswing.com' });
+});
+
 test('rejects malformed, oversized and empty payloads', () => {
   assert.equal(validate('').ok, false);
   assert.equal(validate('{nope').reason, 'bad_json');

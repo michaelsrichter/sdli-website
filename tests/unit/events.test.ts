@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { admissionOf, admissionText, isUpcoming, nextConfirmed, partition, resolveOccurrences, sortOccurrences } from '../../src/lib/event-core';
+import { admissionOf, admissionText, hostOf, isUpcoming, nextConfirmed, partition, resolveOccurrences, sdliFirst, sortOccurrences } from '../../src/lib/event-core';
 import { ev, tuesdaySeries } from './helpers';
 
 const NOW = new Date('2026-10-01T22:00:00-04:00');
@@ -102,6 +102,40 @@ describe('upcoming versus past', () => {
       { title: 'C', start: new Date(1) },
     ]);
     expect(sorted.map((s) => s.title)).toEqual(['C', 'A', 'B']);
+  });
+});
+
+describe('SDLI events first, community events after', () => {
+  const community = (id: string, data: Record<string, unknown>) => ev(id, { host: 'community', organizer: 'dj-scott', ...data });
+  const events = [
+    community('2026-10-02-dj-scott.md', { title: 'Friday Social', startDateTime: '2026-10-02T18:00', endDateTime: '2026-10-02T23:00' }),
+    ev('2026-10-06-pizza.md', { title: 'Pizza Night', startDateTime: '2026-10-06T19:30', endDateTime: '2026-10-06T22:00' }),
+    community('2026-10-03-waterfalls.md', { title: 'Saturday Ballroom', startDateTime: '2026-10-03T19:00', endDateTime: '2026-10-03T23:00' }),
+    ev('2026-10-13-dj.md', { title: 'DJ Night', startDateTime: '2026-10-13T19:30', endDateTime: '2026-10-13T22:00', status: 'cancelled' }),
+    ev('2026-10-20-band.md', { title: 'Band Night', startDateTime: '2026-10-20T19:30', endDateTime: '2026-10-20T22:00' }),
+  ];
+  const all = resolveOccurrences(events, [], { now: NOW });
+
+  it('treats events without a host as SDLI events', () => {
+    expect(all.map((o) => hostOf(o))).toEqual(['community', 'community', 'sdli', 'sdli', 'sdli']);
+  });
+  it('the "next dance" is always the next confirmed SDLI dance, even when a community event is sooner', () => {
+    expect(nextConfirmed(all, NOW)?.title).toBe('Pizza Night');
+    expect(nextConfirmed(all, NOW, 'any')?.title).toBe('Friday Social');
+    expect(nextConfirmed(all, new Date('2026-10-07T00:00:00-04:00'))?.title).toBe('Band Night');
+  });
+  it('lists SDLI events first, each group in date order', () => {
+    expect(sdliFirst(all).map((o) => o.title)).toEqual(['Pizza Night', 'DJ Night', 'Band Night', 'Friday Social', 'Saturday Ballroom']);
+  });
+});
+
+describe('events that run past midnight', () => {
+  it('a series ending at 12 AM ends the next day', () => {
+    const fri = tuesdaySeries({ title: 'Friday Dance', slug: 'friday-dance', recurrence: { frequency: 'weekly', weekday: 'friday', startDate: '2026-10-02', endDate: '2026-10-09' }, startTime: '20:00', endTime: '00:00', danceStartTime: '20:00', danceEndTime: '00:00', lessonStartTime: undefined });
+    const [first] = resolveOccurrences([], [fri], { now: NOW });
+    expect(first!.endLocal).toBe('2026-10-03T00:00');
+    expect((first!.end.getTime() - first!.start.getTime()) / 3600000).toBe(4);
+    expect(isUpcoming(first!, new Date('2026-10-02T23:30:00-04:00'))).toBe(true);
   });
 });
 

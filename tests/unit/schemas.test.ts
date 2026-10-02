@@ -8,6 +8,7 @@ import {
   eventSchema,
   faqSchema,
   gallerySchema,
+  organizerSchema,
   pageSchema,
   personSchema,
   seriesSchema,
@@ -108,6 +109,52 @@ describe('all real content in the repository is valid', () => {
       if (d.venue) expect(venues.has(d.venue), `${f} venue ${d.venue}`).toBe(true);
       for (const p of [...(d.instructorNames ?? []), ...(d.djNames ?? []), ...(d.bandName ? [d.bandName] : [])]) expect(people.has(p), `${f} person ${p}`).toBe(true);
       for (const s of d.danceStyles ?? []) expect(styles.has(s), `${f} style ${s}`).toBe(true);
+    }
+  });
+  it('organizers are valid, and everything they reference exists', () => {
+    md('organizers', organizerSchema);
+    const ids = (dir: string) => new Set(readdirSync(join(root, 'src', 'content', dir)).map((f) => f.replace(/\.(md|yml)$/, '')));
+    const venues = ids('venues');
+    const styles = ids('styles');
+    const organizers = ids('organizers');
+    for (const f of readdirSync(join(root, 'src', 'content', 'organizers'))) {
+      const d = frontmatter(readFileSync(join(root, 'src', 'content', 'organizers', f), 'utf8'));
+      if (d.venue) expect(venues.has(d.venue), `${f} venue ${d.venue}`).toBe(true);
+      for (const s of d.danceStyles ?? []) expect(styles.has(s), `${f} style ${s}`).toBe(true);
+    }
+    for (const dir of ['instructors', 'performers']) {
+      for (const f of readdirSync(join(root, 'src', 'content', dir))) {
+        const d = frontmatter(readFileSync(join(root, 'src', 'content', dir, f), 'utf8'));
+        if (d.organizer) expect(organizers.has(d.organizer), `${dir}/${f} organizer ${d.organizer}`).toBe(true);
+      }
+    }
+  });
+  it('every community event says who runs it, how to reach them and where the listing came from', () => {
+    const organizers = new Set(readdirSync(join(root, 'src', 'content', 'organizers')).map((f) => f.replace(/\.md$/, '')));
+    const people = new Set([...readdirSync(join(root, 'src', 'content', 'instructors')), ...readdirSync(join(root, 'src', 'content', 'performers'))].map((f) => f.replace(/\.md$/, '')));
+    let count = 0;
+    for (const dir of ['events', 'series']) {
+      for (const f of readdirSync(join(root, 'src', 'content', dir))) {
+        const d = frontmatter(readFileSync(join(root, 'src', 'content', dir, f), 'utf8'));
+        if (d.host !== 'community') continue;
+        count++;
+        expect(d.organizer, `${dir}/${f} organizer`).toBeTruthy();
+        expect(organizers.has(d.organizer), `${dir}/${f} organizer ${d.organizer}`).toBe(true);
+        expect(d.sourceName, `${dir}/${f} sourceName`).toBeTruthy();
+        for (const p of [...(d.instructorNames ?? []), ...(d.djNames ?? []), ...(d.bandName ? [d.bandName] : [])]) expect(people.has(p), `${dir}/${f} person ${p}`).toBe(true);
+      }
+    }
+    expect(count).toBeGreaterThan(10);
+  });
+  it('teachers with a website (Carol Fraser) carry it, and no profile links to the dead LISS or lijazz domains', () => {
+    const carol = frontmatter(readFileSync(join(root, 'src', 'content', 'instructors', 'carol-fraser.md'), 'utf8'));
+    expect(carol.website).toBe('https://triplestepswing.com/');
+    for (const dir of ['instructors', 'performers', 'organizers', 'venues']) {
+      for (const f of readdirSync(join(root, 'src', 'content', dir))) {
+        const d = frontmatter(readFileSync(join(root, 'src', 'content', dir, f), 'utf8'));
+        const urls = [d.website, d.facebookUrl, d.instagramUrl, d.youtubeUrl, ...(d.moreLinks ?? []).map((l: { url: string }) => l.url)].filter(Boolean);
+        for (const u of urls) expect(u, `${dir}/${f}`).not.toMatch(/liswingsyndicate\.com|lijazz\.com/);
+      }
     }
   });
 });

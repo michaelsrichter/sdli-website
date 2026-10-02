@@ -5,7 +5,7 @@ import YAML from 'yaml';
 import { breadcrumbJsonLd, eventJsonLd, faqJsonLd, jsonLdString } from '../../src/lib/seo';
 import { inlineMarkdown } from '../../src/lib/markdown';
 import { buildCmsConfig } from '../../scripts/build-cms-config.mjs';
-import { eventSchema } from '../../src/lib/schemas';
+import { eventSchema, organizerSchema, personSchema, seriesSchema, styleSchema, venueSchema } from '../../src/lib/schemas';
 import { z } from 'astro/zod';
 
 const root = join(__dirname, '..', '..');
@@ -42,6 +42,20 @@ describe('JSON-LD', () => {
   it('reflects cancellations and postponements', () => {
     expect((eventJsonLd({ ...(e as object), status: 'cancelled' } as never, settings, 'https://www.sdli.org') as any).eventStatus).toBe('https://schema.org/EventCancelled');
     expect((eventJsonLd({ ...(e as object), status: 'postponed' } as never, settings, 'https://www.sdli.org') as any).eventStatus).toBe('https://schema.org/EventPostponed');
+  });
+  it('names SDLI as organizer of its own events, and the real organizer of community events', () => {
+    expect((eventJsonLd({ ...(e as object), host: 'sdli' } as never, settings, 'https://www.sdli.org') as any).organizer.name).toBe('Swing Dance Long Island, Inc.');
+    const community = {
+      ...(e as object),
+      host: 'community',
+      organizerEntry: { id: 'triple-step-swing', data: { name: 'Triple Step Swing', website: 'https://triplestepswing.com/', email: 'hello@triplestepswing.com' } },
+      instructors: [{ name: 'Carol Fraser', href: '/performers/carol-fraser/', links: [{ kind: 'website', label: 'Website', url: 'https://triplestepswing.com/' }] }],
+    } as never;
+    const ld = eventJsonLd(community, settings, 'https://www.sdli.org') as any;
+    expect(ld.organizer).toEqual({ '@type': 'Organization', name: 'Triple Step Swing', url: 'https://triplestepswing.com/', email: 'hello@triplestepswing.com' });
+    expect(ld.performer[0].sameAs).toEqual(['https://triplestepswing.com/']);
+    expect(ld.offers[0].name).toBe('Admission');
+    expect((eventJsonLd({ ...(community as object), organizerEntry: undefined } as never, settings, 'https://www.sdli.org') as any).organizer).toBeUndefined();
   });
   it('escapes markup when embedding JSON-LD', () => {
     expect(jsonLdString({ a: '</script><script>alert(1)</script>' })).not.toContain('</script>');
@@ -117,7 +131,7 @@ describe('Decap CMS configuration', () => {
     expect(existsSync(join(root, config.media_folder))).toBe(true);
   });
   it('has all required collections and their folders exist', () => {
-    for (const c of ['events', 'series', 'venues', 'instructors', 'performers', 'styles', 'pages', 'announcements', 'gallery', 'faqs', 'settings']) expect(names.has(c)).toBe(true);
+    for (const c of ['events', 'series', 'venues', 'organizers', 'instructors', 'performers', 'styles', 'pages', 'announcements', 'gallery', 'faqs', 'settings']) expect(names.has(c)).toBe(true);
     for (const c of config.collections) {
       if (c.folder) expect(existsSync(join(root, c.folder)), c.folder).toBe(true);
       for (const f of c.files ?? []) expect(existsSync(join(root, f.file)), f.file).toBe(true);
@@ -141,6 +155,30 @@ describe('Decap CMS configuration', () => {
     const cms = new Set(config.collections.find((c: any) => c.name === 'events').fields.map((f: any) => f.name));
     const notEditable = ['slug', 'latitude', 'longitude', 'legacyUrl', 'timezone'];
     for (const key of shape) if (!notEditable.includes(key)) expect(cms.has(key), key).toBe(true);
+  });
+  it('every series, venue, organizer, person and style field can be edited in the CMS', () => {
+    const fieldsOf = (name: string) => new Set(config.collections.find((c: any) => c.name === name).fields.map((f: any) => f.name));
+    const shapeOf = (schema: any) => Object.keys((schema.shape ?? schema._def?.schema?.shape ?? schema.def?.in?.shape ?? schema.in?.shape ?? {}) as object);
+    const img = () => z.string();
+    const checks: [string, any, string[]][] = [
+      ['series', seriesSchema(img), ['latitude', 'longitude', 'legacyUrl']],
+      ['venues', venueSchema(img), ['legacyUrl']],
+      ['organizers', organizerSchema, []],
+      ['instructors', personSchema(img), ['legacyUrl']],
+      ['performers', personSchema(img), ['legacyUrl']],
+      ['styles', styleSchema, []],
+    ];
+    for (const [name, schema, skip] of checks) {
+      const shape = shapeOf(schema);
+      expect(shape.length, `${name} schema shape`).toBeGreaterThan(3);
+      const cms = fieldsOf(name);
+      for (const key of shape) if (!skip.includes(key)) expect(cms.has(key), `${name}.${key}`).toBe(true);
+    }
+  });
+  it('lists events newest first and can filter SDLI and community events', () => {
+    const events = config.collections.find((c: any) => c.name === 'events');
+    expect(events.sortable_fields.default).toEqual({ field: 'startDateTime', direction: 'descending' });
+    expect(events.view_filters.map((f: any) => f.label)).toEqual(expect.arrayContaining(['SDLI events', 'Community events']));
   });
   it('requires alt text alongside every image field', () => {
     for (const c of config.collections) {

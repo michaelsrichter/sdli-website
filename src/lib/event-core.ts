@@ -21,6 +21,12 @@ export interface RawSeries {
 
 /** Detail fields that can be inherited from a series and overridden per occurrence. */
 export const DETAIL_KEYS = [
+  'host',
+  'organizer',
+  'infoUrl',
+  'sourceName',
+  'sourceUrl',
+  'cadence',
   'summary',
   'doorsTime',
   'lessonStartTime',
@@ -201,8 +207,11 @@ function computeTiming(
   let endStr: string;
   if (endLocal) {
     const e = parseLocal(endLocal);
-    endStr = `${e.date}T${e.time ?? '23:59'}`;
-    end = zonedToUtc(e.date, e.time ?? '23:59', tz);
+    const eTime = e.time ?? '23:59';
+    // A same-day end at or before the start (e.g. 8 PM to 12 AM) means the event runs past midnight.
+    const eDate = e.date === s.date && e.time && eTime <= s.time ? addDays(e.date, 1) : e.date;
+    endStr = `${eDate}T${eTime}`;
+    end = zonedToUtc(eDate, eTime, tz);
   } else if (danceEndTime && danceEndTime > s.time) {
     endStr = `${s.date}T${danceEndTime}`;
     end = zonedToUtc(s.date, danceEndTime, tz);
@@ -324,9 +333,22 @@ export function partition(list: Occurrence[], now: Date) {
   return { upcoming, past };
 }
 
-/** Next event that is actually happening (not cancelled or postponed). */
-export function nextConfirmed(list: Occurrence[], now: Date): Occurrence | undefined {
-  return list.find((o) => isUpcoming(o, now) && (o.status === 'scheduled' || o.status === 'soldOut'));
+/** Host of an occurrence. Entries without a host are SDLI events (the site's own calendar). */
+export function hostOf(o: Pick<Occurrence, 'details'>): 'sdli' | 'community' {
+  return o.details.host === 'community' ? 'community' : 'sdli';
+}
+
+/** Next event that is actually happening (not cancelled or postponed). Defaults to SDLI events only. */
+export function nextConfirmed(list: Occurrence[], now: Date, host: 'sdli' | 'community' | 'any' = 'sdli'): Occurrence | undefined {
+  return list.find(
+    (o) => isUpcoming(o, now) && (o.status === 'scheduled' || o.status === 'soldOut') && (host === 'any' || hostOf(o) === host),
+  );
+}
+
+/** Stable display order: SDLI events first (chronological), then community events (chronological). */
+export function sdliFirst<T extends Pick<Occurrence, 'details' | 'start' | 'title'>>(list: T[]): T[] {
+  const sorted = sortOccurrences(list);
+  return [...sorted.filter((o) => hostOf(o) === 'sdli'), ...sorted.filter((o) => hostOf(o) === 'community')];
 }
 
 export interface AdmissionSummary {

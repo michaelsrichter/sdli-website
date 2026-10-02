@@ -35,6 +35,28 @@ x-time: &time
 
 x-event-details: &event-details
   - { label: 'Short summary (1–2 sentences)', name: summary, widget: text, required: false, hint: 'Shown on event cards and in search results. Keep it under 300 characters.' }
+  - label: 'Who runs this event?'
+    name: host
+    widget: select
+    required: false
+    default: sdli
+    options:
+      - { label: 'SDLI event (ours)', value: sdli }
+      - { label: 'Community event (another group)', value: community }
+    hint: 'Community events get a "Community event" badge, are listed after SDLI events, and never appear as the "Next SDLI dance".'
+  - label: 'Organizer (community events)'
+    name: organizer
+    widget: relation
+    collection: organizers
+    value_field: '{{slug}}'
+    search_fields: [name, town]
+    display_fields: ['{{name}} ({{town}})']
+    required: false
+    hint: 'Who runs a community event. Their phone, email, website and social links are shown on the event. Add new groups under "Dance groups and organizers".'
+  - { label: 'Repeats (in plain words)', name: cadence, widget: string, required: false, hint: 'For community events, for example "Every Wednesday" or "First and third Fridays of the month".' }
+  - { label: 'More information link', name: infoUrl, widget: string, required: false, hint: "The organizer's own page for this event, if there is one." }
+  - { label: 'Listing source', name: sourceName, widget: string, required: false, hint: 'Where this listing came from, for example "The Dance Calendar, November 2026". Shown on the event page.' }
+  - { label: 'Listing source link', name: sourceUrl, widget: string, required: false }
   - { label: 'Doors open', name: doorsTime, <<: *time }
   - { label: 'Lesson starts', name: lessonStartTime, <<: *time, hint: 'Leave empty if there is no lesson.' }
   - { label: 'Open dancing starts', name: danceStartTime, <<: *time }
@@ -105,6 +127,10 @@ x-event-details: &event-details
       - { label: 'Workshop', value: workshop }
       - { label: 'Special event', value: special-event }
       - { label: 'Community event', value: community-event }
+      - { label: 'Social dance', value: social-dance }
+      - { label: 'Practice party', value: practice }
+      - { label: 'Class', value: class }
+      - { label: 'Dance weekend', value: festival }
   - label: 'Experience level'
     name: experienceLevel
     widget: select
@@ -155,9 +181,13 @@ collections:
     extension: md
     format: frontmatter
     slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
-    summary: '{{startDateTime}}{{occurrenceDate}} · {{title}} · {{status}}'
-    sortable_fields: [startDateTime, occurrenceDate, title, status]
+    summary: '{{startDateTime}}{{occurrenceDate}} · {{title}} · {{host}} · {{status}}'
+    sortable_fields:
+      default: { field: startDateTime, direction: descending }
+      fields: [startDateTime, occurrenceDate, title, status, host]
     view_filters:
+      - { label: 'SDLI events', field: host, pattern: '^(sdli)?$' }
+      - { label: 'Community events', field: host, pattern: community }
       - { label: Cancelled, field: status, pattern: cancelled }
       - { label: Postponed, field: status, pattern: postponed }
       - { label: Drafts, field: status, pattern: draft }
@@ -259,14 +289,58 @@ collections:
       - { label: Latitude, name: latitude, widget: number, value_type: float, required: false }
       - { label: Longitude, name: longitude, widget: number, value_type: float, required: false }
       - { label: 'Directions link', name: directionsUrl, widget: string, required: false }
+      - { label: 'Google Maps listing (photos and reviews)', name: googleMapsUrl, widget: string, required: false, hint: 'The venue''s Google Maps page, for example https://www.google.com/maps?cid=…' }
+      - { label: 'Facebook page', name: facebookUrl, widget: string, required: false }
       - { label: Parking, name: parkingNotes, widget: text, required: false }
       - { label: Accessibility, name: accessibilityNotes, widget: text, required: false, hint: 'Step-free entry, restrooms, seating, lighting, etc.' }
+      - { label: 'Where the parking and access details came from', name: factsSource, widget: string, required: false, hint: 'For example "Google Maps listing and reviews (October 2026)". Shown under the details.' }
       - { label: Photo, name: image, widget: image, required: false, choose_url: false }
       - { label: 'Photo description (alt text)', name: imageAlt, widget: string, required: false }
       - { label: 'SEO title', name: seoTitle, widget: string, required: false }
       - { label: 'SEO description', name: seoDescription, widget: text, required: false }
       - { label: 'Notes for editors', name: editorialReview, widget: text, required: false }
       - { label: About this venue, name: body, widget: markdown, required: false }
+
+  # ---------- Community organizers ----------
+  - name: organizers
+    label: Dance groups and organizers
+    label_singular: Dance group
+    description: 'Other groups, studios and teachers that run community events. Pick one as the organizer of a community event; their contact details and links appear on the event and on the Dance community page.'
+    folder: src/content/organizers
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: name
+    slug: '{{fields.name}}'
+    summary: '{{name}} · {{town}}'
+    sortable_fields: [name, town]
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: 'Short name', name: shortName, widget: string, required: false }
+      - { label: 'Still active', name: active, widget: boolean, default: true, hint: 'Turn off to hide the group from the Dance community page.' }
+      - { label: 'One-line description', name: tagline, widget: string, required: false, hint: 'For example "Wednesday Ballroom & Latin socials". Under 160 characters.' }
+      - { label: Town, name: town, widget: string, required: false }
+      - { label: 'Usual venue', name: venue, widget: relation, collection: venues, value_field: '{{slug}}', search_fields: [name, city], display_fields: ['{{name}}, {{city}}'], required: false }
+      - { label: 'Dance styles', name: danceStyles, widget: relation, collection: styles, value_field: '{{slug}}', search_fields: [name], display_fields: [name], multiple: true, required: false, hint: 'The first style decides which group they appear in on the Dance community page.' }
+      - { label: Phone, name: phone, widget: string, required: false, hint: 'As published by the organizer.' }
+      - { label: 'Second phone', name: phoneAlt, widget: string, required: false }
+      - { label: Email, name: email, widget: string, required: false }
+      - { label: Website, name: website, widget: string, required: false }
+      - { label: Facebook, name: facebookUrl, widget: string, required: false }
+      - { label: Instagram, name: instagramUrl, widget: string, required: false }
+      - label: 'More links'
+        name: moreLinks
+        widget: list
+        required: false
+        summary: '{{fields.label}}'
+        fields:
+          - { label: 'Link text', name: label, widget: string }
+          - { label: 'Web address', name: url, widget: string }
+      - { label: 'Classes they offer', name: classes, widget: text, required: false, hint: 'Shown under "Take a class". Leave empty if they only run dances.' }
+      - { label: 'Listing source', name: sourceName, widget: string, required: false, hint: 'Where these details came from, for example "The Dance Calendar, October 2026".' }
+      - { label: 'Listing source link', name: sourceUrl, widget: string, required: false }
+      - { label: 'Notes for editors', name: editorialReview, widget: text, required: false }
+      - { label: About, name: body, widget: markdown, required: false }
 
   # ---------- People ----------
   - name: instructors
@@ -282,8 +356,20 @@ collections:
       - { label: Name, name: name, widget: string }
       - { label: Type, name: kind, widget: select, options: [{ label: Teacher, value: instructor }, { label: DJ, value: dj }, { label: Band, value: band }] }
       - { label: 'Role or tagline', name: role, widget: string, required: false }
-      - { label: Website, name: website, widget: string, required: false }
+      - { label: Website, name: website, widget: string, required: false, hint: 'Their own website. Shown wherever their name appears on the site.' }
       - { label: Facebook, name: facebookUrl, widget: string, required: false }
+      - { label: Instagram, name: instagramUrl, widget: string, required: false }
+      - { label: YouTube, name: youtubeUrl, widget: string, required: false }
+      - label: 'More links'
+        name: moreLinks
+        widget: list
+        required: false
+        summary: '{{fields.label}}'
+        hint: 'For example a Meetup group, a calendar or a music page.'
+        fields:
+          - { label: 'Link text', name: label, widget: string, hint: 'Short, for example "Meetup group".' }
+          - { label: 'Web address', name: url, widget: string }
+      - { label: 'Runs this dance group', name: organizer, widget: relation, collection: organizers, value_field: '{{slug}}', search_fields: [name], display_fields: [name], required: false, hint: 'Optional. Links their profile to their group on the Dance community page.' }
       - { label: 'Band members', name: members, widget: list, required: false }
       - { label: 'Dance styles', name: danceStyles, widget: relation, collection: styles, value_field: '{{slug}}', search_fields: [name], display_fields: [name], multiple: true, required: false }
       - { label: Photo, name: image, widget: image, required: false, choose_url: false }
@@ -317,6 +403,14 @@ collections:
     fields:
       - { label: Name, name: name, widget: string }
       - { label: 'Sort order', name: order, widget: number, value_type: int, default: 50 }
+      - label: 'Kind of dance'
+        name: family
+        widget: select
+        default: swing
+        options:
+          - { label: 'Swing (danced at SDLI)', value: swing }
+          - { label: 'Other (ballroom, Latin, tango, country…)', value: other }
+        hint: 'Swing styles appear in "The dances you will see" and on New to Swing. Other styles are used to tag community events.'
       - { label: 'Short description', name: summary, widget: text }
       - { label: 'Longer description', name: description, widget: text, required: false }
       - { label: 'Typical music', name: tempo, widget: string, required: false }
@@ -398,7 +492,7 @@ collections:
 
   # ---------- FAQs ----------
   - name: faqs
-    label: Questions and answers
+    label: Frequently Asked Questions
     label_singular: Question
     folder: src/content/faqs
     create: true
@@ -450,7 +544,8 @@ collections:
               - { label: State, name: state, widget: string }
               - { label: 'ZIP code', name: postalCode, widget: string }
           - { label: 'Email list sign-up link', name: newsletterUrl, widget: string, required: false }
-          - { label: 'Facebook page', name: facebookUrl, widget: string, required: false }
+          - { label: 'Facebook page or group', name: facebookUrl, widget: string, required: false }
+          - { label: 'Facebook link text', name: facebookLabel, widget: string, required: false, hint: 'For example "SDLI Facebook group".' }
           - { label: 'Instagram page', name: instagramUrl, widget: string, required: false }
           - { label: 'YouTube channel', name: youtubeUrl, widget: string, required: false }
           - { label: 'Membership fee ($ per year)', name: membershipFee, widget: number, value_type: float }
