@@ -220,6 +220,7 @@
   .featured__when { font-weight: 700; font-size: var(--step-1); margin-top: 0.25rem; }
   .facts { display: grid; gap: 0.6rem; padding: 0; list-style: none; }
   .facts li { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: 0.6rem; align-items: start; }
+  .facts li > * { min-width: 0; overflow-wrap: anywhere; }
   .facts svg { width: 1.4rem; height: 1.4rem; color: var(--c-brand); margin-top: 0.15rem; }
   .facts dt, .fact-label { font-weight: 700; }
   .reassure { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -661,7 +662,8 @@
 
   .org-list { display: grid; gap: var(--space-4); padding: 0; list-style: none; }
   @media (min-width: 48rem) { .org-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .org-card { display: grid; gap: 0.45rem; align-content: start; padding: var(--space-4); border: 1px solid var(--c-line); border-radius: var(--radius-m); background: var(--c-surface); scroll-margin-top: 5rem; }
+  .org-card { display: grid; gap: 0.45rem; align-content: start; min-width: 0; padding: var(--space-4); border: 1px solid var(--c-line); border-radius: var(--radius-m); background: var(--c-surface); scroll-margin-top: 5rem; overflow-wrap: anywhere; }
+  .org-list > li { min-width: 0; }
   .org-card:target { outline: 3px solid var(--c-focus); outline-offset: 2px; }
   .org-card h3 { font-size: var(--step-1); }
   .org-card .facts { gap: 0.35rem; font-size: 0.95rem; }

@@ -18,12 +18,21 @@ const assert = (cond, msg) => {
   if (!cond) throw new Error(msg);
 };
 
-await check('Homepage loads with the next dance', async () => {
+await check('Homepage loads with the next SDLI dance', async () => {
   const r = await get('/');
   assert(r.status === 200, `status ${r.status}`);
   const html = await r.text();
-  assert(html.includes('Next dance'), 'missing "Next dance"');
+  assert(html.includes('Next SDLI dance'), 'missing "Next SDLI dance"');
   return html.match(/<title>([^<]+)/)?.[1];
+});
+await check('Community page and community calendar feed', async () => {
+  const r = await get('/community/');
+  assert(r.status === 200, `status ${r.status}`);
+  const html = await r.text();
+  assert(html.includes('Triple Step Swing'), 'organizer missing');
+  const feed = await get('/events/community-events.ics');
+  assert(/text\/calendar/.test(feed.headers.get('content-type') || ''), `content-type ${feed.headers.get('content-type')}`);
+  return `${((await feed.text()).match(/BEGIN:VEVENT/g) || []).length} community events in feed`;
 });
 await check('Security headers', async () => {
   const h = (await get('/')).headers;
