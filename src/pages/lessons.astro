@@ -8,21 +8,39 @@ import { getEventGroups } from '../lib/content';
 import { photos } from '../lib/photos';
 
 const teachers = await getCollection('instructors');
-const { upcoming, past } = await getEventGroups();
+const organizers = (await getCollection('organizers')).filter((o) => o.data.active && o.data.classes);
+const SWING = new Set(['lindy-hop', 'east-coast-swing', 'west-coast-swing', 'balboa', 'blues']);
+const swingClasses = organizers.filter((o) => (o.data.danceStyles ?? []).some((s) => SWING.has(s))).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const { upcomingSdli, past } = await getEventGroups();
 const lastSeen = (id: string) => past.find((e) => (e.details.instructorNames ?? []).includes(id))?.date ?? '';
 teachers.sort((a, b) => lastSeen(b.id).localeCompare(lastSeen(a.id)));
-const withLesson = upcoming.filter((e) => e.hasLesson).slice(0, 4);
+const withLesson = upcomingSdli.filter((e) => e.hasLesson).slice(0, 4);
 ---
 <ContentPage id="lessons" pageType="lessons">
   <section aria-labelledby="next-lessons">
     <h2 id="next-lessons">Next lessons</h2>
     <ul class="event-list mt-5" data-upcoming-list="lessons">{withLesson.map((e) => <EventCard event={e} />)}</ul>
-    <p class="mt-3"><a href="/events/?lesson=yes">All upcoming lessons</a></p>
+    <p class="mt-3"><a href="/events/?lesson=yes&host=sdli">All upcoming SDLI lessons</a></p>
   </section>
   <section aria-labelledby="teachers-h">
     <h2 id="teachers-h">Teachers</h2>
     <ul class="grid grid--2 mt-5" role="list">{teachers.map((t) => <PersonCard person={t} />)}</ul>
   </section>
+  {swingClasses.length > 0 && (
+    <section aria-labelledby="more-classes-h">
+      <h2 id="more-classes-h">More swing classes on Long Island</h2>
+      <p class="mt-3">Want to learn faster? These teachers and studios run class series outside SDLI nights.</p>
+      <ul class="org-list mt-5">
+        {swingClasses.map((o) => (
+          <li class="org-card">
+            <h3 class="h4"><a href={`/community/#${o.id}`}>{o.data.name}</a></h3>
+            <p>{o.data.classes}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-3"><a href="/community/#classes">All classes, including ballroom and Latin</a></p>
+    </section>
+  )}
   <Fragment slot="aside">
     <Photo photo={photos.polkaDots} sizes="(min-width: 56rem) 35vw, 92vw" widths={[480, 720, 960]} />
   </Fragment>

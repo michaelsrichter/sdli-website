@@ -19,11 +19,11 @@ const groups = Object.keys(labels)
   .filter((g) => g.items.length);
 const crumbs = [
   { name: 'Home', href: '/' },
-  { name: 'Questions and answers', href: '/faq/' },
+  { name: 'Frequently Asked Questions', href: '/faq/' },
 ];
 ---
 <BaseLayout title="Swing Dance FAQ: Partners, Lessons, Prices" description="Answers to common questions about SDLI swing dances: do I need a partner, are beginners welcome, what does it cost, what should I wear and more." pageType="faq" jsonLd={[faqJsonLd(faqs.map((f) => f.data)), breadcrumbJsonLd(crumbs, Astro.site!)]}>
-  <PageHeader title="Questions and answers" lede="Quick answers about SDLI dances. Still wondering? Call the 24-hour Dance Hotline at (631) 476-3707." crumbs={crumbs} />
+  <PageHeader title="Frequently Asked Questions" lede="Quick answers about SDLI dances. Still wondering? Call the 24-hour Dance Hotline at (631) 476-3707." crumbs={crumbs} />
   <div class="container--narrow section stack-l">
     {groups.map((g) => (
       <section aria-labelledby={`faq-${g.key}`}>

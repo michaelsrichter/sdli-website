@@ -9,10 +9,15 @@ import AddToCalendar from '../../../components/AddToCalendar.astro';
 import ShareControls from '../../../components/ShareControls.astro';
 import EventCard from '../../../components/EventCard.astro';
 import ResponsiveImage from '../../../components/ResponsiveImage.astro';
-import { calendarEventOf, getEventGroups, getSettings, scheduleLines, shareInputOf, type ResolvedEvent } from '../../../lib/content';
+import HostBadge from '../../../components/HostBadge.astro';
+import RelativeWhen from '../../../components/RelativeWhen.astro';
+import StyleTags from '../../../components/StyleTags.astro';
+import PersonLinks from '../../../components/PersonLinks.astro';
+import { calendarEventOf, getEventGroups, getSettings, scheduleLines, shareInputOf, type PersonRef, type ResolvedEvent } from '../../../lib/content';
 import { breadcrumbJsonLd, eventJsonLd } from '../../../lib/seo';
 import { formatPrice, isUpcoming } from '../../../lib/event-core';
 import { formatTime } from '../../../lib/time';
+import { displayHost } from '../../../lib/links';
 
 export async function getStaticPaths() {
   const { all } = await getEventGroups();
@@ -20,11 +25,12 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.props as { slug: string };
-const { all, upcoming, now } = await getEventGroups();
+const { all, upcomingOrdered, next: nextSdli, now } = await getEventGroups();
 const e = all.find((x) => x.slug === slug) as ResolvedEvent;
 const settings = await getSettings();
 const site = Astro.site!;
 const d = e.details;
+const sdli = e.host === 'sdli';
 const upcomingNow = isUpcoming(e, now);
 const status = upcomingNow ? e.status : e.effectiveStatus;
 const cal = calendarEventOf(e, site);
@@ -43,7 +49,9 @@ if (!Content && e.source.seriesId) {
   if (s?.body?.trim()) Content = (await render(s)).Content;
 }
 
-const more = upcoming.filter((x) => x.slug !== e.slug).slice(0, 3);
+const more = upcomingOrdered.filter((x) => x.slug !== e.slug).slice(0, 3);
+/** Point visitors on any other event page to the next SDLI dance. */
+const showNextSdli = upcomingNow && nextSdli && nextSdli.slug !== e.slug;
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: upcomingNow ? 'Events' : 'Past events', href: upcomingNow ? '/events/' : '/events/past/' },
@@ -57,19 +65,36 @@ const description =
     `${e.dateLabel}${e.timeLabel ? ` at ${e.timeLabel}` : ''}${e.location.name ? `, ${e.location.name}, ${e.location.city}.` : '.'}`,
     d.lessonStartTime ? `Swing lesson at ${formatTime(d.lessonStartTime)}.` : '',
     e.band ? `Live music by ${e.band.name}.` : '',
-    e.beginnerFriendly ? 'Beginners welcome, no partner needed.' : '',
+    [e.beginnerFriendly && 'Beginners welcome.', e.noPartnerNeeded && 'No partner needed.'].filter(Boolean).join(' '),
+    sdli ? '' : 'Community event listed by SDLI.',
   ]
     .filter(Boolean)
     .join(' ')
     .slice(0, 165);
 const lessonLine = d.lessonStartTime ? `Lesson at ${formatTime(d.lessonStartTime)}` : undefined;
 const daysUntil = Math.ceil((e.start.getTime() - now.getTime()) / 86400000);
-const priceRows = [
-  { label: 'Non-members', value: e.admission.nonMember },
-  { label: 'SDLI members', value: e.admission.member },
-  { label: 'Students', value: e.admission.student },
-].filter((r) => typeof r.value === 'number') as { label: string; value: number }[];
+const priceRows = (
+  sdli
+    ? [
+        { label: 'Non-members', value: e.admission.nonMember },
+        { label: 'SDLI members', value: e.admission.member },
+        { label: 'Students', value: e.admission.student },
+      ]
+    : [
+        { label: 'Per person', value: e.admission.nonMember },
+        { label: 'Members', value: e.admission.member },
+        { label: 'Students', value: e.admission.student },
+      ]
+).filter((r) => typeof r.value === 'number') as { label: string; value: number }[];
 const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
+const telOf = (p: string) => `tel:+1${p.replace(/[^0-9]/g, '').replace(/^1(?=\d{10}$)/, '')}`;
+const people: { role: string; icon: 'music' | 'people'; p: PersonRef }[] = [
+  ...(e.band ? [{ role: 'Live band', icon: 'music' as const, p: e.band }] : []),
+  ...e.djs.map((p) => ({ role: 'DJ', icon: 'music' as const, p })),
+  ...e.instructors.map((p) => ({ role: 'Teacher', icon: 'people' as const, p })),
+];
+const c = e.contact;
+const organizerName = e.organizerEntry?.data.name ?? c.name;
 ---
 <BaseLayout
   title={title}
@@ -90,7 +115,9 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
           <TicketDate date={e.date} muted={!upcomingNow || status === 'cancelled'} />
           <div>
             <div class="event-hero__badges">
+              <HostBadge host={e.host} />
               <StatusBadge status={status} showScheduled={upcomingNow} />
+              {upcomingNow && <RelativeWhen start={e.start} end={e.end} excited={sdli} allDay={e.timeTba} />}
               {e.typeLabels.slice(0, 3).map((t) => <span class="pill">{t}</span>)}
             </div>
             <h1 id="event-title" class="mt-3">{e.title}</h1>
@@ -141,12 +168,31 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
               <p><a href="/events/">See upcoming dances</a></p>
             </div>
           )}
-          {upcomingNow && e.source.kind === 'series-occurrence' && (
+{upcomingNow && sdli && e.source.kind === 'series-occurrence' && (
             <div class="alert alert--info" role="note">
               <p class="alert__title">Part of SDLI's regular weekly schedule</p>
               <p>The theme, teacher or band for this night will be posted closer to the date. Weather or holidays can change plans, so check this page or call the {settings.hotlineLabel} at <a href={`tel:+1${tel}`}>{settings.hotlinePhone}</a> before you go.</p>
             </div>
           )}
+{!sdli && (
+  <div class="alert alert--community" role="note">
+    <p class="alert__title">Community event, not run by SDLI</p>
+    <p>
+      {organizerName ? `${organizerName} runs this event. ` : ''}We list it so you can find more places to dance.
+      {upcomingNow && ' Times and prices can change, so please check with the organizer before you go.'}
+    </p>
+  </div>
+)}
+{showNextSdli && nextSdli && (
+  <aside class="next-sdli no-print" aria-label="Next SDLI dance">
+    <HostBadge host="sdli" size="small" />
+    <p>
+      <span class="next-sdli__label">Next SDLI dance:</span>
+      <a href={nextSdli.url}>{nextSdli.title}</a>, {nextSdli.dateLabel}
+      <RelativeWhen start={nextSdli.start} end={nextSdli.end} excited allDay={nextSdli.timeTba} />
+    </p>
+  </aside>
+)}
 
           <section class="panel" aria-labelledby="glance">
             <h2 id="glance">At a glance</h2>
@@ -189,7 +235,7 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
                     <span>{upcomingNow ? 'To be announced' : 'Not listed for this past event'}</span>
                   )}
                   {e.admission.notes && <p class="muted mt-3">{e.admission.notes}</p>}
-                  {upcomingNow && <p class="mt-3"><a href="/membership/">Members pay less. Join for ${settings.membershipFee} a year.</a></p>}
+                  {upcomingNow && sdli && <p class="mt-3"><a href="/membership/">Members pay less. Join for ${settings.membershipFee} a year.</a></p>}
                 </dd>
               </div>
               <div>
@@ -197,24 +243,59 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
                 <dd>
                   <p class="reassure">
                     {e.beginnerFriendly && <span class="tag"><Icon name="check" />Beginners welcome</span>}
-                    {!e.partnerRequired && <span class="tag"><Icon name="people" />No partner needed</span>}
-                    {e.hasLesson && <span class="tag"><Icon name="shoe" />Swing lesson first</span>}
+                    {e.noPartnerNeeded && <span class="tag"><Icon name="people" />No partner needed</span>}
+                    {e.hasLesson && <span class="tag"><Icon name="shoe" />{sdli ? 'Swing lesson first' : 'Lesson first'}</span>}
                     <span class="tag tag--neutral">{e.experienceLabel}</span>
                   </p>
-                  {e.styles.length > 0 && <p class="mt-3"><span class="fact-label">Dance styles:</span> {e.styles.map((s) => s.name).join(', ')}</p>}
+                  {e.styles.length > 0 && (
+                    <div class="mt-3">
+                      <p class="fact-label">Dances you can expect:</p>
+                      <StyleTags styles={e.styles} />
+                    </div>
+                  )}
                   {d.registrationRequired && d.registrationUrl && <p class="mt-3"><a href={d.registrationUrl}>Registration required: sign up here</a></p>}
                   {d.capacityNotes && <p class="mt-3">{d.capacityNotes}</p>}
                 </dd>
               </div>
-              {(e.band || e.djs.length > 0 || e.instructors.length > 0) && (
+              {people.length > 0 && (
                 <div>
                   <dt>Lineup</dt>
                   <dd>
-                    <ul class="facts">
-                      {e.band && <li><Icon name="music" /><span><span class="fact-label">Live band:</span> {e.band.href ? <a href={e.band.href}>{e.band.name}</a> : e.band.name}</span></li>}
-                      {e.djs.map((p) => <li><Icon name="music" /><span><span class="fact-label">DJ:</span> {p.href ? <a href={p.href}>{p.name}</a> : p.name}</span></li>)}
-                      {e.instructors.map((p) => <li><Icon name="people" /><span><span class="fact-label">Teacher:</span> {p.href ? <a href={p.href}>{p.name}</a> : p.name}</span></li>)}
+                    <ul class="lineup">
+                      {people.map(({ role, icon, p }) => (
+                        <li>
+                          <Icon name={icon} />
+                          <div>
+                            <span><span class="fact-label">{role}:</span> {p.href ? <a href={p.href}>{p.name}</a> : p.name}</span>
+                            <PersonLinks links={p.links} name={p.name} location="event" />
+                          </div>
+                        </li>
+                      ))}
                     </ul>
+                  </dd>
+                </div>
+              )}
+              {!sdli && (organizerName || c.phone || c.email || c.links.length > 0 || e.infoUrl) && (
+                <div>
+                  <dt>Hosted by</dt>
+                  <dd>
+                    {organizerName && <p><strong>{e.organizerEntry ? <a href={`/community/#${e.organizerEntry.id}`}>{organizerName}</a> : organizerName}</strong></p>}
+                    {d.cadence && <p class="muted">{d.cadence}</p>}
+                    <ul class="facts mt-3">
+                      {c.phone && <li><Icon name="phone" /><a href={telOf(c.phone)} data-track="outbound_click" data-track-method="phone" data-track-location="event">{c.phone}</a></li>}
+                      {c.phoneAlt && <li><Icon name="phone" /><a href={telOf(c.phoneAlt)} data-track="outbound_click" data-track-method="phone" data-track-location="event">{c.phoneAlt}</a></li>}
+                      {c.email && <li><Icon name="mail" /><a href={`mailto:${c.email}`} data-track="outbound_click" data-track-method="email" data-track-location="event">{c.email}</a></li>}
+                      {e.infoUrl && <li><Icon name="external" /><a href={e.infoUrl} target="_blank" rel="noopener" data-track="outbound_click" data-track-method="link" data-track-location="event" data-track-target={displayHost(e.infoUrl)}>Event details on {displayHost(e.infoUrl)}<span class="visually-hidden"> (opens in a new tab)</span></a></li>}
+                    </ul>
+                    {organizerName && <PersonLinks links={c.links} name={organizerName} location="event" />}
+                  </dd>
+                </div>
+              )}
+              {e.listing && (
+                <div>
+                  <dt>Source</dt>
+                  <dd class="muted">
+                    Listed in {e.listing.url ? <a href={e.listing.url} target="_blank" rel="noopener">{e.listing.name}<span class="visually-hidden"> (opens in a new tab)</span></a> : e.listing.name}.
                   </dd>
                 </div>
               )}
@@ -252,7 +333,18 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
           </section>
           <section class="panel actions" aria-labelledby="q-h">
             <h2 id="q-h">Questions?</h2>
-            <p>Call the {settings.hotlineLabel}: <a href={`tel:+1${tel}`} data-track="click_hotline" data-track-location="event">{settings.hotlinePhone}</a></p>
+            {sdli ? (
+              <p>Call the {settings.hotlineLabel}: <a href={`tel:+1${tel}`} data-track="click_hotline" data-track-location="event">{settings.hotlinePhone}</a></p>
+            ) : c.phone || c.email ? (
+              <p>
+                Contact {organizerName ?? 'the organizer'}:{' '}
+                {c.phone && <a href={telOf(c.phone)} data-track="outbound_click" data-track-method="phone" data-track-location="event_aside">{c.phone}</a>}
+                {c.phone && c.email && ' or '}
+                {c.email && <a href={`mailto:${c.email}`} data-track="outbound_click" data-track-method="email" data-track-location="event_aside">{c.email}</a>}
+              </p>
+            ) : (
+              <p>Contact {organizerName ?? 'the organizer'}{c.links[0] ? <> through <a href={c.links[0].url} target="_blank" rel="noopener">their {c.links[0].label.toLowerCase()}<span class="visually-hidden"> (opens in a new tab)</span></a></> : ''}.</p>
+            )}
             <p><button type="button" class="btn btn--secondary btn--small js-only" data-print><Icon name="print" />Print this page</button></p>
           </section>
         </aside>
@@ -265,7 +357,7 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
             <a class="btn btn--secondary" href="/events/">All events</a>
           </div>
           <ul class="event-list" data-upcoming-list="event_more">
-            {more.map((x) => <EventCard event={x} />)}
+            {more.map((x) => <EventCard event={x} compact={x.host === 'community'} />)}
           </ul>
         </section>
       )}

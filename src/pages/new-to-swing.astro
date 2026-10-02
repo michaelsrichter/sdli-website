@@ -8,7 +8,7 @@ import { photos } from '../lib/photos';
 import { faqJsonLd } from '../lib/seo';
 import { inlineMarkdown } from '../lib/markdown';
 
-const styles = (await getCollection('styles')).sort((a, b) => a.data.order - b.data.order);
+const styles = (await getCollection('styles')).filter((s) => s.data.family === 'swing').sort((a, b) => a.data.order - b.data.order);
 const faqs = (await getCollection('faqs', (f) => f.data.published && f.data.category === 'first-visit')).sort((a, b) => a.data.order - b.data.order);
 const { next } = await getEventGroups();
 ---
@@ -35,7 +35,7 @@ const { next } = await getEventGroups();
         </details>
       ))}
     </div>
-    <p class="mt-5"><a href="/faq/">All questions and answers</a></p>
+    <p class="mt-5"><a href="/faq/">All Frequently Asked Questions</a></p>
   </section>
   <Fragment slot="aside">
     {next && <FeaturedEvent event={next} label="Your first night could be" hasSocialImage />}

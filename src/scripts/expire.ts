@@ -15,7 +15,7 @@ document.querySelectorAll<HTMLElement>('[data-upcoming-list] [data-event]').forE
 });
 
 // Month headings with no remaining visible events.
-document.querySelectorAll<HTMLElement>('[data-upcoming-list] [data-month-group]').forEach((group) => {
+document.querySelectorAll<HTMLElement>('[data-upcoming-list] [data-month-group], [data-upcoming-list] [data-host-section]').forEach((group) => {
   const visible = group.querySelectorAll('[data-event]:not([hidden])').length;
   if (visible === 0) group.hidden = true;
 });

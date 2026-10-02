@@ -15,18 +15,22 @@ Key facts:
 - Membership: $${s.membershipFee} per person per year (${s.membershipYear}); join at the door of any SDLI dance.
 - ${s.hotlineLabel}: ${s.hotlinePhone}. Email: ${s.email}.
 - Mailing address: ${s.legalName}, ${s.mailingAddress.line1}, ${s.mailingAddress.city}, ${s.mailingAddress.state} ${s.mailingAddress.postalCode}.
-${next ? `- Next scheduled dance: ${next.title}, ${next.dateLabel}${next.timeLabel ? ` at ${next.timeLabel}` : ''} (${u(next.url)}).\n` : ''}
+${next ? `- Next scheduled SDLI dance: ${next.title}, ${next.dateLabel}${next.timeLabel ? ` at ${next.timeLabel}` : ''} (${u(next.url)}).\n` : ''}
 ## Events
-- [Upcoming events](${u('/events/')}): every upcoming dance with date, lesson time, price and venue.
-- [Calendar feed (.ics)](${u('/events/sdli-events.ics')})
-- [RSS feed](${u('/events/rss.xml')})
+- [Upcoming events](${u('/events/')}): every upcoming SDLI dance with date, lesson time, price and venue, followed by community events run by other Long Island groups (clearly labeled "Community event").
+- [SDLI calendar feed (.ics)](${u('/events/sdli-events.ics')})
+- [Community events calendar feed (.ics)](${u('/events/community-events.ics')})
+- [RSS feed](${u('/events/rss.xml')}) (SDLI dances only)
 - [Past events](${u('/events/past/')})
 
 ## For new dancers
 - [New to swing?](${u('/new-to-swing/')})
 - [Lessons](${u('/lessons/')})
-- [Questions and answers](${u('/faq/')})
+- [Frequently Asked Questions](${u('/faq/')})
 
+## Long Island dance community
+- [Dance groups and teachers](${u('/community/')}): other swing, blues, ballroom and Latin groups on Long Island, with contacts and classes. These are not run by SDLI.
+${s.facebookUrl ? `- [${s.facebookLabel ?? 'SDLI Facebook group'}](${s.facebookUrl})\n` : ''}
 ## Organization
 - [About SDLI](${u('/about/')})
 - [Membership](${u('/membership/')})

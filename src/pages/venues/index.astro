@@ -2,34 +2,59 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
-import Icon from '../../components/Icon.astro';
-import { getEventGroups } from '../../lib/content';
+import HostBadge from '../../components/HostBadge.astro';
+import { getEventGroups, getSettings } from '../../lib/content';
 import { breadcrumbJsonLd } from '../../lib/seo';
 import history from '../../data/legacy-history.json';
 
-const venues = (await getCollection('venues')).sort((a, b) => Number(b.data.active) - Number(a.data.active) || a.data.name.localeCompare(b.data.name));
-const { upcoming } = await getEventGroups();
+const venues = (await getCollection('venues')).filter((v) => v.data.active).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const { upcoming, past } = await getEventGroups();
+const settings = await getSettings();
+const isSdli = (id: string) => id === settings.defaultVenue || [...upcoming, ...past].some((e) => e.host === 'sdli' && e.venueEntry?.id === id);
+const sdliVenues = venues.filter((v) => isSdli(v.id));
+const otherVenues = venues.filter((v) => !isSdli(v.id)).sort((a, b) => a.data.city.localeCompare(b.data.city) || a.data.name.localeCompare(b.data.name));
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Venues', href: '/venues/' },
 ];
 ---
-<BaseLayout title="Swing Dance Venues on Long Island" description="Where Swing Dance Long Island dances happen, with addresses and directions. Weekly Tuesday dances at the Huntington Moose Lodge in Greenlawn, NY." pageType="venues" jsonLd={[breadcrumbJsonLd(crumbs, Astro.site!)]}>
-  <PageHeader title="Venues" lede="Where SDLI dances happen, with directions." crumbs={crumbs} />
+<BaseLayout title="Swing Dance Venues on Long Island" description="Where Swing Dance Long Island dances happen, with addresses, parking and directions, plus other Long Island dance venues. Weekly Tuesday dances at the Huntington Moose Lodge in Greenlawn, NY." pageType="venues" jsonLd={[breadcrumbJsonLd(crumbs, Astro.site!)]}>
+  <PageHeader title="Venues" lede="Where SDLI dances happen, plus other places to dance around Long Island." crumbs={crumbs} />
   <div class="container section stack-l">
-    <ul class="grid grid--2" role="list">
-      {venues.filter((v) => v.data.active).map((v) => {
-        const count = upcoming.filter((e) => e.venueEntry?.id === v.id).length;
-        return (
-          <li class="card card--accent">
-            <p class="card__kicker">{count} upcoming {count === 1 ? 'event' : 'events'}</p>
-            <h2 class="h3"><a href={`/venues/${v.id}/`}>{v.data.name}</a></h2>
-            <address>{v.data.address}<br />{v.data.city}, {v.data.state} {v.data.postalCode}</address>
-            <p class="muted"><Icon name="arrow" class="visually-hidden" />Venue details and directions</p>
-          </li>
-        );
-      })}
-    </ul>
+    <section aria-labelledby="sdli-venues">
+      <h2 id="sdli-venues">Where SDLI dances</h2>
+      <ul class="grid grid--2 mt-5" role="list">
+        {sdliVenues.map((v) => {
+          const count = upcoming.filter((e) => e.venueEntry?.id === v.id && e.host === 'sdli').length;
+          return (
+            <li class="card card--accent">
+              <p class="card__kicker"><HostBadge host="sdli" size="small" /> {count} upcoming SDLI {count === 1 ? 'dance' : 'dances'}</p>
+              <h3><a href={`/venues/${v.id}/`}>{v.data.name}</a></h3>
+              <address>{v.data.address}<br />{v.data.city}, {v.data.state} {v.data.postalCode}</address>
+              <p class="muted">Venue details, parking and directions</p>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+    {otherVenues.length > 0 && (
+      <section aria-labelledby="other-venues">
+        <h2 id="other-venues">Other dance venues around Long Island</h2>
+        <p class="mt-3">Places where other groups hold the <a href="/events/#community">community events</a> we list.</p>
+        <ul class="grid grid--3 mt-5" role="list">
+          {otherVenues.map((v) => {
+            const count = upcoming.filter((e) => e.venueEntry?.id === v.id).length;
+            return (
+              <li class="card">
+                <p class="card__kicker">{v.data.city}{count ? ` · ${count} upcoming` : ''}</p>
+                <h3 class="h4"><a href={`/venues/${v.id}/`}>{v.data.name}</a></h3>
+                <address class="muted">{v.data.address}</address>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )}
     <section class="card" id="past-venues" aria-labelledby="past-venues-h">
       <h2 id="past-venues-h" class="h3">Places SDLI has danced</h2>
       <p>Over the years, SDLI has held dances and events at many places across Long Island. These are historical venues from the old website, not current dance locations.</p>

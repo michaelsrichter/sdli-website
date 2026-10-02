@@ -2,6 +2,8 @@
 import type { CollectionEntry } from 'astro:content';
 import ResponsiveImage from './ResponsiveImage.astro';
 import Icon from './Icon.astro';
+import PersonLinks from './PersonLinks.astro';
+import { linksOf } from '../lib/links';
 interface Props {
   person: CollectionEntry<'instructors'> | CollectionEntry<'performers'>;
   upcomingCount?: number;
@@ -20,5 +22,6 @@ const kindLabel = p.kind === 'band' ? 'Band' : p.kind === 'dj' ? 'DJ' : 'Teacher
     <p class="card__kicker">{kindLabel}{upcomingCount > 0 ? ` · ${upcomingCount} upcoming` : ''}</p>
     <h3><a href={`/performers/${person.id}/`}>{p.name}</a></h3>
     {p.role && <p class="muted">{p.role}</p>}
+    <PersonLinks links={linksOf(p)} name={p.name} max={3} location="performers" />
   </div>
 </li>

@@ -40,6 +40,7 @@ const GA_EVENTS = new Set([
   'add_to_calendar',
   'share',
   'get_directions',
+  'outbound_click',
   'click_hotline',
   'click_email',
   'newsletter_click',
@@ -213,6 +214,7 @@ document.addEventListener('click', (e) => {
   track(el.dataset.track!, {
     method: el.dataset.trackMethod,
     location: el.dataset.trackLocation ?? el.closest<HTMLElement>('[data-track-location]')?.dataset.trackLocation,
+    target: el.dataset.trackTarget,
   });
 });
 

@@ -5,7 +5,8 @@ test.describe('visitor journeys', () => {
     await page.goto('/');
     const card = page.locator('[data-featured-candidate]:not([hidden]) .featured');
     await expect(card).toBeVisible();
-    await expect(card.getByText('Next dance')).toBeVisible();
+    await expect(card.getByText('Next SDLI dance')).toBeVisible();
+    await expect(card.locator('[data-when]')).toHaveText(/This Tuesday · in 5 days!|Tonight!|Tomorrow night|in \d+ days/);
     await expect(card.locator('.featured__when')).toHaveText(/\w+day, \w+ \d{1,2}, \d{4}/);
     await expect(card.getByText(/Lesson:/)).toBeVisible();
     await expect(card.getByText(/Open dancing:/)).toBeVisible();
@@ -125,6 +126,75 @@ test.describe('visitor journeys', () => {
     await card.locator('.event-card__title a').click();
     await expect(page.locator('.alert--bad')).toContainText('This event is cancelled.');
     await expect(page.locator('.event-hero .status')).toHaveText(/Cancelled/i);
+  });
+});
+
+test.describe('SDLI events first, community events clearly marked', () => {
+  test('the homepage hero is the next SDLI dance even when a community event is sooner', async ({ pinned: page }) => {
+    await page.goto('/');
+    const card = page.locator('[data-featured-candidate]:not([hidden]) .featured');
+    await expect(card.locator('.featured__title')).toHaveText('Tuesday Pizza Night');
+    const coming = page.locator('[data-upcoming-list="home"] .event-card');
+    expect(await coming.count()).toBeGreaterThan(2);
+    for (const host of await coming.evaluateAll((els) => els.map((e) => (e as HTMLElement).dataset.host))) expect(host).toBe('sdli');
+    const community = page.locator('[data-upcoming-list="home_community"] .event-card');
+    await expect(community.first()).toBeVisible();
+    await expect(community.first().locator('.host--community')).toHaveText(/Community event/);
+  });
+
+  test('the events page lists SDLI dances before community events, and can show only one kind', async ({ pinned: page }) => {
+    await page.goto('/events/');
+    await expect(page.locator('[data-featured-candidate] .featured__label')).toContainText('Next SDLI dance');
+    const sections = await page.locator('[data-host-section]').evaluateAll((els) => els.map((e) => (e as HTMLElement).dataset.hostSection));
+    expect(sections).toEqual(['sdli', 'community']);
+    await expect(page.locator('.host-legend')).toContainText('Run by another group');
+    await page.locator('label.chip', { hasText: 'Community events' }).click();
+    await expect(page.locator('[data-host-section="sdli"]')).toBeHidden();
+    await expect(page).toHaveURL(/host=community/);
+    const visibleHosts = await page.locator('[data-upcoming-list] .event-card:visible').evaluateAll((els) => [...new Set(els.map((e) => (e as HTMLElement).dataset.host))]);
+    expect(visibleHosts).toEqual(['community']);
+    await page.locator('label.chip', { hasText: 'SDLI events' }).click();
+    await expect(page.locator('[data-host-section="community"]')).toBeHidden();
+  });
+
+  test('a community event page shows who runs it, how to reach them, the source and the next SDLI dance', async ({ pinned: page }) => {
+    await page.goto('/events/2026-10-23-dancxchange-club-night/');
+    await expect(page.locator('.event-hero .host--community')).toBeVisible();
+    await expect(page.locator('.alert--community')).toContainText('not run by SDLI');
+    await expect(page.locator('[data-ended-notice]')).toBeHidden();
+    const glance = page.locator('section[aria-labelledby="glance"]');
+    await expect(glance.getByRole('link', { name: "Donna DeSimone's DancXchange", exact: true })).toHaveAttribute('href', '/community/#dancxchange');
+    await expect(glance.locator('a[href^="tel:"]').first()).toHaveAttribute('href', 'tel:+15163758498');
+    await expect(glance.getByText(/Listed in/)).toContainText('The Dance Calendar, October 2026');
+    await expect(glance.locator('.style-tag').first()).toBeVisible();
+    await expect(page.locator('.next-sdli a')).toHaveText('Tuesday Pizza Night');
+  });
+
+  test('teachers and bands link to their own websites wherever they are mentioned', async ({ pinned: page }) => {
+    await page.goto('/events/2026-10-27-tuesday-night-swing/');
+    const lineup = page.locator('.lineup');
+    await expect(lineup.getByRole('link', { name: 'Carol Fraser', exact: true })).toHaveAttribute('href', '/performers/carol-fraser/');
+    await expect(lineup.locator('a.ext-link[href="https://triplestepswing.com/"]')).toBeVisible();
+    await page.goto('/events/');
+    const ext = page.locator('.event-card a.person-ext[href="https://triplestepswing.com/"]').first();
+    await expect(ext).toBeVisible();
+    await expect(ext).toHaveAttribute('target', '_blank');
+    await page.goto('/performers/carol-fraser/');
+    await expect(page.getByRole('link', { name: /^Website/ })).toHaveAttribute('href', 'https://triplestepswing.com/');
+    await expect(page.getByRole('link', { name: /^Swing calendar/ })).toHaveAttribute('href', 'https://triplestepswing.com/calendar');
+  });
+
+  test('the Moose Lodge page links to Google photos and reviews and shows parking', async ({ pinned: page }) => {
+    await page.goto('/venues/huntington-moose-lodge/');
+    await expect(page.getByRole('link', { name: /Photos & reviews/ })).toHaveAttribute('href', /google\.com\/maps\?cid=6872930918112154437/);
+    await expect(page.locator('#venue-info').locator('xpath=..')).toContainText('Free parking');
+  });
+
+  test('the community page lists groups with contacts and classes', async ({ pinned: page }) => {
+    await page.goto('/community/');
+    await expect(page.locator('#triple-step-swing')).toContainText('hello@triplestepswing.com');
+    await expect(page.locator('#classes')).toContainText('Lindy Hop');
+    await expect(page.locator('#sources')).toContainText('The Dance Calendar');
   });
 });
 

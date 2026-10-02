@@ -24,8 +24,9 @@ const hasConsent = Boolean(import.meta.env.PUBLIC_GA4_ID || import.meta.env.PUBL
           <li><a href="/events/calendar/">Month calendar</a></li>
           <li><a href="/events/past/">Past events</a></li>
           <li><a href="/new-to-swing/">New to swing?</a></li>
-          <li><a href="/faq/">Questions and answers</a></li>
+          <li><a href="/faq/">Frequently Asked Questions</a></li>
           <li><a href="/performers/">Bands, DJs and teachers</a></li>
+          <li><a href="/community/">Long Island dance community</a></li>
         </ul>
       </section>
       <section aria-labelledby="footer-org">
@@ -35,6 +36,7 @@ const hasConsent = Boolean(import.meta.env.PUBLIC_GA4_ID || import.meta.env.PUBL
           <li><a href="/membership/">Membership</a></li>
           <li><a href="/contact/">Contact and volunteering</a></li>
           {s.newsletterUrl && <li><a href={s.newsletterUrl} rel="noopener" data-track="newsletter_click" data-track-location="footer">Join the email list</a></li>}
+          {s.facebookUrl && <li><a href={s.facebookUrl} rel="noopener" data-track="outbound_click" data-track-method="facebook" data-track-location="footer" data-track-target="facebook.com">{s.facebookLabel ?? 'Facebook group'}</a></li>}
           <li><a href="/events/sdli-events.ics" data-track="add_to_calendar" data-track-method="subscribe_feed">Subscribe to our calendar</a></li>
         </ul>
       </section>

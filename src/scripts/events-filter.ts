@@ -10,13 +10,14 @@ if (form && list) {
   const empty = document.querySelector<HTMLElement>('[data-filter-empty]');
   const cards = [...list.querySelectorAll<HTMLElement>('[data-event]')].filter((c) => !c.hasAttribute('data-expired'));
   const groups = [...list.querySelectorAll<HTMLElement>('[data-month-group]')];
+  const hostSections = [...list.querySelectorAll<HTMLElement>('[data-host-section]')];
 
   const nyDate = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
   const today = nyDate(new Date());
   const weekEnd = nyDate(new Date(Date.now() + 6 * 86400000));
   const month = today.slice(0, 7);
 
-  const fields = ['when', 'type', 'style', 'venue', 'lesson', 'level', 'q'] as const;
+  const fields = ['when', 'host', 'type', 'style', 'venue', 'lesson', 'level', 'q'] as const;
   type Field = (typeof fields)[number];
 
   function values(): Record<Field, string> {
@@ -30,6 +31,7 @@ if (form && list) {
     if (v.when === 'week' && (date < today || date > weekEnd)) return false;
     if (v.when === 'month' && !date.startsWith(month)) return false;
     if (v.when === 'band' && c.dataset.band !== 'yes') return false;
+    if (v.host && c.dataset.host !== v.host) return false;
     if (v.type && !(c.dataset.types ?? '').split(' ').includes(v.type)) return false;
     if (v.style && !(c.dataset.styles ?? '').split(' ').includes(v.style)) return false;
     if (v.venue && c.dataset.venue !== v.venue) return false;
@@ -48,6 +50,7 @@ if (form && list) {
       if (ok) shown++;
     }
     for (const g of groups) g.hidden = !g.querySelector('[data-event]:not([hidden])');
+    for (const s of hostSections) s.hidden = !s.querySelector('[data-event]:not([hidden])');
     if (count) count.textContent = `${shown} ${shown === 1 ? 'event' : 'events'} shown`;
     if (empty) empty.hidden = shown !== 0;
     const params = new URLSearchParams();

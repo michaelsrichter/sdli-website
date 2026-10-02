@@ -6,19 +6,31 @@ import EventCard from '../components/EventCard.astro';
 import EmptyState from '../components/EmptyState.astro';
 import Icon from '../components/Icon.astro';
 import Photo from '../components/Photo.astro';
-import { getEventGroups, getSettings } from '../lib/content';
+import PersonName from '../components/PersonName.astro';
+import HostBadge from '../components/HostBadge.astro';
+import { getEventGroups, getSettings, type PersonRef } from '../lib/content';
+import { linksOf } from '../lib/links';
 import { photos } from '../lib/photos';
 
 const settings = await getSettings();
 const page = (await getEntry('pages', 'home'))!;
 const { Content } = await render(page);
-const { upcoming, next } = await getEventGroups();
-// Render a few "next dance" candidates so the browser can promote the next one if the first ends before the nightly rebuild.
-const candidates = upcoming.filter((e) => e.status === 'scheduled' || e.status === 'soldOut').slice(0, 3);
-const comingUp = upcoming.filter((e) => e.slug !== next?.slug).slice(0, 6);
-const styles = (await getCollection('styles')).sort((a, b) => a.data.order - b.data.order);
+const { upcomingSdli, upcomingCommunity, next, past } = await getEventGroups();
+// Render a few "next SDLI dance" candidates so the browser can promote the next one if the first ends before the nightly rebuild.
+const candidates = upcomingSdli.filter((e) => e.status === 'scheduled' || e.status === 'soldOut').slice(0, 3);
+const comingUp = upcomingSdli.filter((e) => e.slug !== next?.slug).slice(0, 6);
+const community = upcomingCommunity.slice(0, 4);
+const styles = (await getCollection('styles')).filter((s) => s.data.family === 'swing').sort((a, b) => a.data.order - b.data.order);
 const venue = (await getEntry('venues', settings.defaultVenue ?? 'huntington-moose-lodge'))!;
 const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
+// Teachers who taught most recently, linked to their own websites.
+const instructors = await getCollection('instructors');
+const lastTaught = (id: string) => past.find((e) => (e.details.instructorNames ?? []).includes(id))?.date ?? '';
+const recentTeachers: PersonRef[] = instructors
+  .filter((t) => lastTaught(t.id))
+  .sort((a, b) => lastTaught(b.id).localeCompare(lastTaught(a.id)))
+  .slice(0, 2)
+  .map((t) => ({ name: t.data.name, href: `/performers/${t.id}/`, kind: t.data.kind, links: linksOf(t.data) }));
 ---
 <BaseLayout title={page.data.seoTitle ?? settings.siteName} description={page.data.seoDescription ?? settings.description} pageType="home" exactTitle>
   <section class="hero" aria-labelledby="hero-title">
@@ -59,7 +71,7 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
     <div class="container">
       <div class="section__head">
         <div>
-          <h2 id="coming-up">Coming up</h2>
+          <h2 id="coming-up">Coming up at SDLI</h2>
           <p>Every Tuesday is a little different: pizza nights, guest teachers and live bands.</p>
         </div>
         <div class="btn-row">
@@ -82,6 +94,26 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
       <p class="mt-5"><a href="/events/sdli-events.ics" data-track="add_to_calendar" data-track-method="subscribe_feed" data-track-location="home">Subscribe to the SDLI calendar</a> to get every dance on your phone.</p>
     </div>
   </section>
+
+  {community.length > 0 && (
+    <section class="section section--tint" aria-labelledby="community-h">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <h2 id="community-h">More dancing around Long Island</h2>
+            <p>Want to dance on other nights? These <HostBadge host="community" size="small" /> events are run by other groups. Check with the organizer before you go.</p>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn--secondary" href="/events/#community">All community events <Icon name="arrow" /></a>
+            <a class="btn btn--secondary" href="/community/"><Icon name="people" />Dance groups and teachers</a>
+          </div>
+        </div>
+        <ul class="event-list" data-upcoming-list="home_community">
+          {community.map((e) => <EventCard event={e} compact />)}
+        </ul>
+      </div>
+    </section>
+  )}
 
   <section class="section section--sand" aria-labelledby="expect">
     <div class="container">
@@ -131,7 +163,9 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
         <ul class="facts">
           <li><Icon name="check" /><span>No partner or experience needed</span></li>
           <li><Icon name="shoe" /><span>Wear comfortable shoes that let you turn</span></li>
-          <li><Icon name="people" /><span>Recent teachers include Carol Fraser and Lourdes Cruz</span></li>
+          {recentTeachers.length > 0 && (
+            <li><Icon name="people" /><span>Recent teachers include {recentTeachers.map((t, n) => <>{n > 0 && ' and '}<PersonName person={t} location="home" /></>)}</span></li>
+          )}
         </ul>
         <div class="btn-row">
           <a class="btn btn--primary" href="/new-to-swing/">Your first night</a>
@@ -202,6 +236,7 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
         <div class="btn-row">
           <a class="btn btn--primary" href="/contact/">Volunteer or contact us</a>
           {settings.newsletterUrl && <a class="btn btn--secondary" href={settings.newsletterUrl} rel="noopener" data-track="newsletter_click" data-track-location="home">Join the email list</a>}
+          {settings.facebookUrl && <a class="btn btn--secondary" href={settings.facebookUrl} target="_blank" rel="noopener" data-track="outbound_click" data-track-method="facebook" data-track-location="home" data-track-target="facebook.com"><Icon name="facebook" />{settings.facebookLabel ?? 'Facebook group'}<span class="visually-hidden"> (opens in a new tab)</span></a>}
         </div>
       </div>
       <div class="stack">

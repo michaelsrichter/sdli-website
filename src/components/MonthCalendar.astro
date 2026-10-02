@@ -1,5 +1,6 @@
 ---
 import type { ResolvedEvent } from '../lib/content';
+import { sdliFirst } from '../lib/event-core';
 import { addDays, daysInMonth, formatDateLong, formatMonthKey, weekdayOf, WEEKDAYS } from '../lib/time';
 import EventCard from './EventCard.astro';
 import EmptyState from './EmptyState.astro';
@@ -24,7 +25,10 @@ const days = Array.from({ length: cells }, (_, i) => addDays(start, i));
 const weeks = Array.from({ length: cells / 7 }, (_, w) => days.slice(w * 7, w * 7 + 7));
 const byDate = new Map<string, ResolvedEvent[]>();
 for (const e of events) byDate.set(e.date, [...(byDate.get(e.date) ?? []), e]);
+// Within each day, SDLI's own events come first.
+for (const [k, list] of byDate) byDate.set(k, sdliFirst(list));
 const inMonth = events.filter((e) => e.date.startsWith(month));
+const hasCommunity = inMonth.some((e) => e.host === 'community');
 const label = formatMonthKey(month);
 ---
 <div class="cal-nav">
@@ -32,6 +36,12 @@ const label = formatMonthKey(month);
   <h2 id="cal-title">{label}</h2>
   {next ? <a class="btn btn--secondary btn--small" href={`/events/calendar/${next}/`} data-track="view_calendar_month" data-track-method="next">{formatMonthKey(next)} <span aria-hidden="true">→</span></a> : <span></span>}
 </div>
+{hasCommunity && (
+  <ul class="host-legend mt-3" aria-label="What the colors mean">
+    <li><span class="cal__event legend-swatch" aria-hidden="true">Gold</span>SDLI dances</li>
+    <li><span class="cal__event cal__event--community legend-swatch" aria-hidden="true">Outlined</span>Other groups' community events</li>
+  </ul>
+)}
 
 <table class="cal" aria-labelledby="cal-title">
   <thead>
@@ -49,8 +59,9 @@ const label = formatMonthKey(month);
               {!outside && list.map((e) => {
                 const st = e.end.getTime() <= now.getTime() && e.status !== 'cancelled' ? 'completed' : e.status;
                 return (
-                  <a class:list={['cal__event', `cal__event--${st}`]} href={e.url}>
+                  <a class:list={['cal__event', `cal__event--${st}`, `cal__event--${e.host}`]} href={e.url}>
                     {e.status === 'cancelled' && <span class="visually-hidden">Cancelled: </span>}
+                    {e.host === 'community' && <span class="visually-hidden">Community event: </span>}
                     {e.title}
                     {e.timeLabel && <span class="visually-hidden">, {e.timeLabel}</span>}
                   </a>
@@ -67,7 +78,7 @@ const label = formatMonthKey(month);
 <div class="cal-agenda">
   {inMonth.length ? (
     <ul class="event-list">
-      {inMonth.map((e) => <EventCard event={e} past={e.end.getTime() <= now.getTime()} />)}
+      {inMonth.map((e) => <EventCard event={e} past={e.end.getTime() <= now.getTime()} compact={e.host === 'community'} />)}
     </ul>
   ) : (
     <EmptyState title={`No events listed for ${label}`}><p><a href="/events/">See all upcoming events</a></p></EmptyState>

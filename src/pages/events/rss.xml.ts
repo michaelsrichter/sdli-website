@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 import { getEventGroups, getSettings } from '../../lib/content';
 
 export const GET: APIRoute = async (context) => {
-  const [{ upcoming }, settings] = await Promise.all([getEventGroups(), getSettings()]);
+  const [{ upcomingSdli: upcoming }, settings] = await Promise.all([getEventGroups(), getSettings()]);
   return rss({
     title: `${settings.siteName}: upcoming dances`,
     description: settings.description,

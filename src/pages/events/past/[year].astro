@@ -8,11 +8,11 @@ import { breadcrumbJsonLd } from '../../../lib/seo';
 
 export async function getStaticPaths() {
   const { past } = await getEventGroups();
-  return [...new Set(past.map((e) => e.date.slice(0, 4)))].map((year) => ({ params: { year } }));
+  return [...new Set(past.filter((e) => e.host === 'sdli').map((e) => e.date.slice(0, 4)))].map((year) => ({ params: { year } }));
 }
 const { year } = Astro.params as { year: string };
 const { past } = await getEventGroups();
-const list = past.filter((e) => e.date.startsWith(year));
+const list = past.filter((e) => e.host === 'sdli' && e.date.startsWith(year));
 const months = new Map<string, typeof list>();
 for (const e of list) months.set(e.date.slice(0, 7), [...(months.get(e.date.slice(0, 7)) ?? []), e]);
 const crumbs = [

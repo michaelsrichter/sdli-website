@@ -3,25 +3,29 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import EventCard from '../../components/EventCard.astro';
+import FeaturedEvent from '../../components/FeaturedEvent.astro';
 import EmptyState from '../../components/EmptyState.astro';
+import HostBadge from '../../components/HostBadge.astro';
 import Icon from '../../components/Icon.astro';
-import { getEventGroups, getSettings } from '../../lib/content';
+import { getEventGroups, getSettings, type ResolvedEvent } from '../../lib/content';
 import { EVENT_TYPE_LABELS, EXPERIENCE_LABELS } from '../../lib/schemas';
 import { formatMonthKey } from '../../lib/time';
 import { breadcrumbJsonLd } from '../../lib/seo';
 
-const { upcoming } = await getEventGroups();
+const { upcoming, upcomingSdli, upcomingCommunity, next } = await getEventGroups();
 const settings = await getSettings();
 const styles = (await getCollection('styles')).sort((a, b) => a.data.order - b.data.order);
 const venues = await getCollection('venues');
-const groups = new Map<string, typeof upcoming>();
-for (const e of upcoming) {
-  const key = e.date.slice(0, 7);
-  groups.set(key, [...(groups.get(key) ?? []), e]);
-}
+const byMonth = (list: ResolvedEvent[]) => {
+  const groups = new Map<string, ResolvedEvent[]>();
+  for (const e of list) groups.set(e.date.slice(0, 7), [...(groups.get(e.date.slice(0, 7)) ?? []), e]);
+  return [...groups];
+};
+const sdliMonths = byMonth(upcomingSdli.filter((e) => e.slug !== next?.slug));
+const communityMonths = byMonth(upcomingCommunity);
 const usedTypes = [...new Set(upcoming.flatMap((e) => e.details.eventTypes ?? []))];
 const usedStyles = styles.filter((s) => upcoming.some((e) => e.styles.some((x) => x.id === s.id)));
-const usedVenues = venues.filter((v) => upcoming.some((e) => e.venueEntry?.id === v.id));
+const usedVenues = venues.filter((v) => upcoming.some((e) => e.venueEntry?.id === v.id)).sort((a, b) => a.data.name.localeCompare(b.data.name));
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Events', href: '/events/' },
@@ -32,14 +36,19 @@ const quick = [
   { value: 'month', label: 'This month' },
   { value: 'band', label: 'Live bands' },
 ];
+const hosts = [
+  { value: '', label: 'Everyone' },
+  { value: 'sdli', label: 'SDLI events' },
+  { value: 'community', label: 'Community events' },
+];
 ---
 <BaseLayout
   title="Upcoming Swing Dances on Long Island"
-  description={`Upcoming SDLI swing dances, lessons and live band nights on Long Island. ${upcoming.length} events listed. Beginners welcome, no partner needed.`}
+  description={`Upcoming SDLI swing dances, lessons and live band nights, plus ${upcomingCommunity.length} community dance events around Long Island. Beginners welcome at SDLI, no partner needed.`}
   pageType="events"
   jsonLd={[breadcrumbJsonLd(crumbs, Astro.site!)]}
 >
-  <PageHeader title="Upcoming events" lede="Swing dances, lessons and live band nights. Every Tuesday, beginners are welcome and no partner is needed." crumbs={crumbs}>
+  <PageHeader title="Upcoming events" lede="SDLI swing dances every Tuesday, plus more places to dance around Long Island. At SDLI, beginners are welcome and no partner is needed." crumbs={crumbs}>
     <nav class="mt-5" aria-label="Event views">
       <div class="view-switch">
         <a href="/events/" aria-current="page">List</a>
@@ -50,6 +59,12 @@ const quick = [
   </PageHeader>
 
   <div class="container section stack-l">
+    {next && (
+      <div data-featured-candidate data-end={String(next.end.getTime())}>
+        <FeaturedEvent event={next} hasSocialImage />
+      </div>
+    )}
+
     <form class="filters js-only" data-event-filters aria-label="Filter events">
       <fieldset>
         <legend>Show</legend>
@@ -58,6 +73,17 @@ const quick = [
             <label class="chip">
               <input type="radio" name="when" value={q.value} checked={i === 0} />
               <span>{q.label}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Hosted by</legend>
+        <div class="quick-views">
+          {hosts.map((h, i) => (
+            <label class="chip">
+              <input type="radio" name="host" value={h.value} checked={i === 0} />
+              <span>{h.label}</span>
             </label>
           ))}
         </div>
@@ -104,7 +130,7 @@ const quick = [
         </div>
         <div class="field">
           <label for="f-q">Search</label>
-          <input id="f-q" name="q" type="search" placeholder="Band, teacher, theme…" autocomplete="off" />
+          <input id="f-q" name="q" type="search" placeholder="Band, teacher, town…" autocomplete="off" />
         </div>
       </div>
       </details>
@@ -114,21 +140,50 @@ const quick = [
       </div>
     </form>
 
+    <ul class="host-legend" aria-label="What the badges mean">
+      <li><HostBadge host="sdli" size="small" />Run by Swing Dance Long Island</li>
+      <li><HostBadge host="community" size="small" />Run by another group. Check with the organizer before you go.</li>
+    </ul>
+
     {upcoming.length === 0 ? (
       <EmptyState title="No upcoming events are listed right now">
         <p>New dates are added regularly. Call the {settings.hotlineLabel} at {settings.hotlinePhone} or <a href={settings.newsletterUrl}>join the email list</a>.</p>
         <p><a href="/events/past/">Browse past events</a></p>
       </EmptyState>
     ) : (
-      <div data-upcoming-list="events">
-        {[...groups].map(([key, list]) => (
-          <section data-month-group aria-labelledby={`m-${key}`}>
-            <h2 class="month-heading" id={`m-${key}`}>{formatMonthKey(key)}</h2>
-            <ul class="event-list">
-              {list.map((e) => <EventCard event={e} />)}
-            </ul>
+      <div class="stack-l" data-upcoming-list="events">
+        {sdliMonths.length > 0 && (
+          <section data-host-section="sdli" id="sdli" aria-labelledby="sdli-h">
+            <h2 id="sdli-h">{next ? 'More SDLI dances' : 'SDLI dances'}</h2>
+            {sdliMonths.map(([key, list]) => (
+              <section data-month-group aria-labelledby={`m-sdli-${key}`}>
+                <h3 class="month-heading" id={`m-sdli-${key}`}>{formatMonthKey(key)}</h3>
+                <ul class="event-list">
+                  {list.map((e) => <EventCard event={e} headingLevel="h4" />)}
+                </ul>
+              </section>
+            ))}
           </section>
-        ))}
+        )}
+        {communityMonths.length > 0 && (
+          <section data-host-section="community" id="community" aria-labelledby="community-h">
+            <div class="section__head">
+              <div>
+                <h2 id="community-h">More dancing around Long Island</h2>
+                <p>Other groups' dances, socials and classes, including swing, ballroom, Latin and more. Details come from the organizers' own listings and <a href="/community/#sources">community calendars</a>.</p>
+              </div>
+              <a class="btn btn--secondary" href="/community/"><Icon name="people" />Dance groups and teachers</a>
+            </div>
+            {communityMonths.map(([key, list]) => (
+              <section data-month-group aria-labelledby={`m-community-${key}`}>
+                <h3 class="month-heading" id={`m-community-${key}`}>{formatMonthKey(key)}</h3>
+                <ul class="event-list">
+                  {list.map((e) => <EventCard event={e} headingLevel="h4" compact />)}
+                </ul>
+              </section>
+            ))}
+          </section>
+        )}
       </div>
     )}
     <div data-filter-empty hidden>
@@ -142,9 +197,10 @@ const quick = [
 
     <section class="card" aria-labelledby="sub">
       <h2 id="sub" class="h3">Never miss a dance</h2>
-      <p>Add every SDLI dance to your phone's calendar. It updates automatically when we add or change events.</p>
+      <p>Add every SDLI dance to your phone's calendar. It updates automatically when we add or change events. Want the community events too? Subscribe to the community calendar as well.</p>
       <div class="btn-row">
-        <a class="btn btn--primary btn--small" href="/events/sdli-events.ics" data-track="add_to_calendar" data-track-method="subscribe_feed" data-track-location="events"><Icon name="calendar" />Subscribe (.ics)</a>
+        <a class="btn btn--primary btn--small" href="/events/sdli-events.ics" data-track="add_to_calendar" data-track-method="subscribe_feed" data-track-location="events"><Icon name="calendar" />SDLI dances (.ics)</a>
+        <a class="btn btn--secondary btn--small" href="/events/community-events.ics" data-track="add_to_calendar" data-track-method="subscribe_feed" data-track-location="events_community"><Icon name="calendar" />Community events (.ics)</a>
         <a class="btn btn--secondary btn--small" href="/events/rss.xml">RSS feed</a>
         {settings.newsletterUrl && <a class="btn btn--secondary btn--small" href={settings.newsletterUrl} rel="noopener" data-track="newsletter_click" data-track-location="events"><Icon name="mail" />Email list</a>}
       </div>

@@ -6,7 +6,7 @@ import { getEventGroups } from '../../../lib/content';
 import { breadcrumbJsonLd } from '../../../lib/seo';
 import history from '../../../data/legacy-history.json';
 
-const { past } = await getEventGroups();
+const past = (await getEventGroups()).past.filter((e) => e.host === 'sdli');
 const years = [...new Set(past.map((e) => e.date.slice(0, 4)))].sort().reverse();
 const recent = past.slice(0, 12);
 const crumbs = [
