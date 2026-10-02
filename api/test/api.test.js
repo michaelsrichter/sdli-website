@@ -78,6 +78,18 @@ test('telemetry endpoint accepts same-origin beacons', async () => {
   assert.equal(res.status, 204);
 });
 
+test('behind Static Web Apps the public host comes from x-ms-original-url', async () => {
+  const body = JSON.stringify({ v: 1, page: '/', pageType: 'home', items: [{ name: 'page_view', props: {} }] });
+  const res = await handlers.telemetry(
+    req('http://internal-func-host:7071/api/telemetry', { origin: 'https://www.sdli.org', host: 'internal-func-host:7071', 'x-ms-original-url': 'https://www.sdli.org/api/telemetry' }, body),
+    ctx,
+  );
+  assert.equal(res.status, 204);
+  process.env.GITHUB_OAUTH_CLIENT_ID = 'test-client';
+  const auth = await handlers.auth(req('http://internal-func-host:7071/api/auth', { 'x-ms-original-url': 'https://www.sdli.org/api/auth?provider=github' }), ctx);
+  assert.equal(new URL(auth.headers.Location).searchParams.get('redirect_uri'), 'https://www.sdli.org/api/callback');
+});
+
 test('auth reports missing configuration instead of failing silently', async () => {
   delete process.env.GITHUB_OAUTH_CLIENT_ID;
   const res = await handlers.auth(req('https://example.azurestaticapps.net/api/auth?provider=github'), ctx);

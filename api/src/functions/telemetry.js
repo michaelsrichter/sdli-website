@@ -3,6 +3,7 @@ const telemetry = require('../telemetry-setup');
 const { app } = require('@azure/functions');
 const { createHash, randomBytes } = require('node:crypto');
 const { validate, createRateLimiter } = require('../telemetry-validate');
+const { publicHost, isAllowedHost } = require('../hosts');
 
 const allow = createRateLimiter({ limit: 120, windowMs: 60000 });
 const salt = randomBytes(16).toString('hex');
@@ -11,11 +12,9 @@ const { instruments, customEvent, flush } = telemetry;
 function sameOrigin(request) {
   const origin = request.headers.get('origin');
   if (!origin) return true; // some browsers omit Origin on same-origin sendBeacon requests
-  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || '';
-  const allowed = (process.env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
   try {
-    const o = new URL(origin);
-    return o.host === host || allowed.includes(o.origin);
+    const o = new URL(origin).host.toLowerCase();
+    return o === publicHost(request) || isAllowedHost(o);
   } catch {
     return false;
   }

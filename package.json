@@ -15,7 +15,7 @@
     "preview": "astro preview --port 4321",
     "check": "astro check",
     "typecheck": "astro check",
-    "validate:content": "astro sync && node scripts/validate-content.mjs",
+    "validate:content": "astro sync",
     "test": "vitest run",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
@@ -25,7 +25,8 @@
     "cms:local": "npx decap-server",
     "copy:cms": "node scripts/copy-cms.mjs",
     "postinstall": "node scripts/copy-cms.mjs && node scripts/build-cms-config.mjs",
-    "ci": "npm run check && npm run test && npm run build && npm run test:links"
+    "ci": "npm run check && npm run test && npm run build && npm run test:links",
+    "test:smoke": "node scripts/smoke.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

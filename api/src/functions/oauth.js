@@ -11,19 +11,16 @@
 const telemetry = require('../telemetry-setup');
 const { app } = require('@azure/functions');
 const { randomBytes, timingSafeEqual } = require('node:crypto');
+const { publicHost, isAllowedHost } = require('../hosts');
 const { instruments, flush } = telemetry;
 
 const STATE_COOKIE = 'sdli_oauth_state';
 const SCOPES = new Set(['public_repo', 'repo']);
 
 function publicOrigin(request) {
-  const url = new URL(request.url);
-  const host = request.headers.get('x-forwarded-host') || url.host;
-  const allowed = (process.env.ALLOWED_HOSTS || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
-  const h = host.toLowerCase();
-  const ok = allowed.length ? allowed.includes(h) : /(^|\.)azurestaticapps\.net$/.test(h) || /(^|\.)sdli\.org$/.test(h) || h.startsWith('localhost');
-  if (!ok) return null;
-  const proto = h.startsWith('localhost') ? 'http' : 'https';
+  const host = publicHost(request);
+  if (!isAllowedHost(host)) return null;
+  const proto = /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host) ? 'http' : 'https';
   return `${proto}://${host}`;
 }
 
