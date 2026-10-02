@@ -1,0 +1,18 @@
+---
+title: Swing Dancing with Pizza
+status: completed
+startDateTime: 2025-07-01T19:30
+summary: Join Swing Dance Long Island for an evening of dancing. Lesson at 7:30PM to get you on the floor.
+lessonStartTime: 19:30
+danceStartTime: 20:00
+venue: huntington-moose-lodge
+eventTypes:
+  - weekly-dance
+  - dj-night
+beginnerFriendly: true
+partnerRequired: false
+sponsor: Swing Dance Long Island, Inc.
+legacyUrl: /index.php/sdli/events_archive/pizza1/
+---
+
+Join Swing Dance Long Island for an evening of dancing. Lesson at 7:30PM to get you on the floor. Swing dancing starts at 8PM. No partner necessary and beginners are always welcome.

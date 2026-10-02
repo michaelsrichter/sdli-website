@@ -1,0 +1,27 @@
+siteName: Swing Dance Long Island
+shortName: SDLI
+legalName: Swing Dance Long Island, Inc.
+tagline: Swing dancing every Tuesday night on Long Island. Beginners welcome, no partner needed.
+description: Swing Dance Long Island (SDLI) hosts friendly swing dances with a beginner lesson every Tuesday in Greenlawn, NY. No partner needed.
+mission: Swing Dance Long Island, Inc. is an all-volunteer, not-for-profit organization dedicated to the promotion of swing dancing on Long Island, New York.
+hotlinePhone: (631) 476-3707
+hotlineLabel: 24-hour Dance Hotline
+email: info@sdli.org
+mailingAddress:
+  line1: P.O. Box 508
+  city: Centereach
+  state: NY
+  postalCode: "11720"
+newsletterUrl: http://eepurl.com/f77YX
+membershipFee: 12
+membershipYear: October 1 to September 30
+standardPrices:
+  - label: DJ night
+    member: 10
+    student: 5
+    nonMember: 15
+  - label: Band night
+    member: 15
+    student: 10
+    nonMember: 20
+defaultVenue: huntington-moose-lodge
