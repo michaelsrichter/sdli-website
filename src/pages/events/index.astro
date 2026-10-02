@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
+import EventViews from '../../components/EventViews.astro';
 import EventCard from '../../components/EventCard.astro';
 import FeaturedEvent from '../../components/FeaturedEvent.astro';
 import EmptyState from '../../components/EmptyState.astro';
@@ -49,13 +50,7 @@ const hosts = [
   jsonLd={[breadcrumbJsonLd(crumbs, Astro.site!)]}
 >
   <PageHeader title="Upcoming events" lede="SDLI swing dances every Tuesday, plus more places to dance around Long Island. At SDLI, beginners are welcome and no partner is needed." crumbs={crumbs}>
-    <nav class="mt-5" aria-label="Event views">
-      <div class="view-switch">
-        <a href="/events/" aria-current="page">List</a>
-        <a href="/events/calendar/">Month calendar</a>
-        <a href="/events/past/">Past events</a>
-      </div>
-    </nav>
+    <EventViews current="list" />
   </PageHeader>
 
   <div class="container section stack-l">

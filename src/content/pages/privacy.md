@@ -26,6 +26,12 @@ If you choose **Allow**:
 
 Both services set cookies in your browser. You can change your mind at any time using the **Privacy choices** link at the bottom of every page.
 
+## The dance map
+
+The [dance map](/events/map/) shows map pictures from OpenStreetMap. When you open that page, your browser downloads those pictures from OpenStreetMap's servers, which can see your IP address, as with any website. No cookies are set.
+
+The **Show dances near me** button asks your browser for your location only when you tap it. Your location is used on your device to sort the list and is never sent to SDLI.
+
 ## Contact
 
 Questions? Email info@sdli.org.

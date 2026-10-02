@@ -76,13 +76,14 @@ const thirdPartyConnect = [
   'https://*.clarity.ms',
   'https://c.bing.com',
 ];
-const thirdPartyImg = ['https://*.google-analytics.com', 'https://*.googletagmanager.com', 'https://*.clarity.ms', 'https://c.bing.com'];
+const thirdPartyImg = ['https://*.google-analytics.com', 'https://*.googletagmanager.com', 'https://*.clarity.ms', 'https://c.bing.com', 'https://tile.openstreetmap.org'];
 const siteCsp = [
   "default-src 'self'",
   `script-src 'self' ${[...hashes].join(' ')} ${thirdPartyScripts.join(' ')}`.replace(/\s+/g, ' ').trim(),
   "style-src 'self'",
   `img-src 'self' data: ${thirdPartyImg.join(' ')}`,
   "font-src 'self'",
+  "media-src 'self'",
   `connect-src 'self' ${thirdPartyConnect.join(' ')}`,
   "manifest-src 'self'",
   "object-src 'none'",

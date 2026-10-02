@@ -57,6 +57,7 @@ export const DETAIL_KEYS = [
   'capacityNotes',
   'featuredImage',
   'featuredImageAlt',
+  'featuredImageFocus',
   'gallery',
   'sponsor',
   'contactName',

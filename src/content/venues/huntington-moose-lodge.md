@@ -9,6 +9,7 @@ postalCode: "11740"
 phone: (631) 757-2777
 latitude: 40.8676878
 longitude: -73.3536959
+coordinatesSource: Old SDLI website (Google Maps)
 directionsUrl: https://www.google.com/maps/dir/?api=1&destination=Huntington+Moose+Lodge%2C+631+Pulaski+Road%2C+Greenlawn%2C+NY+11740
 seoTitle: Huntington Moose Lodge, Greenlawn | SDLI Tuesday Swing Dances
 seoDescription: SDLI's weekly Tuesday swing dances happen at the Huntington Moose Lodge, 631 Pulaski Road, Greenlawn, NY. Directions and venue details.

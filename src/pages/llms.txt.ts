@@ -18,6 +18,7 @@ Key facts:
 ${next ? `- Next scheduled SDLI dance: ${next.title}, ${next.dateLabel}${next.timeLabel ? ` at ${next.timeLabel}` : ''} (${u(next.url)}).\n` : ''}
 ## Events
 - [Upcoming events](${u('/events/')}): every upcoming SDLI dance with date, lesson time, price and venue, followed by community events run by other Long Island groups (clearly labeled "Community event").
+- [Dance map](${u('/events/map/')}): every venue with upcoming dances, with addresses and directions.
 - [SDLI calendar feed (.ics)](${u('/events/sdli-events.ics')})
 - [Community events calendar feed (.ics)](${u('/events/community-events.ics')})
 - [RSS feed](${u('/events/rss.xml')}) (SDLI dances only)

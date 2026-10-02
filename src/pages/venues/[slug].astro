@@ -53,6 +53,7 @@ const host = (u: string) => new URL(u).hostname.replace(/^www\./, '');
       <a class="btn btn--primary" href={google} target="_blank" rel="noopener" data-track="get_directions" data-track-method="google" data-track-location="venue"><Icon name="directions" />Google Maps<span class="visually-hidden"> (opens in a new tab)</span></a>
       <a class="btn btn--secondary" href={apple} target="_blank" rel="noopener" data-track="get_directions" data-track-method="apple" data-track-location="venue"><Icon name="pin" />Apple Maps<span class="visually-hidden"> (opens in a new tab)</span></a>
       {v.googleMapsUrl && <a class="btn btn--secondary" href={v.googleMapsUrl} target="_blank" rel="noopener" data-track="outbound_click" data-track-method="reviews" data-track-location="venue" data-track-target="google.com"><Icon name="star" />Photos &amp; reviews<span class="visually-hidden"> on Google Maps (opens in a new tab)</span></a>}
+      {v.latitude !== undefined && atVenue.length > 0 && <a class="btn btn--secondary" href={`/events/map/#place-${venue.id}`}><Icon name="pin" />See it on the dance map</a>}
     </div>
   </PageHeader>
   <div class="container section">

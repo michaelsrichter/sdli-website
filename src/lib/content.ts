@@ -90,6 +90,10 @@ export interface ResolvedEvent extends Occurrence {
   image?: ImageMetadata | undefined;
   imageAlt?: string | undefined;
   imageFrom?: 'event' | 'performer' | 'series' | undefined;
+  /** Point to keep in view when the image is cropped ("x% y%"). */
+  imageFocus?: string | undefined;
+  /** Name of the teacher or band when the image is their profile photo. */
+  imagePerson?: string | undefined;
   description: string;
 }
 
@@ -186,13 +190,13 @@ export async function getAllEvents(): Promise<ResolvedEvent[]> {
       const ownImage = source?.data.featuredImage as ImageMetadata | undefined;
       const image =
         ownImage && source?.data.featuredImageAlt
-          ? { src: ownImage, alt: source.data.featuredImageAlt, from: 'event' as const }
+          ? { src: ownImage, alt: source.data.featuredImageAlt, from: 'event' as const, focus: source.data.featuredImageFocus }
           : bandEntry?.data.image && bandEntry.data.imageAlt
-            ? { src: bandEntry.data.image as ImageMetadata, alt: bandEntry.data.imageAlt, from: 'performer' as const }
+            ? { src: bandEntry.data.image as ImageMetadata, alt: bandEntry.data.imageAlt, from: 'performer' as const, focus: bandEntry.data.imageFocus, credit: bandEntry.data.name }
             : instructorEntry?.data.image && instructorEntry.data.imageAlt
-              ? { src: instructorEntry.data.image as ImageMetadata, alt: instructorEntry.data.imageAlt, from: 'performer' as const }
+              ? { src: instructorEntry.data.image as ImageMetadata, alt: instructorEntry.data.imageAlt, from: 'performer' as const, focus: instructorEntry.data.imageFocus, credit: instructorEntry.data.name }
               : d.featuredImage && d.featuredImageAlt
-                ? { src: d.featuredImage as ImageMetadata, alt: d.featuredImageAlt, from: 'series' as const }
+                ? { src: d.featuredImage as ImageMetadata, alt: d.featuredImageAlt, from: 'series' as const, focus: d.featuredImageFocus }
                 : undefined;
       return {
         ...o,
@@ -226,6 +230,8 @@ export async function getAllEvents(): Promise<ResolvedEvent[]> {
         image: image?.src,
         imageAlt: image?.alt,
         imageFrom: image?.from,
+        imageFocus: image?.focus,
+        imagePerson: image && 'credit' in image ? image.credit : undefined,
         description,
       };
     });

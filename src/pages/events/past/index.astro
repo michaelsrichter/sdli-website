@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PageHeader from '../../../components/PageHeader.astro';
+import EventViews from '../../../components/EventViews.astro';
 import EventCard from '../../../components/EventCard.astro';
 import { getEventGroups } from '../../../lib/content';
 import { breadcrumbJsonLd } from '../../../lib/seo';
@@ -18,13 +19,7 @@ const oldYears = Object.entries(history.years as Record<string, number>).sort(([
 ---
 <BaseLayout title="Past Swing Dances" description="Archive of past Swing Dance Long Island dances, band nights and lessons, plus SDLI's event history back to 2006." pageType="past" jsonLd={[breadcrumbJsonLd(crumbs, Astro.site!)]}>
   <PageHeader title="Past events" lede="Look back at recent SDLI dances, bands and teachers." crumbs={crumbs}>
-    <nav class="mt-5" aria-label="Event views">
-      <div class="view-switch">
-        <a href="/events/">List</a>
-        <a href="/events/calendar/">Month calendar</a>
-        <a href="/events/past/" aria-current="page">Past events</a>
-      </div>
-    </nav>
+    <EventViews current="past" />
   </PageHeader>
   <div class="container section stack-l">
     <nav aria-label="Archive years">

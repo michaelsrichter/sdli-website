@@ -4,6 +4,7 @@ import { test, expect, noHorizontalScroll } from './fixtures';
 const PAGES = [
   '/',
   '/events/',
+  '/events/map/',
   '/events/calendar/',
   '/events/past/',
   '/events/past/2026/',

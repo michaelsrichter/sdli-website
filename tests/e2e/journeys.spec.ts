@@ -198,6 +198,58 @@ test.describe('SDLI events first, community events clearly marked', () => {
   });
 });
 
+test.describe('photos, map and header', () => {
+  test('the homepage slideshow rotates Moose Lodge photos and can be paused and stepped', async ({ pinned: page }) => {
+    await page.goto('/');
+    const show = page.locator('.home-hero__photos [data-slideshow]');
+    await expect(show).toBeVisible();
+    const slides = show.locator('[data-slide]');
+    expect(await slides.count()).toBeGreaterThan(8);
+    await expect(slides.first().locator('img.slideshow__img')).toHaveAttribute('alt', /swing dancing/i);
+    await expect(show.locator('[data-slideshow-count]')).toHaveText(/^1 \/ \d+$/);
+    await show.getByRole('button', { name: 'Next photo' }).click();
+    await expect(show.locator('[data-slideshow-count]')).toHaveText(/^2 \/ \d+$/);
+    // Choosing a photo by hand stops autoplay.
+    await expect(show.getByRole('button', { name: 'Play slideshow' })).toBeVisible();
+    await expect(show.locator('video[data-slide-video]').first()).toHaveAttribute('data-src', /\/media\/videos\/.+\.mp4$/);
+  });
+
+  test('photos are never upscaled past their source size', async ({ pinned: page }) => {
+    await page.goto('/gallery/');
+    const imgs = page.locator('.gallery-grid img');
+    expect(await imgs.count()).toBeGreaterThan(10);
+    for (const img of (await imgs.all()).slice(0, 6)) {
+      await img.scrollIntoViewIfNeeded();
+      const ok = await img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0);
+      expect(ok).toBe(true);
+    }
+  });
+
+  test('the events map shows a pin for every place and links back to events', async ({ pinned: page }) => {
+    await page.goto('/events/map/');
+    await expect(page.locator('.view-switch a[aria-current="page"]')).toHaveText('Map');
+    const places = page.locator('[data-map-place]');
+    const n = await places.count();
+    expect(n).toBeGreaterThan(10);
+    await expect(page.locator('.leaflet-marker-icon')).toHaveCount(n);
+    await expect(page.locator('.leaflet-marker-icon.map-pin--sdli')).toHaveCount(1);
+    await expect(places.first()).toContainText('Huntington Moose Lodge');
+    await places.first().getByRole('button', { name: 'Show on map' }).click();
+    await expect(page.locator('.leaflet-popup')).toContainText('Huntington Moose Lodge');
+    await page.locator('label.chip', { hasText: 'SDLI events' }).click();
+    await expect(page.locator('.leaflet-marker-icon')).toHaveCount(1);
+    await expect(page).toHaveURL(/host=sdli/);
+  });
+
+  test('the Facebook group is linked from the header on every page, and the weather banner is gone', async ({ pinned: page }) => {
+    for (const path of ['/', '/events/', '/contact/']) {
+      await page.goto(path);
+      await expect(page.locator('.site-header a.header-social')).toHaveAttribute('href', 'https://www.facebook.com/groups/2209573261');
+      await expect(page.locator('.announcement')).toHaveCount(0);
+    }
+  });
+});
+
 test.describe('event discovery', () => {
   test('filters narrow the list and can be cleared', async ({ pinned: page }) => {
     await page.goto('/events/');

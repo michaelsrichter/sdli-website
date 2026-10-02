@@ -87,12 +87,23 @@ const seo = {
   seoTitle: opt(z.string().max(70, 'Keep SEO titles under 70 characters.')),
   seoDescription: opt(z.string().max(170, 'Keep SEO descriptions under 170 characters.')),
 };
+/** Point to keep in view when a photo is cropped, as "x% y%" from the top-left. */
+export const FOCUS_RE = /^\d{1,3}% \d{1,3}%$/;
+const focus = opt(z.string().regex(FOCUS_RE, 'Use a focus point such as "50% 30%".'));
 const imageWithAlt = <I extends z.ZodType>(image: ImageHelper<I>) =>
   z.object({
     image: image(),
     alt: z.string().min(3, 'Describe the image for people who cannot see it.'),
     caption: opt(z.string()),
     credit: opt(z.string()),
+    /** Link for the credit, e.g. the photo's license page. */
+    creditUrl: url,
+    focus,
+    /**
+     * Optional short, silent video clip (an .mp4 under /media/videos/). The photo is shown as its poster
+     * and for anyone who prefers reduced motion.
+     */
+    video: opt(z.string().regex(/^\/media\/videos\/[\w.-]+\.mp4$/, 'Use a path such as /media/videos/clip.mp4.')),
   });
 
 /** Fields shared by one-time events, series templates and occurrence overrides. */
@@ -138,6 +149,7 @@ const eventDetailFields = <I extends z.ZodType>(image: ImageHelper<I>) => ({
   capacityNotes: opt(z.string()),
   featuredImage: opt(image()),
   featuredImageAlt: opt(z.string().min(3)),
+  featuredImageFocus: focus,
   gallery: optList(imageWithAlt(image)),
   sponsor: opt(z.string()),
   contactName: opt(z.string()),
@@ -239,6 +251,8 @@ export const venueSchema = <I extends z.ZodType>(image: ImageHelper<I>) =>
       website: url,
       latitude: opt(z.coerce.number().min(-90).max(90)),
       longitude: opt(z.coerce.number().min(-180).max(180)),
+      /** Where the map coordinates came from, e.g. "U.S. Census Bureau Geocoder" (filled in automatically). */
+      coordinatesSource: opt(z.string()),
       directionsUrl: url,
       /** Google Maps listing (photos, reviews, hours). */
       googleMapsUrl: url,
@@ -274,6 +288,7 @@ export const personSchema = <I extends z.ZodType>(image: ImageHelper<I>) =>
       danceStyles: optList(z.string()),
       image: opt(image()),
       imageAlt: opt(z.string().min(3)),
+      imageFocus: focus,
       imageCredit: opt(z.string()),
       ...seo,
       editorialReview: opt(z.string()),
@@ -347,6 +362,8 @@ export const gallerySchema = <I extends z.ZodType>(image: ImageHelper<I>) =>
     description: opt(z.string()),
     order: z.coerce.number().int().default(50),
     published: z.boolean().default(true),
+    /** Also show this album's photos in the rotating slideshow at the top of the homepage. */
+    homepageSlideshow: z.boolean().default(false),
     images: z.array(imageWithAlt(image)).min(1, 'Add at least one photo.'),
     source: opt(z.string()),
     rightsNote: opt(z.string()),
