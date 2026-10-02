@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Lourdes Cruz instruction
 status: completed
+published: true
 startDateTime: 2026-06-09T19:30
 summary: West coast swing dance lesson at 7:30PM by Lourdes Cruz. Social swing dancing starts at 8:00PM.
 lessonStartTime: 19:30

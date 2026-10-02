@@ -1,6 +1,7 @@
 ---
 title: Nick Palumbo and the Flipped Fedoras
 status: completed
+published: true
 startDateTime: 2025-09-30T19:30
 summary: Swing lesson at 7:30PM. Nick Palumbo and the Flipped Fedoras will go on at 8PM.
 lessonStartTime: 19:30

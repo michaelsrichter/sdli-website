@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Pizza
 status: completed
+published: true
 startDateTime: 2024-10-01T19:30
 summary: Join us for a swing dance lesson at 7:30pm at the Huntington Moose Lodge. Pizza and social swing dancing at 8pm.
 lessonStartTime: 19:30

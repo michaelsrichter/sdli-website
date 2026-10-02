@@ -1,6 +1,7 @@
 ---
 title: Roy Wilson and the Buzzards
 status: completed
+published: true
 startDateTime: 2024-09-17
 venue: huntington-moose-lodge
 bandName: the-buzzards

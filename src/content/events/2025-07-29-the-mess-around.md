@@ -1,6 +1,7 @@
 ---
 title: The Mess Around
 status: completed
+published: true
 startDateTime: 2025-07-29T19:30
 summary: The Mess Around band will be performing for Swing Dance Long Island at the Huntington Moose Lodge. Swing dance instruction at 7:30PM.
 lessonStartTime: 19:30

@@ -19,8 +19,7 @@ locale: en
 
 media_folder: src/assets/uploads
 public_folder: ../../assets/uploads
-media_library:
-  max_file_size: 8000000
+# The built-in media library is used (no media_library block: Decap treats any entry there as an external library).
 
 editor:
   preview: true

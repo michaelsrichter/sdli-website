@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Carol Teaching
 status: completed
+published: true
 startDateTime: 2025-07-22T19:30
 summary: Join Swing Dance Long Island for an evening of dancing. Drop-in Swing Dance lesson at 7:30PM by xxx to get you on the floor.
 lessonStartTime: 19:30

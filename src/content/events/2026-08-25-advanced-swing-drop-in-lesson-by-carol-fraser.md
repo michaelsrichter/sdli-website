@@ -1,6 +1,7 @@
 ---
 title: Advanced Swing Drop-in Lesson by Carol Fraser
 status: completed
+published: true
 startDateTime: 2026-08-25
 summary: Advanced swing dance lesson by Carol Fraser..
 venue: huntington-moose-lodge

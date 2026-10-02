@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with the Playing Favorites Band
 status: completed
+published: true
 startDateTime: 2026-03-31T19:30
 endDateTime: 2026-03-31T22:00
 summary: Join us on Tuesday, 24 March to enjoy a basic swing dance lesson at 7:30 PM and general dancing till 10 PM. Singles and beginners welcome.

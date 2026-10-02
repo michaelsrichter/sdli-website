@@ -1,6 +1,7 @@
 ---
 title: Brian Lewis and New Vintage Swing
 status: completed
+published: true
 startDateTime: 2025-06-17
 venue: huntington-moose-lodge
 bandName: new-vintage-swing-band

@@ -1,6 +1,7 @@
 ---
 title: West Coast Swing Lesson with Lourdes Cruz
 status: completed
+published: true
 startDateTime: 2026-07-14T19:30
 endDateTime: 2026-07-14T22:00
 summary: Ready to shake, slide, and swing your way into the night? Join us for an evening built around rhythm, connection, and pure dance joy!

@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with WCS Lesson by Ellen
 status: completed
+published: true
 startDateTime: 2024-06-11T19:30
 summary: Join Swing Dance Long Island for a Tuesday evening Swing Dance at the Huntington Moose Lodge in Greenlawn, Long Island. Ellen will teach a West Coast Swing lesson at 7:30PM.
 lessonStartTime: 19:30

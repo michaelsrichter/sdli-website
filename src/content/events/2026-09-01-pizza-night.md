@@ -1,6 +1,7 @@
 ---
 title: Pizza Night
 status: completed
+published: true
 startDateTime: 2026-09-01T19:30
 endDateTime: 2026-09-01T22:00
 lessonStartTime: 19:30

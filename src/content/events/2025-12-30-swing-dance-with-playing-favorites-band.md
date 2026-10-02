@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Playing Favorites Band
 status: completed
+published: true
 startDateTime: 2025-12-30T19:30
 summary: On December 30th, the night before New Year's Eve, Swing Dance Long Island will be holding a Swing Dance. Lesson at 7:30PM and the Playing Favorites Band will go on at 8PM.
 lessonStartTime: 19:30

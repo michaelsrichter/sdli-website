@@ -1,6 +1,7 @@
 ---
 title: Swing Dance
 status: completed
+published: true
 startDateTime: 2025-11-25T19:30
 summary: Join us for an evening of swing dancing and a dance lesson! Swing dance lesson at 7:30pm.
 lessonStartTime: 19:30

@@ -1,6 +1,7 @@
 ---
 title: The Haymakers
 status: completed
+published: true
 startDateTime: 2024-08-20T19:30
 summary: Lesson at 7:30PM. The Haymakers at 8PM.
 lessonStartTime: 19:30

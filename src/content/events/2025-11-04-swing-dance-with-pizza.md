@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Pizza
 status: completed
+published: true
 startDateTime: 2025-11-04T19:30
 summary: Join us for an evening of swing dancing and a slice of pizza! Swing dance lesson at 7:30pm.
 lessonStartTime: 19:30

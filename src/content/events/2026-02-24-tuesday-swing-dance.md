@@ -1,6 +1,7 @@
 ---
 title: Tuesday Swing Dance
 status: cancelled
+published: true
 startDateTime: 2026-02-24
 cancelledMessage: To allow time for the cleanup after the Snowpocalipse we will be cancelling this Tuesday's dance. Please join us next week!
 venue: huntington-moose-lodge

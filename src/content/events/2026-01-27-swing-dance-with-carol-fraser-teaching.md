@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Carol Fraser Teaching
 status: cancelled
+published: true
 startDateTime: 2026-01-27T19:30
 cancelledMessage: Our weekly dance has been cancelled due to the snowstorm. Please be safe if you are shoveling snow or attempting to drive.
 lessonStartTime: 19:30

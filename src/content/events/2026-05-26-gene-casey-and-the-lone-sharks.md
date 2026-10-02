@@ -1,6 +1,7 @@
 ---
 title: Gene Casey & The Lone Sharks
 status: completed
+published: true
 startDateTime: 2026-05-26T19:30
 endDateTime: 2026-05-26T22:00
 summary: Swing dance lesson at 7:30PM by Carol Fraser. Social swing dancing at 8:00PM to the music of Gene Casey and the Lone Sharks.

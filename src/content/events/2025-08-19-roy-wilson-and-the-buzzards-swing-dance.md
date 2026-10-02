@@ -1,6 +1,7 @@
 ---
 title: Roy Wilson and the Buzzards - Swing Dance
 status: completed
+published: true
 startDateTime: 2025-08-19T19:30
 summary: This evening Roy and the Buzzards will be on stage performing their Rockabilly Swing music. Lesson at 7:30pm.
 lessonStartTime: 19:30

@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with West Coast Swing Lesson by Lourdes Cruz
 status: completed
+published: true
 startDateTime: 2025-06-10
 instructorNames:
   - lourdes-cruz

@@ -1,6 +1,7 @@
 ---
 title: Gail Storm Band
 status: completed
+published: true
 startDateTime: 2025-05-20
 summary: "IMPORTANT NOTE: Gail Storm will be playing this evening. Previously scheduled Nick Palumbo will not be able to attend."
 venue: huntington-moose-lodge

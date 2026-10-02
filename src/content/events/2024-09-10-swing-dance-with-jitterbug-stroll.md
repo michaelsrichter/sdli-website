@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Jitterbug Stroll
 status: completed
+published: true
 startDateTime: 2024-09-10T19:30
 summary: Join us every Tuesday for an evening of Swing Dance fun. Lesson at 7:30pm and social swing dancing at 8:00pm.
 lessonStartTime: 19:30

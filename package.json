@@ -22,7 +22,7 @@
     "test:links": "node scripts/check-links.mjs",
     "lighthouse": "lhci autorun",
     "cms:config": "node scripts/build-cms-config.mjs",
-    "cms:local": "npx decap-server",
+    "cms:local": "decap-server",
     "copy:cms": "node scripts/copy-cms.mjs",
     "postinstall": "node scripts/copy-cms.mjs && node scripts/build-cms-config.mjs",
     "ci": "npm run check && npm run test && npm run build && npm run test:links",
@@ -45,6 +45,7 @@
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.63.0",
     "@types/node": "^24.0.0",
+    "decap-server": "^3.11.3",
     "typescript": "^6.0.3",
     "vitest": "^5.0.1",
     "yaml": "^2.9.1"

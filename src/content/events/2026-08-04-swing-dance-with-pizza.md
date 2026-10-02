@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Pizza
 status: completed
+published: true
 startDateTime: 2026-08-04T19:30
 summary: Swing Dances every Tuesday evening at the Huntington Moose Lodge in Greenlawn. East coast swing dance lesson at 7:30PM.
 lessonStartTime: 19:30

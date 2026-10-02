@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with drop in lesson by Carol Fraser
 status: completed
+published: true
 startDateTime: 2024-10-22
 venue: huntington-moose-lodge
 instructorNames:

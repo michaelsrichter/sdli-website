@@ -1,6 +1,7 @@
 ---
 title: "Band Night: Nick Palumbo and the Flipped Fedoras"
 status: completed
+published: true
 startDateTime: 2026-09-15T19:30
 endDateTime: 2026-09-15T22:00
 lessonStartTime: 19:30

@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with WCS Lesson by Ellen
 status: completed
+published: true
 startDateTime: 2024-07-09T19:30
 summary: West Coast Swing Dance Lesson by Ellen at 7:30PM. DJ music at 8PM.
 lessonStartTime: 19:30

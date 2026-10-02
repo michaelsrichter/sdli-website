@@ -1,6 +1,7 @@
 ---
 title: The Lone Sharks
 status: completed
+published: true
 startDateTime: 2025-09-16T19:30
 summary: Gene Casy and the Lone Sharks will be performing this evening. Swing Dance lesson at 7:30pm.
 lessonStartTime: 19:30

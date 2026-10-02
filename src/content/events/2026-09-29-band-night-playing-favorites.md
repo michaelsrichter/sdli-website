@@ -1,6 +1,7 @@
 ---
 title: "Band Night: Playing Favorites"
 status: completed
+published: true
 startDateTime: 2026-09-29T19:30
 endDateTime: 2026-09-29T22:00
 lessonStartTime: 19:30

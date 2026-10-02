@@ -1,6 +1,7 @@
 ---
 title: The Mutant Kings
 status: completed
+published: true
 startDateTime: 2026-01-20T19:30
 summary: Join us to welcoming The Mutant Kings band to Swing Dance Long Island first band night of 2026! Swing lesson at 7:30PM and the band goes on at 8PM.
 lessonStartTime: 19:30

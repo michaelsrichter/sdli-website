@@ -30,7 +30,7 @@ Visitor ─▶ static HTML (works without JS) ─▶ /api/telemetry (OpenTelemet
 ```bash
 npm ci                 # installs, self-hosts Decap CMS, generates public/admin/config.yml
 npm --prefix api ci
-npm run dev            # http://localhost:4321  (CMS: npm run cms:local, then /admin/)
+npm run dev            # http://localhost:4321  (CMS: npm run cms:local, then /admin/index.html)
 ```
 
 | Command | What it does |

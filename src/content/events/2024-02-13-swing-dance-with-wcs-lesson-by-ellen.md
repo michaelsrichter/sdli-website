@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with WCS Lesson by Ellen
 status: cancelled
+published: true
 startDateTime: 2024-02-13T19:30
 cancelledMessage: This evening's dance has been cancelled due to the snow. Be safe and see you next week.
 lessonStartTime: 19:30

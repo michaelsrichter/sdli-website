@@ -1,6 +1,7 @@
 ---
 title: Gene Casey and the Lone Sharks
 status: completed
+published: true
 startDateTime: 2024-06-04T19:30
 summary: Join Swing Dance Long Island for a Tuesday evening Swing Dance at the Huntington Moose Lodge in Greenlawn, Long Island. Pizza will be served.
 lessonStartTime: 19:30

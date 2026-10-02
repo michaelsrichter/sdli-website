@@ -1,6 +1,7 @@
 ---
 title: Playing Favorites at SDLI's Swing Dance
 status: completed
+published: true
 startDateTime: 2024-03-12T19:30
 summary: The band, Playing Favorites will be appearing this evening. Swing dance lesson at 7:30PM.
 lessonStartTime: 19:30

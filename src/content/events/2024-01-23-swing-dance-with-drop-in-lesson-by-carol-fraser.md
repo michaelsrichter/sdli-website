@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with drop in lesson by Carol Fraser
 status: completed
+published: true
 startDateTime: 2024-01-23T19:30
 summary: Join Swing Dance Long Island for a Tuesday evening Swing Dance at the Huntington Moose Lodge in Greenlawn, Long Island. Carol will teach a drop in Swing lesson at 7:30PM.
 lessonStartTime: 19:30

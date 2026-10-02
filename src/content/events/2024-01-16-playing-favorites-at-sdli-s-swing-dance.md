@@ -1,6 +1,7 @@
 ---
 title: Playing Favorites at SDLI's Swing Dance
 status: cancelled
+published: true
 startDateTime: 2024-01-16
 cancelledMessage: This dance was cancelled. The old website noted that Playing Favorites was rescheduled to February 27, 2024.
 venue: huntington-moose-lodge

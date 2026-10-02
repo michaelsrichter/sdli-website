@@ -1,6 +1,7 @@
 ---
 title: Band Night - The Haymakers
 status: completed
+published: true
 startDateTime: 2026-07-21
 venue: huntington-moose-lodge
 bandName: the-haymakers

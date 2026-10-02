@@ -120,7 +120,7 @@ After DNS cutover, change the OAuth App's Homepage and callback URLs to `https:/
 Content is just files in GitHub, so editing never depends on the CMS:
 
 - **GitHub website:** open the file in `src/content/…`, click the pencil icon, edit, and choose **Create a new branch and start a pull request**. The same checks and previews run.
-- **Local CMS** (for technical volunteers): `npm run cms:local` in one terminal and `npm run dev` in another, then open `http://localhost:4321/admin/`. Changes are saved to your local files.
+- **Local CMS** (for technical volunteers): `npm run cms:local` in one terminal and `npm run dev` in another, then open `http://localhost:4321/admin/index.html`. Changes are saved to your local files.
 - **Hosted OAuth alternative:** a service such as DecapBridge can replace the Azure function without changing content or workflows.
 
 ## Recovering from mistakes

@@ -1,6 +1,7 @@
 ---
 title: Brian Lewis and the New Vintage Swing
 status: completed
+published: true
 startDateTime: 2024-06-18T19:30
 summary: Brian Lewis and the New Vintage Swing will be performing at the Huntington Moose Lodge. Dance lesson at 7:30PM and the band goes on at 8PM.
 lessonStartTime: 19:30

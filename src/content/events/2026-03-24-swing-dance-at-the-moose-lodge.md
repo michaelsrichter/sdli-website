@@ -1,6 +1,7 @@
 ---
 title: Swing Dance at the Moose Lodge
 status: completed
+published: true
 startDateTime: 2026-03-24T19:30
 endDateTime: 2026-03-24T22:00
 summary: Join us for a swing dance lesson at 7:30 and then general dancing at 8 PM until 10 PM. Singles and beginners are welcome.

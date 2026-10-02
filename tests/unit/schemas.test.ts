@@ -86,6 +86,18 @@ describe('all real content in the repository is valid', () => {
     yml('gallery', gallerySchema(img));
     yml('settings', settingsSchema(img));
   });
+  it('every event, series, FAQ, album and announcement has an explicit "published" flag (so the CMS toggle shows the real state)', () => {
+    for (const dir of ['events', 'series']) {
+      for (const f of readdirSync(join(root, 'src', 'content', dir)).filter((x) => x.endsWith('.md'))) {
+        expect(Object.hasOwn(frontmatter(readFileSync(join(root, 'src', 'content', dir, f), 'utf8')), 'published'), `${dir}/${f}`).toBe(true);
+      }
+    }
+    for (const dir of ['faqs', 'gallery', 'announcements']) {
+      for (const f of readdirSync(join(root, 'src', 'content', dir)).filter((x) => x.endsWith('.yml'))) {
+        expect(Object.hasOwn(YAML.parse(readFileSync(join(root, 'src', 'content', dir, f), 'utf8')), 'published'), `${dir}/${f}`).toBe(true);
+      }
+    }
+  });
   it('every event references existing venues, people and styles', () => {
     const ids = (dir: string) => new Set(readdirSync(join(root, 'src', 'content', dir)).map((f) => f.replace(/\.(md|yml)$/, '')));
     const venues = ids('venues');

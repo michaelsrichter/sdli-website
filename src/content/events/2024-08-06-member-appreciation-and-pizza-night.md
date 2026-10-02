@@ -1,6 +1,7 @@
 ---
 title: Member Appreciation & Pizza Night
 status: completed
+published: true
 startDateTime: 2024-08-06T19:30
 summary: Member Appreciation. Swing Dance Long Island members get in the door for only $5.
 lessonStartTime: 19:30

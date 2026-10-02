@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Carol Fraser Teaching East Coast Swing
 status: completed
+published: true
 startDateTime: 2026-07-28T19:30
 summary: Carol Frase will be teaching East Coast Swing starting at 7:30PM. Social swing dancing to DJ music starts at 8PM.
 lessonStartTime: 19:30

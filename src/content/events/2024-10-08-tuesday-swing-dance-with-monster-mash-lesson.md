@@ -1,6 +1,7 @@
 ---
 title: Tuesday Swing Dance with Monster Mash Lesson
 status: completed
+published: true
 startDateTime: 2024-10-08T19:30
 summary: This evening we will be having a special half-hour lesson on the Monster Mash. We want to make sure everyone is ready for the SDLI Halloween swing dance on Oct 29th.
 lessonStartTime: 19:30

@@ -1,6 +1,7 @@
 ---
 title: Red, White and Blue Swing Dance - The Brian Lewis New Vintage Orchestra
 status: completed
+published: true
 startDateTime: 2026-06-30T19:30
 summary: Celebrating 250 of the USA. Will honor all veterans with free admission.
 lessonStartTime: 19:30

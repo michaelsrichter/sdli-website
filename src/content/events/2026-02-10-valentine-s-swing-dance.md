@@ -1,6 +1,7 @@
 ---
 title: Valentine's Swing Dance
 status: completed
+published: true
 startDateTime: 2026-02-10T19:30
 summary: Celebrate Valentine's Day with your friends at the Huntington Moose Lodge for our usual Tuesday evening Swing Dance. Swing lesson by Carol at 7:30PM and social dancing starts at 8PM.
 lessonStartTime: 19:30

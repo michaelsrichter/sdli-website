@@ -1,6 +1,7 @@
 ---
 title: Gold Coast Jazz Band
 status: completed
+published: true
 startDateTime: 2024-10-15T19:30
 endDateTime: 2024-10-15T22:00
 summary: This will be our first dance hosting the Gold Coast Jazz band from Northport. Swing dance lesson at 7:30PM.

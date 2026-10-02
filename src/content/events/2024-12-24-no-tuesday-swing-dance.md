@@ -1,6 +1,7 @@
 ---
 title: No Tuesday Swing Dance
 status: cancelled
+published: true
 startDateTime: 2024-12-24
 cancelledMessage: This dance was cancelled.
 venue: huntington-moose-lodge

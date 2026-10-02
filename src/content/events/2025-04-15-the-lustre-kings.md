@@ -1,6 +1,7 @@
 ---
 title: The Lustre Kings
 status: completed
+published: true
 startDateTime: 2025-04-15
 venue: huntington-moose-lodge
 bandName: the-lustre-kings

@@ -1,6 +1,7 @@
 ---
 title: SDLI Holiday Party with Live Band and Food
 status: completed
+published: true
 startDateTime: 2024-12-17
 summary: Swing Dance Long Island will be celebrating our annual holiday party! Hot buffet food, (bring a desert to share if you wish)., The Long Island Jazz Orchestra performing.
 venue: huntington-moose-lodge

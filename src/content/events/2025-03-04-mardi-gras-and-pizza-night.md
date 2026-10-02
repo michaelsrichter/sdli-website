@@ -1,6 +1,7 @@
 ---
 title: Mardi Gras & Pizza Night
 status: completed
+published: true
 startDateTime: 2025-03-04
 eventTypes:
   - weekly-dance

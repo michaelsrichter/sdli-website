@@ -1,6 +1,7 @@
 ---
 title: Swing Dance
 status: completed
+published: true
 startDateTime: 2024-11-12T19:30
 summary: Swing dance lesson at 7:30pm. Social swing dancing at 8pm.
 lessonStartTime: 19:30

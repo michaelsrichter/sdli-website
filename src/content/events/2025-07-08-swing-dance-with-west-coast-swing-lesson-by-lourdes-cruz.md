@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with West Coast Swing Lesson by Lourdes Cruz
 status: completed
+published: true
 startDateTime: 2025-07-08T19:30
 summary: Join Swing Dance Long Island for an evening of dancing. West Coast Swing Dance lesson at 7:30PM by Lourdes Cruz to get you on the floor.
 lessonStartTime: 19:30

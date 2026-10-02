@@ -1,6 +1,7 @@
 ---
 title: Shim Sham Lesson with Carol
 status: completed
+published: true
 startDateTime: 2025-03-11
 summary: Swing dance this evening.
 venue: huntington-moose-lodge

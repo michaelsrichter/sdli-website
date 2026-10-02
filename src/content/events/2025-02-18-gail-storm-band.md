@@ -1,6 +1,7 @@
 ---
 title: Gail Storm Band
 status: completed
+published: true
 startDateTime: 2025-02-18T19:30
 summary: Swing Dance every Tuesday at the Huntington Moose Lodge at 631 Pulaski Road, in Greenlawn, Long Island. Group dance lesson at 7:30PM.
 lessonStartTime: 19:30

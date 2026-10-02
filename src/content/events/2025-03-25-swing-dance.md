@@ -1,6 +1,7 @@
 ---
 title: Swing Dance
 status: completed
+published: true
 startDateTime: 2025-03-25
 eventTypes:
   - weekly-dance

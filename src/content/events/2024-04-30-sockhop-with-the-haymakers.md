@@ -1,6 +1,7 @@
 ---
 title: SockHop with The Haymakers
 status: completed
+published: true
 startDateTime: 2024-04-30T19:30
 summary: Lesson at 7:30PM. The Haymakers at 8PM.
 lessonStartTime: 19:30

@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Carol Fraser Teaching
 status: completed
+published: true
 startDateTime: 2026-03-10T19:30
 summary: Join us to our usual Tuesday Swing Dance. Swing lesson by Carol at 7:30PM and social dancing starts at 8PM.
 lessonStartTime: 19:30

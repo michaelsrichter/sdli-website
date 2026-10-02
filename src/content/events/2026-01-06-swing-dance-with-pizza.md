@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Pizza
 status: completed
+published: true
 startDateTime: 2026-01-06T19:30
 summary: This evening we will be serving Pizza. Swing dance lesson at 7:30PM and social dancing starts at 8PM.
 lessonStartTime: 19:30

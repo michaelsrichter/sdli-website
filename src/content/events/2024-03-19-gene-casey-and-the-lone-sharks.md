@@ -1,6 +1,7 @@
 ---
 title: Gene Casey and the Lone Sharks
 status: completed
+published: true
 startDateTime: 2024-03-19T19:30
 summary: Lesson at 7:30PM. Gene Casey and the Lone Sharks go on at 8PM.
 lessonStartTime: 19:30

@@ -1,6 +1,7 @@
 ---
 title: Laura Meade & Playing Favorites
 status: completed
+published: true
 startDateTime: 2025-04-29T19:30
 summary: Join us for the 5th Tuesday Swing Dance with a live band. Swing instruction at 7:30PM.
 lessonStartTime: 19:30

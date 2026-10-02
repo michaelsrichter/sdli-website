@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with the Madeline Kole Quartet
 status: completed
+published: true
 startDateTime: 2026-03-17T19:30
 summary: Join us to welcoming back the Madeline Kole Quartet! Swing lesson at 7:30PM and the band goes on at 8PM.
 lessonStartTime: 19:30

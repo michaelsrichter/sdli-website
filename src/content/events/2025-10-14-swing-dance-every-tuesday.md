@@ -1,6 +1,7 @@
 ---
 title: Swing Dance Every Tuesday
 status: completed
+published: true
 startDateTime: 2025-10-14T19:30
 summary: Lesson at 7:30. Social swing dancing at 8PM.
 lessonStartTime: 19:30

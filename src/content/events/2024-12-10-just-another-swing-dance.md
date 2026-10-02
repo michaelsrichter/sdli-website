@@ -1,6 +1,7 @@
 ---
 title: Just another Swing Dance
 status: completed
+published: true
 startDateTime: 2024-12-10T19:30
 summary: Overwhelmed by holiday events? Take a break and enjoy a non-themed evening.
 lessonStartTime: 19:30

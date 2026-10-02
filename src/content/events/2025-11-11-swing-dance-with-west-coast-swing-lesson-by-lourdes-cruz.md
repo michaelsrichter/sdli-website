@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with West Coast Swing Lesson by Lourdes Cruz
 status: completed
+published: true
 startDateTime: 2025-11-11T19:30
 summary: Join us for an evening of swing dancing and a swing dance lesson! West Coast Swing dance lesson at 7:30pm by Lourdes Cruz.
 lessonStartTime: 19:30

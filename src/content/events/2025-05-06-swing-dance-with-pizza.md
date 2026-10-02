@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Pizza
 status: completed
+published: true
 startDateTime: 2025-05-06T19:30
 summary: The first Tuesday of the month, Swing Dance Long Island will be serving pizza at our Swing Dance. Swing instruction at 7:30PM.
 lessonStartTime: 19:30

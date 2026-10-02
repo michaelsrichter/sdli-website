@@ -1,6 +1,7 @@
 ---
 title: EC Swing Lesson with Carol Fraser
 status: completed
+published: true
 startDateTime: 2026-06-23T19:30
 summary: Swing dance lesson at 7:30PM by Carol Fraser. Social swing dancing at 8:00PM.
 lessonStartTime: 19:30

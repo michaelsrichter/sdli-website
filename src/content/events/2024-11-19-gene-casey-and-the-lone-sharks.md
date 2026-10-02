@@ -1,6 +1,7 @@
 ---
 title: Gene Casey and the Lone Sharks
 status: completed
+published: true
 startDateTime: 2024-11-19T19:30
 summary: A Rockabilly Swing Dance. Swing dance lesson at 7:30pm.
 lessonStartTime: 19:30

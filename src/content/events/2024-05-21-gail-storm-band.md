@@ -1,6 +1,7 @@
 ---
 title: Gail Storm Band
 status: completed
+published: true
 startDateTime: 2024-05-21
 venue: huntington-moose-lodge
 bandName: gail-storm-band

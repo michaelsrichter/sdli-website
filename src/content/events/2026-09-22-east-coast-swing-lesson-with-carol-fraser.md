@@ -1,6 +1,7 @@
 ---
 title: East Coast Swing Lesson with Carol Fraser
 status: completed
+published: true
 startDateTime: 2026-09-22T19:30
 endDateTime: 2026-09-22T22:00
 lessonStartTime: 19:30

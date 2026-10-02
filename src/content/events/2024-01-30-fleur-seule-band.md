@@ -1,6 +1,7 @@
 ---
 title: Fleur Seule Band
 status: completed
+published: true
 startDateTime: 2024-01-30
 venue: huntington-moose-lodge
 bandName: fleur-seule

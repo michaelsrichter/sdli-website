@@ -1,6 +1,7 @@
 ---
 title: Halloween Dance with Gail Storm
 status: completed
+published: true
 startDateTime: 2025-10-21
 summary: This evening will be our Halloween Swing Dance. Dress in costumes if you dare.
 venue: huntington-moose-lodge

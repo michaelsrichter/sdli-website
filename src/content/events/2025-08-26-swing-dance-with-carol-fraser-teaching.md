@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Carol Fraser Teaching
 status: completed
+published: true
 startDateTime: 2025-08-26T19:30
 summary: Carol Fraser will be teaching a drop-in swing dance lesson at 7:30pm. Social swing dance starts at 8PM.
 lessonStartTime: 19:30

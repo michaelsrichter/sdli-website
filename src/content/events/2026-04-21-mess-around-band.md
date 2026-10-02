@@ -1,6 +1,7 @@
 ---
 title: Mess Around Band
 status: completed
+published: true
 startDateTime: 2026-04-21T19:30
 summary: Swing Dance this evening at the Huntington Moose lodge. A drop-in swing dance lesson at 7:30PM.
 lessonStartTime: 19:30

@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Pizza
 status: completed
+published: true
 startDateTime: 2026-07-07
 venue: huntington-moose-lodge
 eventTypes:

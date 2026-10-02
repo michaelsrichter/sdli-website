@@ -1,6 +1,7 @@
 ---
 title: West Coast Swing Lesson with Lourdes Cruz
 status: completed
+published: true
 startDateTime: 2026-09-08T19:30
 endDateTime: 2026-09-08T22:00
 lessonStartTime: 19:30

@@ -1,6 +1,7 @@
 ---
 title: New Years Eve at the Huntington Moose Lodge
 status: completed
+published: true
 startDateTime: 2024-12-31
 venue: huntington-moose-lodge
 bandName: nick-palumbo-and-the-flipped-fedoras

@@ -1,6 +1,7 @@
 ---
 title: Valentine's Themed Swing Dance - Shim Sham with Carol
 status: completed
+published: true
 startDateTime: 2025-02-11T19:30
 summary: To celebrate Valentine's Day (which is happening later in the week), we will be having a Valentine's themed swing dance on Tuesday. Swing Dance every Tuesday at the Huntington Moose Lodge at 631 Pulaski Road, in Greenlawn, Long Island.
 lessonStartTime: 19:30

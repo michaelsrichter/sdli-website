@@ -1,6 +1,7 @@
 ---
 title: Nick Palumbo and the Flipped Fedoras
 status: completed
+published: true
 startDateTime: 2024-07-30T19:30
 summary: Lesson at 7:30PM. Nick Palumbo and the Flipped Fedoras at 8PM.
 lessonStartTime: 19:30

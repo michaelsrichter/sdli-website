@@ -1,6 +1,7 @@
 ---
 title: No dance this week
 status: cancelled
+published: true
 startDateTime: 2025-12-23
 cancelledMessage: There will be no dance this Tuesday due to the holidays.
 venue: huntington-moose-lodge

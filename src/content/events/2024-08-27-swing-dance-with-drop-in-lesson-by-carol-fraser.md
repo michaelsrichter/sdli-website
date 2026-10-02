@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with drop in lesson by Carol Fraser
 status: completed
+published: true
 startDateTime: 2024-08-27T19:30
 summary: Drop in Swing Lesson by Carol Fraser at 7:30PM. Swing Dancing at 8PM.
 lessonStartTime: 19:30

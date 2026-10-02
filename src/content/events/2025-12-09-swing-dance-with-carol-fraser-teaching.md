@@ -1,6 +1,7 @@
 ---
 title: Swing Dance with Carol Fraser Teaching
 status: completed
+published: true
 startDateTime: 2025-12-09T19:30
 summary: Carol will be teaching a special class this second Tuesday of December. Lesson starts at 7:30PM.
 lessonStartTime: 19:30
