@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import ContentPage from '../layouts/ContentPage.astro';
+import ResponsiveImage from '../components/ResponsiveImage.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../lib/photos';
+
+const albums = (await getCollection('gallery', (g) => g.data.published)).sort((a, b) => a.data.order - b.data.order);
+const site = Astro.site!;
+const imageLd = albums.flatMap((a) =>
+  a.data.images.map((img) => ({
+    '@context': 'https://schema.org',
+    '@type': 'ImageObject',
+    contentUrl: new URL(img.image.src, site).toString(),
+    description: img.alt,
+    ...(img.credit ? { creditText: img.credit } : {}),
+  })),
+);
+---
+<ContentPage id="gallery" pageType="gallery" jsonLd={imageLd}>
+  {albums.map((a) => (
+    <section aria-labelledby={`album-${a.id}`}>
+      <h2 id={`album-${a.id}`}>{a.data.title}</h2>
+      {a.data.description && <p class="muted">{a.data.description}</p>}
+      <ul class="gallery-grid mt-5" role="list">
+        {a.data.images.map((img) => (
+          <li>
+            <figure>
+              <ResponsiveImage src={img.image} alt={img.alt} widths={[480, 720, 1080, 1440]} sizes="(min-width: 60rem) 45vw, 94vw" />
+              {(img.caption || img.credit) && <figcaption>{img.caption}{img.credit ? ` Photo: ${img.credit}` : ''}</figcaption>}
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+  <section aria-labelledby="style-inspo">
+    <h2 id="style-inspo">Dressing up is optional, but fun</h2>
+    <p>Many swing dancers enjoy vintage-inspired outfits. Comfortable clothes are just as welcome. These photos are from swing events elsewhere and are shown for inspiration.</p>
+    <div class="photo-strip mt-5">
+      <Photo photo={photos.heroCouple} sizes="(min-width: 60rem) 30vw, 92vw" widths={[400, 640, 900]} aspect={4 / 5} />
+      <Photo photo={photos.dressedUp} sizes="(min-width: 60rem) 30vw, 92vw" widths={[400, 640, 900]} aspect={4 / 5} />
+      <Photo photo={photos.polkaDots} sizes="(min-width: 60rem) 30vw, 92vw" widths={[400, 640, 900]} aspect={4 / 5} />
+    </div>
+  </section>
+</ContentPage>

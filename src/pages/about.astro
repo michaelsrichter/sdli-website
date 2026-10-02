@@ -1,0 +1,33 @@
+---
+import ContentPage from '../layouts/ContentPage.astro';
+import Photo from '../components/Photo.astro';
+import { photos } from '../lib/photos';
+import history from '../data/legacy-history.json';
+import { getEventGroups } from '../lib/content';
+
+const { past } = await getEventGroups();
+const historic = Object.values(history.years as Record<string, number>).reduce((a, b) => a + b, 0) + past.length;
+const bands = history.pastPerformers.length;
+---
+<ContentPage id="about" pageType="about">
+  <section aria-labelledby="numbers" class="cta-band" id="friends-intro">
+    <h2 id="numbers">SDLI by the numbers</h2>
+    <ul class="stat-row">
+      <li><strong>2006</strong> online archive begins</li>
+      <li><strong>{historic.toLocaleString('en-US')}+</strong> events listed</li>
+      <li><strong>{bands}+</strong> bands in our history</li>
+      <li><strong>100%</strong> volunteer-run</li>
+    </ul>
+  </section>
+  <section id="friends" aria-labelledby="friends-h">
+    <h2 id="friends-h">Friends of SDLI</h2>
+    <ul class="mt-3">
+      <li><a href="https://www.liswingsyndicate.com" rel="noopener">Long Island Swing Syndicate (LISS)</a>: swing classes, workshops and performances on Long Island.</li>
+    </ul>
+    <p class="mt-3 muted">The old website had a long "Links" page. Most of those links were out of date, so only active ones were kept. Know a group we should list? <a href="/contact/">Tell us</a>.</p>
+  </section>
+  <Fragment slot="aside">
+    <Photo photo={photos.history1938} sizes="(min-width: 56rem) 35vw, 92vw" widths={[480, 720, 960]} caption="Jitterbugging in 1938. Swing dancing started in the Jazz Age and is still going strong." />
+    <Photo photo={photos.sdliHorns} sizes="(min-width: 56rem) 35vw, 92vw" widths={[480, 720, 960]} aspect={4 / 3} />
+  </Fragment>
+</ContentPage>

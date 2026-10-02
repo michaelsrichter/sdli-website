@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Icon from '../../components/Icon.astro';
+import { getEventGroups } from '../../lib/content';
+import { breadcrumbJsonLd } from '../../lib/seo';
+import history from '../../data/legacy-history.json';
+
+const venues = (await getCollection('venues')).sort((a, b) => Number(b.data.active) - Number(a.data.active) || a.data.name.localeCompare(b.data.name));
+const { upcoming } = await getEventGroups();
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Venues', href: '/venues/' },
+];
+---
+<BaseLayout title="Swing Dance Venues on Long Island" description="Where Swing Dance Long Island dances happen, with addresses and directions. Weekly Tuesday dances at the Huntington Moose Lodge in Greenlawn, NY." pageType="venues" jsonLd={[breadcrumbJsonLd(crumbs, Astro.site!)]}>
+  <PageHeader title="Venues" lede="Where SDLI dances happen, with directions." crumbs={crumbs} />
+  <div class="container section stack-l">
+    <ul class="grid grid--2" role="list">
+      {venues.filter((v) => v.data.active).map((v) => {
+        const count = upcoming.filter((e) => e.venueEntry?.id === v.id).length;
+        return (
+          <li class="card card--accent">
+            <p class="card__kicker">{count} upcoming {count === 1 ? 'event' : 'events'}</p>
+            <h2 class="h3"><a href={`/venues/${v.id}/`}>{v.data.name}</a></h2>
+            <address>{v.data.address}<br />{v.data.city}, {v.data.state} {v.data.postalCode}</address>
+            <p class="muted"><Icon name="arrow" class="visually-hidden" />Venue details and directions</p>
+          </li>
+        );
+      })}
+    </ul>
+    <section class="card" id="past-venues" aria-labelledby="past-venues-h">
+      <h2 id="past-venues-h" class="h3">Places SDLI has danced</h2>
+      <p>Over the years, SDLI has held dances and events at many places across Long Island. These are historical venues from the old website, not current dance locations.</p>
+      <ul class="style-list mt-3" role="list">
+        {history.pastVenues.map((name) => <li>{name}</li>)}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

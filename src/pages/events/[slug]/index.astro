@@ -1,0 +1,291 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import TicketDate from '../../../components/TicketDate.astro';
+import StatusBadge from '../../../components/StatusBadge.astro';
+import Icon from '../../../components/Icon.astro';
+import AddToCalendar from '../../../components/AddToCalendar.astro';
+import ShareControls from '../../../components/ShareControls.astro';
+import EventCard from '../../../components/EventCard.astro';
+import ResponsiveImage from '../../../components/ResponsiveImage.astro';
+import { calendarEventOf, getEventGroups, getSettings, scheduleLines, shareInputOf, type ResolvedEvent } from '../../../lib/content';
+import { breadcrumbJsonLd, eventJsonLd } from '../../../lib/seo';
+import { formatPrice, isUpcoming } from '../../../lib/event-core';
+import { formatTime } from '../../../lib/time';
+
+export async function getStaticPaths() {
+  const { all } = await getEventGroups();
+  return all.map((event) => ({ params: { slug: event.slug }, props: { slug: event.slug } }));
+}
+
+const { slug } = Astro.props as { slug: string };
+const { all, upcoming, now } = await getEventGroups();
+const e = all.find((x) => x.slug === slug) as ResolvedEvent;
+const settings = await getSettings();
+const site = Astro.site!;
+const d = e.details;
+const upcomingNow = isUpcoming(e, now);
+const status = upcomingNow ? e.status : e.effectiveStatus;
+const cal = calendarEventOf(e, site);
+const share = shareInputOf(e, site);
+const socialImage = upcomingNow ? `${e.url}social.png` : undefined;
+const socialSquare = upcomingNow ? `${e.url}social-square.png` : undefined;
+
+// Body text: the event's own description, else the series description.
+let Content: any = null;
+if (e.source.eventId) {
+  const entry = await getEntry('events', e.source.eventId);
+  if (entry?.body?.trim()) Content = (await render(entry)).Content;
+}
+if (!Content && e.source.seriesId) {
+  const s = await getEntry('series', e.source.seriesId);
+  if (s?.body?.trim()) Content = (await render(s)).Content;
+}
+
+const more = upcoming.filter((x) => x.slug !== e.slug).slice(0, 3);
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: upcomingNow ? 'Events' : 'Past events', href: upcomingNow ? '/events/' : '/events/past/' },
+  { name: e.title, href: e.url },
+];
+const title = d.seoTitle && e.source.kind === 'event' ? d.seoTitle : `${e.title}, ${e.dateLabel}${e.location.city ? ` in ${e.location.city}` : ''}`;
+const description =
+  (e.source.kind === 'event' ? d.seoDescription : undefined) ??
+  [
+    status === 'cancelled' ? 'CANCELLED.' : '',
+    `${e.dateLabel}${e.timeLabel ? ` at ${e.timeLabel}` : ''}${e.location.name ? `, ${e.location.name}, ${e.location.city}.` : '.'}`,
+    d.lessonStartTime ? `Swing lesson at ${formatTime(d.lessonStartTime)}.` : '',
+    e.band ? `Live music by ${e.band.name}.` : '',
+    e.beginnerFriendly ? 'Beginners welcome, no partner needed.' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .slice(0, 165);
+const lessonLine = d.lessonStartTime ? `Lesson at ${formatTime(d.lessonStartTime)}` : undefined;
+const daysUntil = Math.ceil((e.start.getTime() - now.getTime()) / 86400000);
+const priceRows = [
+  { label: 'Non-members', value: e.admission.nonMember },
+  { label: 'SDLI members', value: e.admission.member },
+  { label: 'Students', value: e.admission.student },
+].filter((r) => typeof r.value === 'number') as { label: string; value: number }[];
+const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
+---
+<BaseLayout
+  title={title}
+  description={description}
+  image={socialImage}
+  imageAlt={socialImage ? `${e.title}, ${e.dateLabel}` : undefined}
+  ogType="event"
+  pageType="event"
+  bodyClass="has-action-bar"
+  htmlData={{ 'data-event-slug': e.slug, 'data-event-status': status, 'data-days-until': String(daysUntil) }}
+  jsonLd={[eventJsonLd(e, settings, site, socialImage ? new URL(socialImage, site).toString() : undefined), breadcrumbJsonLd(crumbs, site)]}
+>
+  <article data-event-detail data-end={String(e.end.getTime())} aria-labelledby="event-title">
+    <header class="event-hero">
+      <div class="container">
+        <Breadcrumbs items={crumbs} />
+        <div class="event-hero__top">
+          <TicketDate date={e.date} muted={!upcomingNow || status === 'cancelled'} />
+          <div>
+            <div class="event-hero__badges">
+              <StatusBadge status={status} showScheduled={upcomingNow} />
+              {e.typeLabels.slice(0, 3).map((t) => <span class="pill">{t}</span>)}
+            </div>
+            <h1 id="event-title" class="mt-3">{e.title}</h1>
+            <p class="event-hero__date"><time datetime={e.timeTba ? e.date : e.startLocal}>{e.dateLabel}{e.timeLabel ? ` · ${e.timeLabel}` : ''}</time></p>
+            <ul class="hero-facts" aria-label="Key details">
+              {d.lessonStartTime && <li><Icon name="clock" />Lesson {formatTime(d.lessonStartTime)}</li>}
+              {d.danceStartTime && <li><Icon name="music" />Dancing {formatTime(d.danceStartTime)}{d.danceEndTime ? `–${formatTime(d.danceEndTime)}` : ''}</li>}
+              {e.location.city && <li><Icon name="pin" />{e.location.name ? `${e.location.name}, ` : ''}{e.location.city}</li>}
+              {e.admission.known && <li><Icon name="ticket" />{e.admission.free ? 'Free' : `From ${formatPrice(Math.min(...[e.admission.member, e.admission.student, e.admission.nonMember].filter((n): n is number => typeof n === 'number')))}`}</li>}
+            </ul>
+            {d.summary && <p class="hero__lede">{d.summary}</p>}
+          </div>
+        </div>
+        {e.image && e.imageAlt && (
+          <div class="event-hero__media">
+            <ResponsiveImage src={e.image} alt={e.imageAlt} widths={[480, 720, 960, 1280]} sizes="(min-width: 44rem) 40rem, 94vw" aspect={16 / 9} loading="eager" />
+          </div>
+        )}
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="event-layout">
+        <div class="event-main">
+          {status === 'cancelled' && (
+            <div class="alert alert--bad" role="note">
+              <p class="alert__title">This event is cancelled.</p>
+              <p>{e.cancelledMessage ?? 'We are sorry for any inconvenience.'}</p>
+              {upcomingNow && <p><a href="/events/">See other upcoming dances</a></p>}
+            </div>
+          )}
+          {status === 'postponed' && (
+            <div class="alert alert--warn" role="note">
+              <p class="alert__title">This event is postponed.</p>
+              {e.cancelledMessage && <p>{e.cancelledMessage}</p>}
+              {e.postponedTo && <p><a href={e.postponedTo.startsWith('/') ? e.postponedTo : `/events/${e.postponedTo}/`}>See the new date</a></p>}
+            </div>
+          )}
+          {!upcomingNow && status !== 'cancelled' && (
+            <div class="alert alert--info" role="note">
+              <p class="alert__title">This event has already happened.</p>
+              <p><a href="/events/">See upcoming dances</a></p>
+            </div>
+          )}
+          {upcomingNow && (
+            <div class="alert alert--info" role="note" data-ended-notice hidden>
+              <p class="alert__title">This event has ended.</p>
+              <p><a href="/events/">See upcoming dances</a></p>
+            </div>
+          )}
+          {upcomingNow && e.source.kind === 'series-occurrence' && (
+            <div class="alert alert--info" role="note">
+              <p class="alert__title">Part of SDLI's regular weekly schedule</p>
+              <p>The theme, teacher or band for this night will be posted closer to the date. Weather or holidays can change plans, so check this page or call the {settings.hotlineLabel} at <a href={`tel:+1${tel}`}>{settings.hotlinePhone}</a> before you go.</p>
+            </div>
+          )}
+
+          <section class="panel" aria-labelledby="glance">
+            <h2 id="glance">At a glance</h2>
+            <dl class="dl">
+              <div>
+                <dt>When</dt>
+                <dd>
+                  {e.dateLabel}
+                  <ul class="facts mt-3">
+                    {scheduleLines(e).map((l) => (
+                      <li><Icon name="clock" /><span><span class="fact-label">{l.label}:</span> {l.value}</span></li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+              {e.location.full && (
+                <div>
+                  <dt>Where</dt>
+                  <dd>
+                    {e.location.name && <strong>{e.venueEntry ? <a href={`/venues/${e.venueEntry.id}/`}>{e.location.name}</a> : e.location.name}</strong>}
+                    {e.location.name && <br />}
+                    {e.location.address}<br />
+                    {e.location.city}, {e.location.state} {e.location.postalCode}
+                  </dd>
+                </div>
+              )}
+              <div>
+                <dt>Admission</dt>
+                <dd>
+                  {priceRows.length > 0 ? (
+                    <table class="price-table">
+                      <caption class="visually-hidden">Admission prices</caption>
+                      <tbody>
+                        {priceRows.map((r) => (
+                          <tr><th scope="row">{r.label}</th><td>{formatPrice(r.value)}</td></tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <span>{upcomingNow ? 'To be announced' : 'Not listed for this past event'}</span>
+                  )}
+                  {e.admission.notes && <p class="muted mt-3">{e.admission.notes}</p>}
+                  {upcomingNow && <p class="mt-3"><a href="/membership/">Members pay less. Join for ${settings.membershipFee} a year.</a></p>}
+                </dd>
+              </div>
+              <div>
+                <dt>Good to know</dt>
+                <dd>
+                  <p class="reassure">
+                    {e.beginnerFriendly && <span class="tag"><Icon name="check" />Beginners welcome</span>}
+                    {!e.partnerRequired && <span class="tag"><Icon name="people" />No partner needed</span>}
+                    {e.hasLesson && <span class="tag"><Icon name="shoe" />Swing lesson first</span>}
+                    <span class="tag tag--neutral">{e.experienceLabel}</span>
+                  </p>
+                  {e.styles.length > 0 && <p class="mt-3"><span class="fact-label">Dance styles:</span> {e.styles.map((s) => s.name).join(', ')}</p>}
+                  {d.registrationRequired && d.registrationUrl && <p class="mt-3"><a href={d.registrationUrl}>Registration required: sign up here</a></p>}
+                  {d.capacityNotes && <p class="mt-3">{d.capacityNotes}</p>}
+                </dd>
+              </div>
+              {(e.band || e.djs.length > 0 || e.instructors.length > 0) && (
+                <div>
+                  <dt>Lineup</dt>
+                  <dd>
+                    <ul class="facts">
+                      {e.band && <li><Icon name="music" /><span><span class="fact-label">Live band:</span> {e.band.href ? <a href={e.band.href}>{e.band.name}</a> : e.band.name}</span></li>}
+                      {e.djs.map((p) => <li><Icon name="music" /><span><span class="fact-label">DJ:</span> {p.href ? <a href={p.href}>{p.name}</a> : p.name}</span></li>)}
+                      {e.instructors.map((p) => <li><Icon name="people" /><span><span class="fact-label">Teacher:</span> {p.href ? <a href={p.href}>{p.name}</a> : p.name}</span></li>)}
+                    </ul>
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </section>
+
+          {Content && (
+            <section class="panel" aria-labelledby="about-event">
+              <h2 id="about-event">About this event</h2>
+              <div class="prose"><Content /></div>
+            </section>
+          )}
+        </div>
+
+        <aside class="event-aside no-print" aria-label="Event actions">
+          {upcomingNow && (
+            <section class="panel actions" id="add-to-calendar" aria-labelledby="cal-h">
+              <h2 id="cal-h">Add to your calendar</h2>
+              <AddToCalendar cal={cal} icsHref={`${e.url}calendar.ics`} variant="list" />
+            </section>
+          )}
+          {e.location.directionsUrl && (
+            <section class="panel actions" aria-labelledby="dir-h">
+              <h2 id="dir-h">Get directions</h2>
+              <div class="action-group">
+                <a class="btn btn--primary btn--small" href={e.location.directionsUrl} target="_blank" rel="noopener" data-track="get_directions" data-track-method="google"><Icon name="directions" />Google Maps<span class="visually-hidden"> (opens in a new tab)</span></a>
+                {e.location.appleMapsUrl && <a class="btn btn--secondary btn--small" href={e.location.appleMapsUrl} target="_blank" rel="noopener" data-track="get_directions" data-track-method="apple"><Icon name="pin" />Apple Maps<span class="visually-hidden"> (opens in a new tab)</span></a>}
+              </div>
+            </section>
+          )}
+          <section class="panel actions" id="share" aria-labelledby="share-h">
+            <h2 id="share-h">Share this event</h2>
+            <ShareControls share={share} details={{ lesson: lessonLine, admission: e.admissionLine, beginners: e.beginnerFriendly }} slug={e.slug} socialImage={socialSquare} variant="inline" />
+            {socialSquare && <p class="muted">Posting to Instagram? Copy the event details and download the square image, then add them to your post or story.</p>}
+          </section>
+          <section class="panel actions" aria-labelledby="q-h">
+            <h2 id="q-h">Questions?</h2>
+            <p>Call the {settings.hotlineLabel}: <a href={`tel:+1${tel}`} data-track="click_hotline" data-track-location="event">{settings.hotlinePhone}</a></p>
+            <p><button type="button" class="btn btn--secondary btn--small js-only" data-print><Icon name="print" />Print this page</button></p>
+          </section>
+        </aside>
+      </div>
+
+      {more.length > 0 && (
+        <section class="section no-print" aria-labelledby="more">
+          <div class="section__head">
+            <h2 id="more">More upcoming dances</h2>
+            <a class="btn btn--secondary" href="/events/">All events</a>
+          </div>
+          <ul class="event-list" data-upcoming-list="event_more">
+            {more.map((x) => <EventCard event={x} />)}
+          </ul>
+        </section>
+      )}
+    </div>
+  </article>
+
+  <nav class="action-bar no-print" aria-label="Quick actions">
+    {upcomingNow ? (
+      <a href="#add-to-calendar" class="action-bar__primary"><Icon name="calendar" />Calendar</a>
+    ) : (
+      <a href="/events/" class="action-bar__primary"><Icon name="calendar" />Upcoming</a>
+    )}
+    {e.location.directionsUrl ? (
+      <a href={e.location.directionsUrl} target="_blank" rel="noopener" data-track="get_directions" data-track-method="google" data-track-location="action_bar"><Icon name="directions" />Directions<span class="visually-hidden"> (opens in a new tab)</span></a>
+    ) : (
+      <a href="/contact/"><Icon name="phone" />Contact</a>
+    )}
+    <ShareControls share={share} details={{ lesson: lessonLine, admission: e.admissionLine, beginners: e.beginnerFriendly }} slug={e.slug} socialImage={socialSquare} variant="button" buttonClass="action-bar__btn" location="action_bar" />
+  </nav>
+</BaseLayout>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-print]').forEach((b) => b.addEventListener('click', () => window.print()));
+</script>

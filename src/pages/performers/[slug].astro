@@ -1,0 +1,73 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import EventCard from '../../components/EventCard.astro';
+import ResponsiveImage from '../../components/ResponsiveImage.astro';
+import Icon from '../../components/Icon.astro';
+import { getEventGroups } from '../../lib/content';
+import { breadcrumbJsonLd } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const all = [...(await getCollection('instructors')), ...(await getCollection('performers'))];
+  return all.map((p) => ({ params: { slug: p.id }, props: { person: p } }));
+}
+const { person } = Astro.props;
+const { Content } = await render(person);
+const p = person.data;
+const { upcoming, past } = await getEventGroups();
+const involved = (e: (typeof upcoming)[number]) => e.details.bandName === person.id || (e.details.instructorNames ?? []).includes(person.id) || (e.details.djNames ?? []).includes(person.id);
+const next = upcoming.filter(involved);
+const before = past.filter(involved).slice(0, 6);
+const site = Astro.site!;
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Bands, DJs and teachers', href: '/performers/' },
+  { name: p.name, href: `/performers/${person.id}/` },
+];
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': p.kind === 'band' ? 'MusicGroup' : 'Person',
+  name: p.name,
+  url: new URL(`/performers/${person.id}/`, site).toString(),
+  ...(p.kind === 'instructor' ? { jobTitle: p.role ?? 'Swing dance instructor' } : {}),
+  sameAs: [p.website, p.facebookUrl].filter(Boolean),
+  ...(p.members?.length && p.kind === 'band' ? { member: p.members.map((m) => ({ '@type': 'Person', name: m.replace(/\s*\(.*\)$/, '') })) } : {}),
+};
+const kind = p.kind === 'band' ? 'Live band' : p.kind === 'dj' ? 'DJ' : 'Swing dance teacher';
+---
+<BaseLayout title={p.seoTitle ?? `${p.name}: ${kind} at SDLI`} description={p.seoDescription ?? `${p.name}, ${kind.toLowerCase()} at Swing Dance Long Island dances.${next.length ? ` Next appearance: ${next[0]!.dateLabel}.` : ''}`} pageType="performer" jsonLd={[ld, breadcrumbJsonLd(crumbs, site)]}>
+  <PageHeader title={p.name} lede={p.role ?? kind} crumbs={crumbs} />
+  <div class="container section">
+    <div class="split">
+      <div class="stack-l">
+        <div class="prose"><Content /></div>
+        {p.members && p.members.length > 0 && (
+          <section aria-labelledby="members-h"><h2 id="members-h" class="h3">Members</h2><ul class="mt-3">{p.members.map((m) => <li>{m}</li>)}</ul></section>
+        )}
+        {(p.website || p.facebookUrl) && (
+          <p class="btn-row">
+            {p.website && <a class="btn btn--secondary btn--small" href={p.website} rel="noopener"><Icon name="link" />Website</a>}
+            {p.facebookUrl && <a class="btn btn--secondary btn--small" href={p.facebookUrl} rel="noopener"><Icon name="facebook" />Facebook</a>}
+          </p>
+        )}
+        <section aria-labelledby="next-h">
+          <h2 id="next-h">Upcoming at SDLI</h2>
+          {next.length ? <ul class="event-list mt-5" data-upcoming-list="performer">{next.map((e) => <EventCard event={e} />)}</ul> : <p class="mt-3">No upcoming dates are listed yet. <a href="/events/">See all events</a>.</p>}
+        </section>
+        {before.length > 0 && (
+          <section aria-labelledby="past-h">
+            <h2 id="past-h" class="h3">Recent appearances</h2>
+            <ul class="event-list mt-3">{before.map((e) => <EventCard event={e} past />)}</ul>
+          </section>
+        )}
+      </div>
+      {p.image && p.imageAlt && (
+        <figure class="photo">
+          <ResponsiveImage src={p.image} alt={p.imageAlt} widths={[400, 640, 900]} sizes="(min-width: 56rem) 30vw, 92vw" loading="eager" />
+          {p.imageCredit && <figcaption class="photo__caption">{p.imageCredit}</figcaption>}
+        </figure>
+      )}
+    </div>
+  </div>
+</BaseLayout>
