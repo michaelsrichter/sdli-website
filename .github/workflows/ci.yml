@@ -34,6 +34,8 @@ jobs:
             package-lock.json
             api/package-lock.json
 
+      - name: Lockfiles use the public npm registry
+        run: node scripts/normalize-lockfile.mjs --check
       - name: Install site dependencies
         run: npm ci
       - name: Install API dependencies

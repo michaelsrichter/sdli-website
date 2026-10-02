@@ -27,7 +27,9 @@
     "postinstall": "node scripts/copy-cms.mjs && node scripts/build-cms-config.mjs",
     "ci": "npm run check && npm run test && npm run build && npm run test:links",
     "test:smoke": "node scripts/smoke.mjs",
-    "geocode": "node scripts/geocode-venues.mjs"
+    "geocode": "node scripts/geocode-venues.mjs",
+    "lockfile:normalize": "node scripts/normalize-lockfile.mjs",
+    "lockfile:check": "node scripts/normalize-lockfile.mjs --check"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
