@@ -10,6 +10,11 @@ import sdliFloor from '../assets/uploads/tuesday-dance-floor.jpg';
 import sdliBand from '../assets/uploads/tuesday-band-singer-and-guitarist.jpg';
 import sdliBigBand from '../assets/uploads/big-band-singer.jpg';
 import sdliHorns from '../assets/uploads/big-band-horns.jpg';
+import sdliCouple from '../assets/uploads/sdli-couple-dancing-red-dress.jpg';
+import sdliHalloween from '../assets/uploads/sdli-halloween-dance-floor.jpg';
+import sdliDrums from '../assets/uploads/sdli-big-band-drums.jpg';
+import sdliTuxedos from '../assets/uploads/sdli-dancers-in-tuxedos.jpg';
+import sdliGroup from '../assets/uploads/sdli-formal-group-photo.jpg';
 
 export interface Photo {
   src: ImageMetadata;
@@ -88,4 +93,9 @@ export const photos = {
   sdliBand: { src: sdliBand, alt: 'A smiling singer and a guitarist performing at an SDLI dance.', sdli: true },
   sdliBigBand: { src: sdliBigBand, alt: 'A singer performing with a big band at an SDLI dance.', sdli: true },
   sdliHorns: { src: sdliHorns, alt: 'Big band musicians playing saxophones and other horns at an SDLI dance.', sdli: true },
+  sdliCouple: { src: sdliCouple, alt: 'A couple swing dancing at an SDLI dance, one partner in a red dress.', sdli: true },
+  sdliHalloween: { src: sdliHalloween, alt: 'Dancers in Halloween costumes on the dance floor at an SDLI theme night.', sdli: true },
+  sdliDrums: { src: sdliDrums, alt: "A big band's drummer and horn section playing at an SDLI dance.", sdli: true },
+  sdliTuxedos: { src: sdliTuxedos, alt: 'Five smiling SDLI dancers dressed up in tuxedos and bow ties.', sdli: true },
+  sdliGroup: { src: sdliGroup, alt: 'A large group of SDLI dancers in formal and holiday outfits posing together.', sdli: true },
 } satisfies Record<string, Photo>;

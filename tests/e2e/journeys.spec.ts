@@ -53,6 +53,8 @@ test.describe('visitor journeys', () => {
     const copied = () => page.evaluate(() => (window as any).__copied.at(-1) as string);
     await page.goto('/events/');
     await page.locator('[data-upcoming-list] .event-card__title a').first().click();
+    await page.waitForURL(/\/events\/\d{4}-\d{2}-\d{2}-[a-z0-9-]+\/$/);
+    await page.waitForLoadState('load');
     const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
     const share = page.locator('#share');
     await share.getByRole('button', { name: 'Copy link' }).click();

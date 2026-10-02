@@ -63,6 +63,14 @@ describe('legacy redirects and Static Web Apps configuration', () => {
   it('stays under the 20 KB Azure limit with room for the CSP', () => {
     expect(Buffer.byteLength(JSON.stringify(cfg))).toBeLessThan(12 * 1024);
   });
+  it('has no duplicate routes (Azure treats a trailing slash as the same route)', () => {
+    const seen = new Set<string>();
+    for (const r of cfg.routes) {
+      const key = r.route.toLowerCase().replace(/\/$/, '');
+      expect(seen.has(key), `duplicate route ${r.route}`).toBe(false);
+      seen.add(key);
+    }
+  });
   it('uses permanent redirects for the most important old pages', () => {
     const r = Object.fromEntries(cfg.routes.filter((x: any) => x.redirect).map((x: any) => [x.route, x]));
     expect(r['/index.php'].redirect).toBe('/');

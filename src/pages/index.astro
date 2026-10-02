@@ -48,8 +48,8 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
         </div>
       </div>
       <div class="home-hero__photos">
-        <Photo photo={photos.heroCouple} sizes="(min-width: 60rem) 24vw, 52vw" widths={[320, 480, 720]} />
-        <Photo photo={photos.sdliFloor} sizes="(min-width: 60rem) 22vw, 46vw" widths={[320, 480, 720]} aspect={1} caption="A Tuesday night at SDLI." />
+        <Photo photo={photos.sdliCouple} sizes="(min-width: 60rem) 24vw, 52vw" widths={[320, 400, 500]} aspect={4 / 5} caption="Tuesday night at SDLI." />
+        <Photo photo={photos.sdliTuxedos} sizes="(min-width: 60rem) 22vw, 46vw" widths={[320, 400, 500]} aspect={1} />
       </div>
     </div>
     <svg class="swoosh" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 60V30C240 0 480 0 720 22s480 30 720 0v38z" fill="currentColor" /></svg>
@@ -187,9 +187,9 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
         <a class="btn btn--secondary" href="/gallery/">See the gallery</a>
       </div>
       <div class="photo-strip">
-        <Photo photo={photos.sdliBand} sizes="(min-width: 60rem) 30vw, 92vw" widths={[400, 640, 960]} aspect={1.5} />
+        <Photo photo={photos.sdliGroup} sizes="(min-width: 60rem) 30vw, 92vw" widths={[400, 640, 960]} aspect={1.5} />
         <Photo photo={photos.sdliBigBand} sizes="(min-width: 60rem) 30vw, 92vw" widths={[400, 640, 960]} aspect={1.5} />
-        <Photo photo={photos.socialFloor} sizes="(min-width: 60rem) 30vw, 92vw" widths={[400, 640, 960]} aspect={1.5} />
+        <Photo photo={photos.sdliHalloween} sizes="(min-width: 60rem) 30vw, 92vw" widths={[400, 640, 960]} aspect={1.5} />
       </div>
     </div>
   </section>

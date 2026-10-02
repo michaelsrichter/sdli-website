@@ -10,9 +10,10 @@ interface Props {
   loading?: 'eager' | 'lazy';
   /** Crop to an aspect ratio (width / height) so card collections stay consistent. */
   aspect?: number;
+  /** Crop focus for cover crops: "attention" picks the most interesting region (faces). */
   position?: string;
 }
-const { src, alt, widths, sizes, class: className, loading = 'lazy', aspect } = Astro.props;
+const { src, alt, widths, sizes, class: className, loading = 'lazy', aspect, position = 'attention' } = Astro.props;
 const usable = widths.filter((w) => w <= src.width);
 const finalWidths = usable.length ? usable : [src.width];
 const maxW = Math.max(...finalWidths);
@@ -28,7 +29,7 @@ const height = aspect ? Math.round(maxW / aspect) : Math.round((maxW * src.heigh
   width={maxW}
   height={height}
   fit={aspect ? 'cover' : undefined}
-  position="center"
+  position={aspect ? position : undefined}
   loading={loading}
   decoding={loading === 'eager' ? 'sync' : 'async'}
   fetchpriority={loading === 'eager' ? 'high' : undefined}

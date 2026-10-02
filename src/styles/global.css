@@ -583,3 +583,17 @@
   @media (min-width: 60rem) { .home-hero { grid-template-rows: auto auto 1fr; } .home-hero__more { align-self: start; } }
 }
 
+
+@layer layout {
+  /* Single-column tracks must be able to shrink below their content's min-content width (wide tables scroll inside .table-scroll). */
+  @media (max-width: 55.99rem) { .split { grid-template-columns: minmax(0, 1fr); } }
+  .info-band, .home-hero { grid-template-columns: minmax(0, 1fr); }
+  .split > *, .info-band > *, .stack-l > *, .event-layout > * { min-width: 0; }
+}
+
+
+@layer components {
+  .home-hero__more .hero__lede { margin-top: 0; }
+  @media (min-width: 60rem) { .home-hero { row-gap: var(--space-4); } }
+}
+

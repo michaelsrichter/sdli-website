@@ -1,0 +1,16 @@
+title: Live music
+description: Big bands, swing combos and singers who play for SDLI dancers.
+order: 30
+published: true
+source: Photos from the previous SDLI website (homepage and page banners, hosted on SmugMug).
+rightsNote: Photographer not identified on the old site. Confirm the photographer and permission before reusing these photos elsewhere.
+
+images:
+  - image: ../../assets/uploads/tuesday-band-singer-and-guitarist.jpg
+    alt: A smiling singer and a guitarist performing at an SDLI dance.
+  - image: ../../assets/uploads/big-band-singer.jpg
+    alt: A singer performing with a big band at an SDLI dance.
+  - image: ../../assets/uploads/big-band-horns.jpg
+    alt: Big band musicians playing saxophones and other horns at an SDLI dance.
+  - image: ../../assets/uploads/sdli-big-band-drums.jpg
+    alt: A big band's drummer and horn section playing at an SDLI dance.
