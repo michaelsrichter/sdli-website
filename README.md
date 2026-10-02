@@ -8,7 +8,7 @@ The website for **Swing Dance Long Island (SDLI)**, an all-volunteer, not-for-pr
 
 ## Purpose
 
-Help people answer, in seconds: *Is there a dance coming up? When and where? Is there a lesson? How much? Do I need a partner? Is it beginner-friendly?* And make it easy to add the dance to a calendar, get directions and share it.
+Help people answer, in seconds: *Is there a dance coming up? When and where? Is there a lesson? How much? Do I need a partner? Is it beginner-friendly?* And make it easy to add the dance to a calendar, get directions and share it. SDLI's own dances always come first; other groups' dances around Long Island are listed after them as clearly labeled **community events** (see [/community/](https://witty-smoke-095ea140f.2.azurestaticapps.net/community/)).
 
 ## Architecture
 
@@ -136,8 +136,9 @@ Strict CSP (`script-src 'self'` + one hash; no inline styles), `frame-ancestors 
 - CMS sign-in works on the production host only (one callback per GitHub OAuth App); previews are view-only.
 - Free plan: 3 concurrent preview environments.
 - "Upcoming" is refreshed nightly; between builds the browser hides ended events, but a dance added in the CMS appears only after it is published.
-- Recurring Tuesday dates beyond the old site's posted schedule show the standing schedule with a note until editors add themes, bands or closures.
-- Parking, accessibility and some bios are pending SDLI confirmation (see [legacy-site-migration.md §5](docs/legacy-site-migration.md#5-what-still-needs-a-volunteer-to-confirm)).
+- Recurring Tuesday dates beyond the posted schedule (currently after October 2026) show the standing schedule with a note until editors add themes, bands or closures.
+- Community events come from The Dance Calendar, Triple Step Swing's calendar and the SDLI Facebook group as of October 2026. Editors refresh them monthly (see the [editor guide](docs/editor-guide.md#add-a-community-event-another-groups-dance-or-class)).
+- Moose Lodge parking and accessibility come from Google Maps and reviews; some bios are pending SDLI confirmation (see [legacy-site-migration.md §5](docs/legacy-site-migration.md#5-what-still-needs-a-volunteer-to-confirm)).
 - Azure resources currently live in a Microsoft-internal sandbox subscription; move them to an SDLI-owned subscription before cutover ([decision log #3](docs/decision-log.md)).
 - No code license has been chosen yet.
 

@@ -6,14 +6,15 @@ All content is in `src/content/`. Schemas are in `src/lib/schemas.ts` and enforc
 | --- | --- | --- | --- |
 | `events` | `src/content/events/` | Markdown + front matter | One-time events, archived events, and changes to single dates of a series |
 | `series` | `src/content/series/` | Markdown + front matter | Repeating dances (templates); dates are generated |
-| `venues` | `src/content/venues/` | Markdown | Places, addresses, directions, parking, accessibility |
-| `instructors` | `src/content/instructors/` | Markdown | Teachers |
-| `performers` | `src/content/performers/` | Markdown | Bands and DJs |
-| `styles` | `src/content/styles/` | YAML | Dance-style taxonomy |
+| `venues` | `src/content/venues/` | Markdown | Places, addresses, directions, parking, accessibility, Google Maps listing |
+| `organizers` | `src/content/organizers/` | Markdown | Other dance groups, studios and teachers who run **community events** (contacts, links, classes) |
+| `instructors` | `src/content/instructors/` | Markdown | Teachers (with their website and social links) |
+| `performers` | `src/content/performers/` | Markdown | Bands and DJs (with their website and social links) |
+| `styles` | `src/content/styles/` | YAML | Dance-style taxonomy (`family: swing` for SDLI styles, `other` for ballroom, Latin, tango, country) |
 | `pages` | `src/content/pages/` | Markdown | Home intro, New to Swing, Lessons, Membership, About, Contact, Gallery intro, Privacy |
 | `announcements` | `src/content/announcements/` | YAML | Site-wide banner (with optional start/end dates) |
 | `gallery` | `src/content/gallery/` | YAML | Photo albums |
-| `faqs` | `src/content/faqs/` | YAML | Questions and answers (also published as FAQPage structured data) |
+| `faqs` | `src/content/faqs/` | YAML | Frequently Asked Questions (also published as FAQPage structured data) |
 | `settings` | `src/content/settings/site.yml` | YAML | Contact details, hotline, mailing address, membership fee, standard prices, default venue |
 
 Facts are stored once: venue addresses on the venue; styles in the style taxonomy; standard prices and contact details in settings; prices for a specific night on the event or series.
@@ -33,6 +34,11 @@ The build converts to UTC with `Intl` (handles daylight saving time) and publish
 | Field | Required | Notes |
 | --- | --- | --- |
 | `title` | yes | 3–120 characters |
+| `host` | default `sdli` | `sdli` (an official SDLI event) or `community` (run by another group). Community events get a "Community event" badge, are listed after SDLI events, never become the "Next SDLI dance", stay out of the SDLI calendar feed, RSS and past-events archive, and name their organizer (not SDLI) in structured data |
+| `organizer` | for community events | Organizer ID. Their phone, email, website and social links appear on the event |
+| `cadence` | no | Plain-language repeat pattern for community events ("First and third Fridays of the month") |
+| `infoUrl` | no | The organizer's own page for this event |
+| `sourceName`, `sourceUrl` | for community events | Where the listing came from ("The Dance Calendar, October 2026"); shown on the event page |
 | `status` | default `scheduled` | `draft` (hidden), `scheduled`, `cancelled` (stays visible, clearly marked), `postponed`, `soldOut`, `completed` (archive). Scheduled events that have ended display as "Past event" automatically. |
 | `published` | default `true` | `false` hides the entry |
 | `featured` | default `false` | Reserved for promoting special events |
@@ -44,9 +50,9 @@ The build converts to UTC with `Intl` (handles daylight saving time) and publish
 | `latitude`, `longitude`, `directionsUrl` | no | Directions default to Google Maps for the address |
 | `instructorNames`, `djNames`, `bandName` | no | IDs from Teachers / Bands and DJs |
 | `danceStyles` | no | Style IDs |
-| `eventTypes` | no | `weekly-dance`, `monthly-dance`, `live-band`, `dj-night`, `beginner-lesson`, `workshop`, `special-event`, `community-event` |
+| `eventTypes` | no | `weekly-dance`, `monthly-dance`, `live-band`, `dj-night`, `beginner-lesson`, `workshop`, `special-event`, `community-event`, `social-dance`, `practice`, `festival` (dance weekend), `class` |
 | `experienceLevel` | no | `all-levels` (default), `beginner`, `intermediate`, `advanced` |
-| `partnerRequired`, `beginnerFriendly` | no | Defaults: no partner needed, beginner friendly |
+| `partnerRequired`, `beginnerFriendly` | no | SDLI events default to "no partner needed" and "beginner friendly". Community events only show these when set |
 | `admissionMember`, `admissionStudent`, `admissionNonMember`, `admissionNotes` | no | Numbers in dollars; `0` means free |
 | `registrationUrl`, `registrationRequired`, `capacityNotes` | no | |
 | `featuredImage` + `featuredImageAlt` | no | Alt text is required when an image is set |
@@ -72,7 +78,28 @@ Everything an event has (except title/status overrides), plus:
 | `recurrence.startDate`, `recurrence.endDate` | Date range |
 | `recurrence.horizonWeeks` | How far ahead dates are published (default 12) |
 | `recurrence.exceptDates[]` | Dates to skip silently. Prefer a cancelled override if visitors should see "no dance this week". |
-| `startTime`, `endTime` | Default times for every date |
+| `startTime`, `endTime` | Default times for every date. An `endTime` at or before `startTime` (for example 20:00 to 00:00) means the event ends after midnight |
+
+## Organizer fields (community events)
+
+| Field | Notes |
+| --- | --- |
+| `name`, `shortName` | Shown on events and the Dance community page |
+| `active` | `false` hides the group from the Dance community page |
+| `tagline` | One line (≤ 160 characters) about what they run |
+| `town`, `venue` | Main town and usual venue ID |
+| `danceStyles` | Style IDs. The **first** style decides the group on the Dance community page ("Swing and blues" or "Ballroom, Latin and more") |
+| `phone`, `phoneAlt`, `email`, `website`, `facebookUrl`, `instagramUrl`, `moreLinks[]` | As the organizer publishes them. `moreLinks` items have `label` and `url` |
+| `classes` | Classes they teach; shown under "Take a class" and on the Lessons page for swing styles |
+| `sourceName`, `sourceUrl` | Where the details came from |
+
+## People (teachers, bands, DJs)
+
+`website`, `facebookUrl`, `instagramUrl`, `youtubeUrl` and `moreLinks[]` (label + URL) are shown wherever the person is mentioned: their name on event cards and the next-dance card links to their website (or first social page), event pages and profiles show every link, and structured data lists them as `sameAs`. `organizer` links a teacher to the group they run.
+
+## Venues
+
+`googleMapsUrl` adds a "Photos & reviews" button. `parkingNotes`, `accessibilityNotes` and `factsSource` (where those facts came from) appear in the venue panel. Venues used only by community events appear under "Other dance venues around Long Island".
 
 ## URLs
 
@@ -87,10 +114,11 @@ Everything an event has (except title/status overrides), plus:
 | Past events by year | `/events/past/<YYYY>/` |
 | Venue | `/venues/<id>/` |
 | Teacher, band or DJ | `/performers/<id>/` |
-| Feeds | `/events/rss.xml`, `/events/sdli-events.ics` |
+| Dance community (organizers) | `/community/` (each group at `/community/#<id>`) |
+| Feeds | `/events/rss.xml` (SDLI), `/events/sdli-events.ics` (SDLI), `/events/community-events.ics` (community) |
 
 ## Validation
 
 - `npm run check` / `npm run build`: Astro validates every entry against the schema. Errors name the file and field in plain language (for example "Use the date format YYYY-MM-DD.").
-- `npm test`: also validates every content file directly and checks that every venue, person and style reference exists.
-- The build fails on duplicate event URLs and on references to unknown series, venues or styles.
+- `npm test`: also validates every content file directly and checks that every venue, person, style and organizer reference exists, that every community event names an organizer and a listing source, and that every series, venue, organizer, person and style field is editable in the CMS.
+- The build fails on duplicate event URLs and on references to unknown series, venues, styles or organizers.

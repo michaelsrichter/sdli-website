@@ -24,6 +24,7 @@ Tracked declaratively with `data-track` attributes and in `src/scripts/*.ts`. Al
 | `share_open` | Share dialog opened (no native share available) | `event_slug` |
 | `copy_failed` | Clipboard copy failed | `method` |
 | `get_directions` | Google Maps or Apple Maps | `method`, `location` |
+| `outbound_click` | Opened a teacher's, band's, organizer's or venue's website or social page, or tapped an organizer's phone/email | `method` (`website`, `facebook`, `instagram`, `youtube`, `link`, `phone`, `email`, `reviews`), `location`, `target` (destination site, e.g. `triplestepswing.com`) |
 | `click_hotline` | Tapped the hotline phone number | `location` |
 | `click_email` | Tapped `info@sdli.org` | `location` |
 | `newsletter_click` | Opened the Mailchimp sign-up | `location` |
@@ -34,7 +35,7 @@ Tracked declaratively with `data-track` attributes and in `src/scripts/*.ts`. Al
 | `consent_update` | Analytics choice | `value`, `mode` |
 | `web_vital` | Core Web Vitals (OTel only) | `metric` (LCP, INP, CLS, FCP, TTFB), `rating`, value |
 
-Locations used: `home_next`, `home`, `home_venue`, `event`, `action_bar`, `events`, `calendar`, `venue`, `contact`, `footer`.
+Locations used: `home_next`, `home`, `home_venue`, `event`, `event_aside`, `action_bar`, `events`, `events_community`, `card`, `calendar`, `venue`, `venue_panel`, `performer`, `performers`, `community`, `contact`, `footer`.
 
 ## OpenTelemetry metrics (Application Insights `customMetrics`)
 

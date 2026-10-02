@@ -23,7 +23,7 @@ Every change is recorded with your name and can be undone.
 
 ### See what is coming up
 
-Open **Events**. Use **View filters** (Cancelled, Postponed, Drafts, by year) and **Group by** (Year, Status).
+Open **Events**. The newest events are listed first. Use **View filters** (SDLI events, Community events, Cancelled, Postponed, Drafts, by year) and **Group by** (Year, Status).
 
 ### Post a band night, pizza night or guest teacher (changing one Tuesday)
 
@@ -60,6 +60,34 @@ Set **Status** to *Postponed*, explain in the message, create the new date as it
 
 Open an existing event, click the **⋯** menu, choose **Duplicate**, then change the date and details.
 
+### Add a community event (another group's dance or class)
+
+The site lists other groups' dances after SDLI's own, with a **Community event** badge, so visitors can find more places to dance. SDLI's dances always come first, and the "Next SDLI dance" is always an SDLI dance.
+
+1. Make sure the group exists under **Dance groups and organizers** (see below). Add it first if not.
+2. **Events → New Event** (or **Event series → New Series** if it repeats, for example every Wednesday in November).
+3. **Who runs this event?** *Community event (another group)*.
+4. **Organizer:** pick the group. Their phone, email and website appear on the event automatically.
+5. Fill in **Title** (be specific, for example `Halloween Party at The Waterfalls`), dates and times, **Venue** (add it under **Venues** first if needed), **Dance styles** (these become the tags visitors see), prices and a **Short summary**.
+6. **Repeats (in plain words):** for example `First and third Fridays of the month`.
+7. **Listing source:** where you found it, for example `The Dance Calendar, November 2026`, with the link in **Listing source link**. It is shown on the event page.
+8. If the listing does not say "beginners welcome" or "no partner needed", leave those switches off for community events.
+9. Publish as usual.
+
+Tip: each month, open the new issue of The Dance Calendar and update the community events. Series for other groups should have a **Last date** at the end of the month you checked, so stale dates do not linger.
+
+### Add or update a dance group or organizer
+
+**Dance groups and organizers → New Dance group**. Fill in the name, a one-line description, town, usual venue, **Dance styles** (the first style decides whether they appear under "Swing and blues" or "Ballroom, Latin and more" on the Dance community page), contact details exactly as the group publishes them, website and social links, and **Classes they offer** if they teach classes. Turn off **Still active** to hide a group.
+
+### Teacher and band links
+
+Open **Teachers** or **Bands and DJs** and fill in **Website**, **Facebook**, **Instagram**, **YouTube** and **More links** (for example *Meetup group* or *Swing calendar*). Their name then links to their website on every event card, and their profile and event pages show all of their links. If a teacher also runs a dance group, choose it in **Runs this dance group**.
+
+### Dance styles
+
+**Dance styles** are the tags on events. Set **Kind of dance** to *Swing* for styles danced at SDLI (they appear in "The dances you will see" and on New to Swing) or *Other* for ballroom, Latin, tango, country and so on.
+
 ### Archive
 
 Past events move to **Past events** automatically. You never need to delete them. To hide an event completely, turn off **Show on website**.
@@ -73,10 +101,10 @@ Past events move to **Past events** automatically. You never need to delete them
 ### Edit pages, membership, contact details and prices
 
 - **Pages**: Homepage introduction, New to Swing, Lessons, Membership, About, Contact, Gallery intro, Privacy.
-- **Site settings**: hotline, email, mailing address, email-list link, membership fee and year, **standard door prices** (used on the Membership page and homepage).
-- **Venues**: add parking and accessibility details.
+- **Site settings**: hotline, email, mailing address, email-list link, Facebook group link and its text, membership fee and year, **standard door prices** (used on the Membership page and homepage).
+- **Venues**: add parking and accessibility details, the Google Maps listing (adds a "Photos & reviews" button) and where those facts came from.
 - **Teachers** and **Bands and DJs**: short bios, photos and links.
-- **Questions and answers**: the FAQ page. You can add links like `[Membership](/membership/)`.
+- **Frequently Asked Questions**: the FAQ page. You can add links like `[Membership](/membership/)`.
 - **Announcements**: the banner at the top of every page. Set **Show from** and **Show until** dates so it disappears on its own.
 
 ### Notes for editors
@@ -95,13 +123,15 @@ Ask the administrator, or see [rollback.md](rollback.md). Every published change
 
 ## CMS sign-in setup (administrator)
 
+> **Status (October 2, 2026): done.** OAuth App **SDLI Website CMS** (owner `michaelsrichter`, client ID `Ov23lipeynKiwpQ3lZuc`, callback `https://witty-smoke-095ea140f.2.azurestaticapps.net/api/callback`, user-token expiration **off** because Decap cannot refresh tokens). The client ID and secret are stored only as Static Web App app settings. Sign-in was tested successfully. Manage it at GitHub → Settings → Developer settings → OAuth Apps. The steps below are kept for re-creating it (for example after DNS cutover).
+
 Decap CMS needs a GitHub OAuth App so editors can sign in. This is a one-time step.
 
 1. Sign in to GitHub as the account that owns the repository. Go to **Settings → Developer settings → OAuth Apps → New OAuth App**.
 2. **Application name:** `SDLI Website CMS`
 3. **Homepage URL:** the site address (for example `https://witty-smoke-095ea140f.2.azurestaticapps.net`, later `https://www.sdli.org`)
 4. **Authorization callback URL:** `<site address>/api/callback`
-5. Click **Register application**, then **Generate a new client secret**. Copy the Client ID and secret (do not share or commit them).
+5. Click **Register application**. **Uncheck "Expire user access tokens"** (on by default; Decap cannot refresh tokens, so editors would be signed out). Then click **Generate a new client secret**. Copy the Client ID and secret (do not share or commit them).
 6. Store them in Azure (values are never shown again):
 
    ```powershell
@@ -127,6 +157,7 @@ Content is just files in GitHub, so editing never depends on the CMS:
 
 | Problem | Fix |
 | --- | --- |
+| "Your GitHub user account does not have access to this repo" | You are signed in to GitHub with an account that is not a collaborator. Log out of the CMS (avatar menu → **Log out**), switch to your collaborator account on github.com (avatar → **Switch account**, or use a private/InPrivate window), then click **Login with GitHub** again. Ask the administrator to invite your personal account if needed. **Work accounts managed by an employer's GitHub Enterprise (for example names ending in `_microsoft`) cannot be invited** to this repository; use a personal GitHub account. |
 | "Something went wrong" when saving | Copy your text, reload `/admin/`, try again. Your draft is usually still in the Workflow tab. |
 | Automatic checks failed | Open the pull request, read the first red error. It names the file and field. |
 | A change went live by mistake | Revert the commit in GitHub (see [rollback.md](rollback.md)). |

@@ -15,6 +15,17 @@ Source: a read-only crawl of `http://www.sdli.org` on October 1, 2026 (the HTTPS
 | Dead calls to action | "Sign up today", "Learn more" (x2) and "Browse gallery" linked to `#` |
 | External links | 257, many to retired services (AOL member pages, Yahoo Groups, old hosts) |
 
+## Additional sources (October 2026)
+
+| Source | What was taken | Counts | Notes |
+| --- | --- | --- | --- |
+| The Dance Calendar PDFs, January 2024 – October 2026 (34 issues; [current issue](https://www.thedancecalendar.com/dance-calendar)) | SDLI's own listings (themes, teachers, bands, lesson styles, prices); October 2026 community dances; the organizer directory | 4,552 listings parsed; 171 SDLI listing dates; 129 archive events enriched (empty fields only); 8 missing SDLI nights added; 4 October SDLI overrides; 9 community series and 24 one-time community events; 22 organizers; 15 community venues | Month-end directory pages were excluded (they mention SDLI but are not dated listings). A stray editor's note inside one October listing was not copied |
+| [Triple Step Swing calendar](https://triplestepswing.com/calendar) (Carol Fraser) | TSS monthly swing dances (Oct 2, Nov 13), fall Lindy Hop class series (Oct 19 – Nov 2), Barrelhouse Boogie (2nd Wednesdays), Blues Night at The Burrows (Oct 21) | 50 calendar entries reviewed | Older entries confirmed archive details (for example Carol's lessons on March 24 and April 14, 2026). Stale recurring entries (venue moved) were not imported |
+| [triplestepswing.com](https://triplestepswing.com/) | Carol Fraser's website, email, Instagram, Facebook and Meetup links | — | Replaces the parked liswingsyndicate.com |
+| [SDLI Facebook group](https://www.facebook.com/groups/2209573261) | Group link; New York Lindy Exchange (Oct 9–11) and Savoy Ballroom Memories (Oct 24) | 2 events | No member names or photos copied |
+| Google Maps listing, Huntington Moose Lodge | Parking, accessibility, 4.5-star rating (134 reviews), venue website and Facebook | — | Facts summarized; photos and review text linked, not copied. `moose318.com` only works over http |
+| Band and teacher websites (checked October 2, 2026) | Official websites and social pages for 12 bands and Carol Fraser | 85 unique outside links checked | Facebook and Instagram block automated checks; those links were verified by hand. `lijazz.com` is down (replaced with Mike Ficco's Long Island Jazz Orchestra page). No official pages found for Nick Palumbo, Ben Hoffman, Lourdes Cruz (personal) or Ellen McCreary |
+
 ## Facts migrated (and where they came from)
 
 | Fact | Value on the new site | Source on the old site | Status |
@@ -23,9 +34,9 @@ Source: a read-only crawl of `http://www.sdli.org` on October 1, 2026 (the HTTPS
 | Weekly dance | Every Tuesday, Huntington Moose Lodge, 631 Pulaski Road, Greenlawn, NY | Homepage, event pages | Migrated |
 | Lesson | 7:30 PM | Homepage, September 2026 flyer, event pages | Migrated |
 | Social dancing | 8 to 10 PM | Homepage hero (10:00) and September 2026 flyer (8-10PM) | **Contradiction resolved:** the carousel text said 10:30 PM; the newer flyer and hero say 10 PM |
-| DJ-night admission |  members,  students,  non-members | Homepage | Migrated |
-| Band-night admission |  members,  students,  non-members | Homepage | Migrated |
-| Membership |  per person per year; October 1 to September 30; join at the door; membership card is the receipt | Join us › SDLI Membership | Migrated |
+| DJ-night admission | $10 members, $5 students, $15 non-members | Homepage | Migrated |
+| Band-night admission | $15 members, $10 students, $20 non-members | Homepage | Migrated |
+| Membership | $12 per person per year; October 1 to September 30; join at the door; membership card is the receipt | Join us › SDLI Membership | Migrated |
 | Hotline | 24-hour Dance Hotline (631) 476-3707 | Homepage footer, Contact | Migrated |
 | Email | info@sdli.org | September 2026 flyer | Migrated |
 | Mailing address | P.O. Box 508, Centereach, NY 11720 | Footer, Contact | Migrated |
@@ -204,7 +215,7 @@ Source: a read-only crawl of `http://www.sdli.org` on October 1, 2026 (the HTTPS
 | LI Dance Connection (LIDC) | `http://www.lidance.org/` | Omitted: stale or not current |
 | Lisa "Sparkles" Paternoster (Sparkles) | `http://www.LisaSparkles.com` | Omitted: stale or not current |
 | Lo-Fi Entertainment (Lo-Fi) | `http://lofientertainment.com/nyc-swing/` | Omitted: stale or not current |
-| Long Island Swing Syndicate (LISS) | `http://www.liswingsyndicate.com` | Kept (Friends of SDLI) |
+| Long Island Swing Syndicate (LISS) | `http://www.liswingsyndicate.com` | Replaced in October 2026: the domain is now parked. Carol Fraser's current site, Triple Step Swing (`https://triplestepswing.com/`), is linked instead |
 | Long Island Traditional Music Association (LITMA) | `http://www.litma.org` | Omitted: stale or not current |
 | Louis del Prete (Louis) | `http://groups.yahoo.com/group/ultimate-dance-li/messages` | Omitted: stale or not current |
 | Mary Piazza (Mary Piazza) | `http://www.lidance.com/` | Omitted: stale or not current |
