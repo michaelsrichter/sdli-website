@@ -31,6 +31,7 @@ Tracked declaratively with `data-track` attributes and in `src/scripts/*.ts`. Al
 | `filter_events` | Changed event filters | `filter`, `value`, `results` |
 | `view_calendar_month` | Moved to the previous/next month | `method` |
 | `show_more` | "Show N more SDLI dances" / "Show fewer" on a list that starts with the next 3 | `method` (`expand`, `collapse`), `location` (the list: `home`, `events`, `event_more`, `venue`, `series`, `performer`, `lessons`), `results` (how many extra dances) |
+| `theme_change` | Picked light, dark or auto (match the device) mode | `method` (`light`, `dark`, `auto`), `location` (`header`, `menu`, `footer`) |
 | `faq_open` | Opened a question | `question` |
 | `empty_state` | Visitor saw "no upcoming events" | `location` |
 | `consent_update` | Analytics choice | `value`, `mode` |

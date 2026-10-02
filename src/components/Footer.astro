@@ -1,6 +1,7 @@
 ---
 import type { Settings } from '../lib/content';
 import Icon from './Icon.astro';
+import ThemeSwitch from './ThemeSwitch.astro';
 interface Props {
   settings: Settings;
 }
@@ -51,8 +52,9 @@ const hasConsent = Boolean(import.meta.env.PUBLIC_GA4_ID || import.meta.env.PUBL
         </address>
       </section>
     </div>
+    <ThemeSwitch variant="choice" location="footer" class="theme-choice--footer" />
     <div class="site-footer__base">
-      <p>© {year} {s.legalName}. An all-volunteer, not-for-profit organization.</p>
+      <p>© {year} {s.legalName.replace(/\.$/, '')}. An all-volunteer, not-for-profit organization.</p>
       <p>
         <a href="/privacy/">Privacy</a>
         {hasConsent && <span aria-hidden="true"> · </span>}

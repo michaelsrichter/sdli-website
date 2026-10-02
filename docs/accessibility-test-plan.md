@@ -53,7 +53,7 @@ Record date, tester, browser/assistive technology and result for each.
 | --- | --- | --- |
 | V1 | Zoom to 200% and 400% on desktop | No loss of content or function; text reflows to one column |
 | V2 | Windows High Contrast / forced colors | Buttons, focus rings and badges remain visible |
-| V3 | Dark mode (system setting) | Contrast still passes; photos and badges readable |
+| V3 | Dark mode (system setting, and the Light / Dark / Auto switch in the header, Menu and footer) | Contrast still passes; photos and badges readable; the choice carries to the next page with no flash |
 | V4 | `prefers-reduced-motion: reduce` | No hover lift animations or smooth scrolling |
 | V5 | Text spacing bookmarklet (WCAG 1.4.12) | No clipped text |
 | V6 | 320 px wide phone (iPhone SE) portrait | No sideways scrolling; buttons wrap; dates and prices readable |

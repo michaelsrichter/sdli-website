@@ -32,6 +32,10 @@ The [dance map](/events/map/) shows map pictures from OpenStreetMap. When you op
 
 The **Show dances near me** button asks your browser for your location only when you tap it. Your location is used on your device to sort the list and is never sent to SDLI.
 
+## Light or dark mode
+
+If you pick **Light** or **Dark** (in the header, the Menu or at the bottom of any page), your browser remembers that choice on your device so the next page looks the same. It is not a cookie and is never sent to SDLI. Pick **Auto** to forget it and follow your phone or computer's setting again.
+
 ## Contact
 
 Questions? Email info@sdli.org.

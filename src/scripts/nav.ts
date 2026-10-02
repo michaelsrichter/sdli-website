@@ -34,6 +34,6 @@ document.addEventListener('click', (e) => {
 });
 
 // Close the mobile menu if the viewport grows past the breakpoint.
-window.matchMedia('(min-width: 70rem)').addEventListener('change', (m) => {
+window.matchMedia('(min-width: 78rem)').addEventListener('change', (m) => {
   if (m.matches) setOpen(false);
 });

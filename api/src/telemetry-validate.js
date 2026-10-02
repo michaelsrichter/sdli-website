@@ -17,6 +17,7 @@ const EVENT_NAMES = new Set([
   'filter_events',
   'view_calendar_month',
   'show_more',
+  'theme_change',
   'faq_open',
   'empty_state',
   'consent_update',

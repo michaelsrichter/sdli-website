@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
+import ThemeSwitch from './ThemeSwitch.astro';
 import { getSettings } from '../lib/content';
 
 const settings = await getSettings();
@@ -40,8 +41,10 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
             </li>
           ))}
         </ul>
+        <ThemeSwitch variant="choice" location="menu" class="theme-choice--menu" />
       </div>
     </nav>
+    <ThemeSwitch variant="button" location="header" />
     {settings.facebookUrl && (
       <a class="header-social" href={settings.facebookUrl} target="_blank" rel="noopener" data-track="outbound_click" data-track-method="facebook" data-track-location="header" data-track-target="facebook.com" title={settings.facebookLabel ?? 'SDLI Facebook group'}>
         <Icon name="facebook" />

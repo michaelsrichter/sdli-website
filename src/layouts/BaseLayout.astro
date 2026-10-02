@@ -56,7 +56,7 @@ const analytics = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline>document.documentElement.classList.add('js')</script>
+    <script is:inline>(function(){var d=document.documentElement;d.classList.add('js');try{var t=localStorage.getItem('sdli-theme');if(t==='light'||t==='dark')d.dataset.theme=t}catch(e){}})()</script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     {pageType !== '404' && <link rel="canonical" href={canonical} />}
@@ -101,6 +101,7 @@ const analytics = {
       import '../scripts/relative';
       import '../scripts/expire';
       import '../scripts/collapse';
+      import '../scripts/theme';
     </script>
   </body>
 </html>

@@ -51,7 +51,7 @@ flowchart LR
 | Content | Markdown/YAML in `src/content/`, validated by Zod schemas (`src/lib/schemas.ts`) | Git history is the audit trail; invalid content fails the build |
 | Events engine | `src/lib/event-core.ts` | Expands recurring series, applies per-date overrides, keeps stable URLs |
 | Dates | `src/lib/time.ts` | All times are New York wall-clock strings converted at build time with `Intl`; browsers never parse dates |
-| Styling | One CSS file with custom properties and cascade layers (`src/styles/global.css`) | No CSS framework; light and dark themes |
+| Styling | One CSS file with custom properties and cascade layers (`src/styles/global.css`) | No CSS framework; light and dark themes. Dark follows the device unless the visitor picks Light or Dark (`html[data-theme]`, saved in `localStorage` and applied by the inline head script before the first paint; `scripts/theme.ts`) |
 | Fonts | Fraunces 700 (self-hosted, one 30 KB file) + system fonts | One font request |
 | Images | `astro:assets` → WebP + JPEG, `srcset`, intrinsic sizes | Small, sharp images with no layout shift |
 | Client JS | Vanilla TypeScript modules (nav, share, filters, expiry, analytics) | Everything works without JavaScript; JS only enhances |

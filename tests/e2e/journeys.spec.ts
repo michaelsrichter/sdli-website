@@ -264,6 +264,55 @@ test.describe('only the next 3 SDLI dances show at first', () => {
   });
 });
 
+test.describe('light and dark mode', () => {
+  test('visitors can switch between light and dark, and the choice is remembered', async ({ pinned: page, isMobile }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.goto('/');
+    const html = page.locator('html');
+    const DARK = 'rgb(21, 14, 27)';
+    const LIGHT = 'rgb(255, 250, 242)';
+    await expect(page.locator('body')).toHaveCSS('background-color', DARK);
+
+    if (isMobile) {
+      // Phones: the switch is in the Menu.
+      await page.getByRole('button', { name: 'Menu' }).click();
+      const menu = page.locator('#nav-panel').getByRole('group', { name: 'Light or dark mode' });
+      await expect(menu).toBeVisible();
+      await menu.locator('label', { hasText: 'Light' }).click();
+    } else {
+      await page.locator('.site-header').getByRole('button', { name: 'Switch to light mode' }).click();
+      await expect(page.locator('.site-header').getByRole('button', { name: 'Switch to dark mode' })).toBeVisible();
+    }
+    await expect(html).toHaveAttribute('data-theme', 'light');
+    await expect(page.locator('body')).toHaveCSS('background-color', LIGHT);
+
+    // Remembered on the next page, before any script runs.
+    await page.goto('/events/');
+    await expect(html).toHaveAttribute('data-theme', 'light');
+    await expect(page.locator('body')).toHaveCSS('background-color', LIGHT);
+
+    // The footer offers all three choices on every page; Auto follows the device again.
+    const footer = page.locator('.theme-choice--footer');
+    await expect(footer.getByRole('radio', { name: 'Light' })).toBeChecked();
+    await footer.locator('label', { hasText: 'Auto' }).click();
+    expect(await html.getAttribute('data-theme')).toBeNull();
+    await expect(page.locator('body')).toHaveCSS('background-color', DARK);
+    await footer.locator('label', { hasText: 'Dark' }).click();
+    await page.emulateMedia({ colorScheme: 'light' });
+    await expect(page.locator('body')).toHaveCSS('background-color', DARK);
+  });
+
+  test('without JavaScript the site follows the device and shows no switch', async ({ browser }) => {
+    const ctx = await browser.newContext({ javaScriptEnabled: false, colorScheme: 'dark' });
+    const page = await ctx.newPage();
+    await page.goto('/');
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(21, 14, 27)');
+    await expect(page.locator('[data-theme-toggle]')).toBeHidden();
+    await expect(page.locator('.theme-choice--footer')).toBeHidden();
+    await ctx.close();
+  });
+});
+
 test.describe('photos, map and header', () => {
   test('the homepage slideshow rotates Moose Lodge photos and can be paused and stepped', async ({ pinned: page }) => {
     await page.goto('/');

@@ -70,10 +70,15 @@
     --container: 72rem;
     --tap: 44px;
     --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --map-tiles: none;
+    --when-light: block;
+    --when-dark: none;
   }
 
+  /* Dark mode: the device is set to dark (and the visitor has not picked Light), or the visitor picked Dark.
+     The two blocks must stay identical; tests/unit/theme-css.test.ts checks this. */
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme='light']) {
       --c-bg: #150e1b;
       --c-surface: #211627;
       --c-sand: #2b1d33;
@@ -98,8 +103,46 @@
       --c-muted-bg: #33253b;
       --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
       --shadow-2: 0 8px 28px rgb(0 0 0 / 0.45);
+      --map-tiles: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+
+      --when-light: none;
+
+      --when-dark: block;
     }
   }
+  :root[data-theme='dark'] {
+    --c-bg: #150e1b;
+    --c-surface: #211627;
+    --c-sand: #2b1d33;
+    --c-ink: #f8f0e6;
+    --c-ink-soft: #d3c4d8;
+    --c-line: #45324f;
+    --c-brand: #f4a9cf;
+    --c-accent: #ff9a6b;
+    --c-accent-hover: #ffb38e;
+    --c-on-accent: #22100a;
+    --c-gold: #f6c25a;
+    --c-link: #7fded3;
+    --c-night: #0e0913;
+    --c-night-2: #241530;
+    --c-focus: #8ab4ff;
+    --c-ok: #8be0a2;
+    --c-ok-bg: #133520;
+    --c-warn: #ffcf7a;
+    --c-warn-bg: #3a2708;
+    --c-bad: #ffaaa5;
+    --c-bad-bg: #42140f;
+    --c-muted-bg: #33253b;
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-2: 0 8px 28px rgb(0 0 0 / 0.45);
+    --map-tiles: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+
+    --when-light: none;
+
+    --when-dark: block;
+  }
+  :root[data-theme='light'] { color-scheme: light; }
+  :root[data-theme='dark'] { color-scheme: dark; }
 }
 
 @layer base {
@@ -167,7 +210,12 @@
   .nav__link { display: inline-flex; align-items: center; min-height: var(--tap); padding: 0 0.7rem; border-radius: 999px; color: var(--c-ink); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
   .nav__link:hover { background: var(--c-sand); }
   .nav__link[aria-current='page'] { background: var(--c-night); color: var(--c-on-night); }
-  @media (max-width: 69.99rem) {
+  /* Wide screens: the header is a little wider than the page so all links, the light/dark button and Facebook fit on one line. */
+  @media (min-width: 78rem) {
+    .site-header .site-header__inner { width: min(100% - 2rem, 80rem); gap: var(--space-3); }
+    .nav__link { padding-inline: 0.6rem; }
+  }
+  @media (max-width: 77.99rem) {
     .js .nav__toggle { display: inline-flex; align-items: center; gap: 0.5rem; min-height: var(--tap); padding: 0 1rem; border: 2px solid var(--c-ink); border-radius: 999px; background: transparent; font-weight: 700; cursor: pointer; }
     .js .nav__panel { display: none; }
     .js .nav__panel[data-open] { display: block; position: absolute; inset: 100% 0 auto 0; background: var(--c-bg); border-bottom: 1px solid var(--c-line); box-shadow: var(--shadow-2); padding: var(--space-3) 1rem var(--space-5); max-height: calc(100dvh - 4rem); overflow-y: auto; }
@@ -702,11 +750,9 @@
   .events-map .leaflet-popup-close-button { width: 32px; height: 32px; font-size: 22px; line-height: 30px; }
   .events-map .leaflet-control-attribution { font-size: 0.72rem; }
   .events-map .leaflet-bar a { width: 36px; height: 36px; line-height: 36px; }
-  @media (prefers-color-scheme: dark) {
-    .events-map .leaflet-tile-pane { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
-    .events-map .leaflet-control-attribution { background: rgb(33 22 39 / 0.85); color: var(--c-ink-soft); }
-    .events-map .leaflet-bar a { background: var(--c-surface); color: var(--c-ink); border-color: var(--c-line); }
-  }
+  .events-map .leaflet-tile-pane { filter: var(--map-tiles); }
+  .events-map .leaflet-control-attribution { background: color-mix(in srgb, var(--c-surface) 85%, transparent); color: var(--c-ink-soft); }
+  .events-map .leaflet-bar a { background: var(--c-surface); color: var(--c-ink); border-color: var(--c-line); }
 
   .map-pin { background: none; border: 0; }
   .map-pin__shape, .map-pin-key { display: grid; place-items: center; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); }
@@ -830,4 +876,32 @@
   .js [data-collapse] [data-month-group]:not(:has([data-event]:not([hidden]):not([data-collapsed]))) { display: none; }
   .collapse-more { margin-top: var(--space-4); }
   .collapse-more[hidden] { display: none; }
+}
+
+/* Light / dark mode switch (components/ThemeSwitch.astro, scripts/theme.ts). */
+@layer components {
+  .theme-button { flex: none; display: inline-grid; place-items: center; width: var(--tap); height: var(--tap); padding: 0; border-radius: 50%; border: 2px solid var(--c-ink); background: transparent; color: var(--c-ink); cursor: pointer; }
+  .theme-button:hover { background: var(--c-sand); }
+  .theme-button svg { grid-area: 1 / 1; width: 1.3rem; height: 1.3rem; }
+  .theme-button__moon { display: var(--when-light); }
+  .theme-button__sun { display: var(--when-dark); }
+  /* Phones have no room in the header; the switch is in the Menu and the footer instead. */
+  @media (max-width: 29.99rem) { .theme-button { display: none; } }
+
+  .theme-choice { border: 0; padding: 0; margin: 0; min-width: 0; }
+  /* A floated legend is laid out like a normal heading instead of sitting on the fieldset border. */
+  .theme-choice legend { float: left; width: 100%; padding: 0; margin-bottom: var(--space-2); font-weight: 700; }
+  .theme-choice__options { clear: both; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .theme-choice .chip span { gap: 0.4rem; padding: 0 0.95rem; }
+  .theme-choice .chip svg { width: 1.1rem; height: 1.1rem; }
+  .theme-choice .chip input:checked + span { background: var(--c-ink); color: var(--c-bg); border-color: var(--c-ink); }
+  .theme-choice .chip input:checked + span::before { content: none; }
+  .theme-choice__hint { margin: var(--space-2) 0 0; font-size: 0.9rem; color: var(--c-ink-soft); }
+  .theme-choice--menu { margin-top: var(--space-4); padding: var(--space-4) 1rem 0; border-top: 1px solid var(--c-line); }
+  @media (min-width: 78rem) { .theme-choice--menu { display: none; } }
+  .theme-choice--footer { margin-top: var(--space-6); }
+  .theme-choice--footer legend { font-family: var(--font-display); font-size: 1.1rem; color: var(--c-gold); }
+  .theme-choice--footer .chip span { background: transparent; color: var(--c-on-night); border-color: rgb(255 255 255 / 0.35); }
+  .theme-choice--footer .chip input:checked + span { background: var(--c-on-night); color: var(--c-night); border-color: var(--c-on-night); }
+  .theme-choice--footer .theme-choice__hint { color: var(--c-on-night-soft); }
 }
