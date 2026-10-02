@@ -14,7 +14,7 @@ import { breadcrumbJsonLd } from '../../lib/seo';
 
 const { upcoming } = await getEventGroups();
 const { places, unplaced } = groupByPlace(upcoming.map((e) => ({ ...e, venueId: e.venueEntry?.id })));
-const MAX_EVENTS = 6;
+const MAX_EVENTS = 3;
 const crumbs = [
   { name: 'Home', href: '/' },
   { name: 'Events', href: '/events/' },

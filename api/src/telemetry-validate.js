@@ -16,6 +16,7 @@ const EVENT_NAMES = new Set([
   'newsletter_click',
   'filter_events',
   'view_calendar_month',
+  'show_more',
   'faq_open',
   'empty_state',
   'consent_update',

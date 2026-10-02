@@ -7,6 +7,7 @@ import EmptyState from '../components/EmptyState.astro';
 import Icon from '../components/Icon.astro';
 import Photo from '../components/Photo.astro';
 import Slideshow, { type Slide } from '../components/Slideshow.astro';
+import ShowMore from '../components/ShowMore.astro';
 import PersonName from '../components/PersonName.astro';
 import HostBadge from '../components/HostBadge.astro';
 import { getEventGroups, getSettings, type PersonRef } from '../lib/content';
@@ -19,7 +20,8 @@ const { Content } = await render(page);
 const { upcomingSdli, upcomingCommunity, next, past } = await getEventGroups();
 // Render a few "next SDLI dance" candidates so the browser can promote the next one if the first ends before the nightly rebuild.
 const candidates = upcomingSdli.filter((e) => e.status === 'scheduled' || e.status === 'soldOut').slice(0, 3);
-const comingUp = upcomingSdli.filter((e) => e.slug !== next?.slug).slice(0, 6);
+const comingUp = upcomingSdli.filter((e) => e.slug !== next?.slug).slice(0, 10);
+const SHOW = 3;
 const community = upcomingCommunity.slice(0, 4);
 const styles = (await getCollection('styles')).filter((s) => s.data.family === 'swing').sort((a, b) => a.data.order - b.data.order);
 const venue = (await getEntry('venues', settings.defaultVenue ?? 'huntington-moose-lodge'))!;
@@ -86,9 +88,12 @@ const recentTeachers: PersonRef[] = instructors
         </div>
       </div>
       {comingUp.length > 0 ? (
-        <ul class="event-list" data-upcoming-list="home">
-          {comingUp.map((e) => <EventCard event={e} />)}
-        </ul>
+        <>
+          <ul class="event-list" id="home-sdli-list" data-upcoming-list="home" data-collapse={String(SHOW)}>
+            {comingUp.map((e, i) => <EventCard event={e} collapsed={i >= SHOW} />)}
+          </ul>
+          <ShowMore target="home-sdli-list" total={comingUp.length} limit={SHOW} label="SDLI dances" />
+        </>
       ) : (
         <EmptyState title="No other dances are listed yet">
           <p>Check back soon, or <a href={settings.newsletterUrl}>join the email list</a>.</p>

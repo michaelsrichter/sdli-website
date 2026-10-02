@@ -4,6 +4,7 @@ import ContentPage from '../layouts/ContentPage.astro';
 import Photo from '../components/Photo.astro';
 import PersonCard from '../components/PersonCard.astro';
 import EventCard from '../components/EventCard.astro';
+import ShowMore from '../components/ShowMore.astro';
 import { getEventGroups } from '../lib/content';
 import { photos } from '../lib/photos';
 
@@ -14,12 +15,13 @@ const swingClasses = organizers.filter((o) => (o.data.danceStyles ?? []).some((s
 const { upcomingSdli, past } = await getEventGroups();
 const lastSeen = (id: string) => past.find((e) => (e.details.instructorNames ?? []).includes(id))?.date ?? '';
 teachers.sort((a, b) => lastSeen(b.id).localeCompare(lastSeen(a.id)));
-const withLesson = upcomingSdli.filter((e) => e.hasLesson).slice(0, 4);
+const withLesson = upcomingSdli.filter((e) => e.hasLesson).slice(0, 8);
 ---
 <ContentPage id="lessons" pageType="lessons">
   <section aria-labelledby="next-lessons">
     <h2 id="next-lessons">Next lessons</h2>
-    <ul class="event-list mt-5" data-upcoming-list="lessons">{withLesson.map((e) => <EventCard event={e} />)}</ul>
+    <ul class="event-list mt-5" id="lessons-sdli" data-upcoming-list="lessons" data-collapse="3">{withLesson.map((e, i) => <EventCard event={e} collapsed={i >= 3} />)}</ul>
+    <ShowMore target="lessons-sdli" total={withLesson.length} label="lessons" />
     <p class="mt-3"><a href="/events/?lesson=yes&host=sdli">All upcoming SDLI lessons</a></p>
   </section>
   <section aria-labelledby="teachers-h">

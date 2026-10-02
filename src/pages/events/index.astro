@@ -8,6 +8,7 @@ import FeaturedEvent from '../../components/FeaturedEvent.astro';
 import EmptyState from '../../components/EmptyState.astro';
 import HostBadge from '../../components/HostBadge.astro';
 import Icon from '../../components/Icon.astro';
+import ShowMore from '../../components/ShowMore.astro';
 import { getEventGroups, getSettings, type ResolvedEvent } from '../../lib/content';
 import { EVENT_TYPE_LABELS, EXPERIENCE_LABELS } from '../../lib/schemas';
 import { formatMonthKey } from '../../lib/time';
@@ -22,7 +23,10 @@ const byMonth = (list: ResolvedEvent[]) => {
   for (const e of list) groups.set(e.date.slice(0, 7), [...(groups.get(e.date.slice(0, 7)) ?? []), e]);
   return [...groups];
 };
-const sdliMonths = byMonth(upcomingSdli.filter((e) => e.slug !== next?.slug));
+const sdliList = upcomingSdli.filter((e) => e.slug !== next?.slug);
+const sdliMonths = byMonth(sdliList);
+const SHOW = 3;
+const sdliIndex = new Map(sdliList.map((e, i) => [e.slug, i]));
 const communityMonths = byMonth(upcomingCommunity);
 const usedTypes = [...new Set(upcoming.flatMap((e) => e.details.eventTypes ?? []))];
 const usedStyles = styles.filter((s) => upcoming.some((e) => e.styles.some((x) => x.id === s.id)));
@@ -148,16 +152,17 @@ const hosts = [
     ) : (
       <div class="stack-l" data-upcoming-list="events">
         {sdliMonths.length > 0 && (
-          <section data-host-section="sdli" id="sdli" aria-labelledby="sdli-h">
+          <section data-host-section="sdli" id="sdli" aria-labelledby="sdli-h" data-collapse={String(SHOW)}>
             <h2 id="sdli-h">{next ? 'More SDLI dances' : 'SDLI dances'}</h2>
             {sdliMonths.map(([key, list]) => (
               <section data-month-group aria-labelledby={`m-sdli-${key}`}>
                 <h3 class="month-heading" id={`m-sdli-${key}`}>{formatMonthKey(key)}</h3>
                 <ul class="event-list">
-                  {list.map((e) => <EventCard event={e} headingLevel="h4" />)}
+                  {list.map((e) => <EventCard event={e} headingLevel="h4" collapsed={(sdliIndex.get(e.slug) ?? 0) >= SHOW} />)}
                 </ul>
               </section>
             ))}
+            <ShowMore target="sdli" total={sdliList.length} limit={SHOW} label="SDLI dances" />
           </section>
         )}
         {communityMonths.length > 0 && (

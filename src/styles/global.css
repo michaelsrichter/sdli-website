@@ -823,3 +823,11 @@
   .view-switch { flex-wrap: wrap; max-width: 100%; border-radius: var(--radius-l); }
   @media (max-width: 29.99rem) { .view-switch a { padding: 0 0.75rem; font-size: 0.95rem; } }
 }
+
+/* "Show more" for long SDLI lists (scripts/collapse.ts). Only applies when JavaScript runs. */
+@layer components {
+  .js [data-collapsed] { display: none !important; }
+  .js [data-collapse] [data-month-group]:not(:has([data-event]:not([hidden]):not([data-collapsed]))) { display: none; }
+  .collapse-more { margin-top: var(--space-4); }
+  .collapse-more[hidden] { display: none; }
+}

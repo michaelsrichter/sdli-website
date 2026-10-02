@@ -198,6 +198,72 @@ test.describe('SDLI events first, community events clearly marked', () => {
   });
 });
 
+test.describe('only the next 3 SDLI dances show at first', () => {
+  test('the homepage shows 3 SDLI dances and a button for the rest, so community events come sooner', async ({ pinned: page }) => {
+    await page.goto('/');
+    const list = page.locator('[data-upcoming-list="home"]');
+    await expect(list.locator('.event-card:visible')).toHaveCount(3);
+    const total = await list.locator('.event-card').count();
+    expect(total).toBeGreaterThan(3);
+    const more = page.locator('[data-collapse-toggle="home-sdli-list"]');
+    await expect(more).toHaveText(`Show ${total - 3} more SDLI dances`);
+    await expect(more).toHaveAttribute('aria-expanded', 'false');
+    await more.click();
+    await expect(list.locator('.event-card:visible')).toHaveCount(total);
+    await expect(more).toHaveText('Show fewer SDLI dances');
+    await expect(more).toHaveAttribute('aria-expanded', 'true');
+    await expect(list.locator('.event-card').nth(3).locator('a').first()).toBeFocused();
+    await more.click();
+    await expect(list.locator('.event-card:visible')).toHaveCount(3);
+  });
+
+  test('the events page shows 3 more SDLI dances, then community events; filters show every match', async ({ pinned: page }) => {
+    await page.goto('/events/');
+    const sdli = page.locator('[data-host-section="sdli"]');
+    await expect(sdli.locator('.event-card:visible')).toHaveCount(3);
+    const total = await sdli.locator('.event-card').count();
+    expect(total).toBeGreaterThan(3);
+    const more = sdli.locator('[data-collapse-toggle]');
+    await expect(more).toHaveText(`Show ${total - 3} more SDLI dances`);
+    // A month heading only shows when at least one of its dances shows.
+    for (const m of await sdli.locator('[data-month-group]:visible').all()) expect(await m.locator('.event-card:visible').count()).toBeGreaterThan(0);
+    await expect(page.locator('[data-host-section="community"] .event-card').first()).toBeVisible();
+
+    await page.locator('label.chip', { hasText: 'SDLI events' }).click();
+    await expect(sdli.locator('.event-card:visible')).toHaveCount(total);
+    await expect(more).toBeHidden();
+    await page.getByRole('button', { name: 'Clear filters' }).click();
+    await expect(sdli.locator('.event-card:visible')).toHaveCount(3);
+    await more.click();
+    await expect(sdli.locator('.event-card:visible')).toHaveCount(total);
+  });
+
+  test('when a listed dance ends before the nightly rebuild, the next one moves up', async ({ page }) => {
+    await page.goto('/');
+    const list = page.locator('[data-upcoming-list="home"]');
+    const total = await list.locator('.event-card').count();
+    const end = Number(await list.locator('.event-card').first().getAttribute('data-end'));
+    await page.clock.setFixedTime(new Date(end + 60_000));
+    await page.reload();
+    await expect(list.locator('.event-card:visible')).toHaveCount(3);
+    await expect(page.locator('[data-collapse-toggle="home-sdli-list"]')).toHaveText(`Show ${total - 4} more SDLI dances`);
+  });
+
+  test('event, venue, series and lesson pages also start with 3 SDLI dances', async ({ pinned: page }) => {
+    await page.goto('/events/2026-10-23-dancxchange-club-night/');
+    await expect(page.locator('#more-sdli .event-card:visible')).toHaveCount(3);
+    await expect(page.locator('[data-upcoming-list="event_more_community"] .event-card').first()).toBeVisible();
+    for (const path of ['/venues/huntington-moose-lodge/', '/events/series/tuesday-night-swing/', '/lessons/']) {
+      await page.goto(path);
+      const list = page.locator('[data-collapse]');
+      await expect(list.locator('.event-card:visible')).toHaveCount(3);
+      expect(await list.locator('.event-card').count()).toBeGreaterThan(3);
+      await page.locator('[data-collapse-toggle]').click();
+      expect(await list.locator('.event-card:visible').count()).toBeGreaterThan(3);
+    }
+  });
+});
+
 test.describe('photos, map and header', () => {
   test('the homepage slideshow rotates Moose Lodge photos and can be paused and stepped', async ({ pinned: page }) => {
     await page.goto('/');
@@ -280,6 +346,11 @@ test.describe('event discovery', () => {
     await page.goto('/events/');
     await expect(page.locator('[data-event-filters]')).toBeHidden();
     expect(await page.locator('[data-upcoming-list] .event-card').count()).toBeGreaterThan(3);
+    // Without JavaScript every SDLI dance shows and there is no "Show more" button.
+    const sdli = page.locator('[data-host-section="sdli"] .event-card');
+    expect(await sdli.count()).toBeGreaterThan(3);
+    await expect(sdli.last()).toBeVisible();
+    await expect(page.locator('[data-collapse-toggle]')).toBeHidden();
     await page.locator('[data-upcoming-list] .event-card__title a').first().click();
     await expect(page.locator('#add-to-calendar a[download]')).toBeVisible();
     await ctx.close();

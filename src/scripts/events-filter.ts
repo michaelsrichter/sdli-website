@@ -51,6 +51,10 @@ if (form && list) {
     }
     for (const g of groups) g.hidden = !g.querySelector('[data-event]:not([hidden])');
     for (const s of hostSections) s.hidden = !s.querySelector('[data-event]:not([hidden])');
+    // While filters are on, show every match; the "Show more" collapse returns when filters are cleared.
+    const filtering = fields.some((f) => v[f] && !(f === 'when' && v[f] === 'all'));
+    list!.querySelectorAll<HTMLElement>('[data-collapse]').forEach((c) => c.toggleAttribute('data-collapse-filtered', filtering));
+    document.dispatchEvent(new CustomEvent('sdli:lists-changed'));
     if (count) count.textContent = `${shown} ${shown === 1 ? 'event' : 'events'} shown`;
     if (empty) empty.hidden = shown !== 0;
     const params = new URLSearchParams();

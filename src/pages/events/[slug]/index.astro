@@ -8,6 +8,7 @@ import Icon from '../../../components/Icon.astro';
 import AddToCalendar from '../../../components/AddToCalendar.astro';
 import ShareControls from '../../../components/ShareControls.astro';
 import EventCard from '../../../components/EventCard.astro';
+import ShowMore from '../../../components/ShowMore.astro';
 import ResponsiveImage from '../../../components/ResponsiveImage.astro';
 import HostBadge from '../../../components/HostBadge.astro';
 import RelativeWhen from '../../../components/RelativeWhen.astro';
@@ -49,7 +50,9 @@ if (!Content && e.source.seriesId) {
   if (s?.body?.trim()) Content = (await render(s)).Content;
 }
 
-const more = upcomingOrdered.filter((x) => x.slug !== e.slug).slice(0, 3);
+const moreSdli = upcomingOrdered.filter((x) => x.slug !== e.slug && x.host === 'sdli').slice(0, 8);
+const moreCommunity = upcomingOrdered.filter((x) => x.slug !== e.slug && x.host === 'community').slice(0, 3);
+const more = [...moreSdli, ...moreCommunity];
 /** Point visitors on any other event page to the next SDLI dance. */
 const showNextSdli = upcomingNow && nextSdli && nextSdli.slug !== e.slug;
 const crumbs = [
@@ -363,9 +366,22 @@ const organizerName = e.organizerEntry?.data.name ?? c.name;
             <h2 id="more">More upcoming dances</h2>
             <a class="btn btn--secondary" href="/events/">All events</a>
           </div>
-          <ul class="event-list" data-upcoming-list="event_more">
-            {more.map((x) => <EventCard event={x} compact={x.host === 'community'} />)}
-          </ul>
+          {moreSdli.length > 0 && (
+            <>
+              <ul class="event-list" id="more-sdli" data-upcoming-list="event_more" data-collapse="3">
+                {moreSdli.map((x, i) => <EventCard event={x} collapsed={i >= 3} />)}
+              </ul>
+              <ShowMore target="more-sdli" total={moreSdli.length} label="SDLI dances" />
+            </>
+          )}
+          {moreCommunity.length > 0 && (
+            <>
+              <h3 class="mt-5">Other dances around Long Island</h3>
+              <ul class="event-list mt-3" data-upcoming-list="event_more_community">
+                {moreCommunity.map((x) => <EventCard event={x} compact headingLevel="h4" />)}
+              </ul>
+            </>
+          )}
         </section>
       )}
     </div>

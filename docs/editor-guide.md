@@ -25,6 +25,8 @@ Every change is recorded with your name and can be undone.
 
 Open **Events**. To see the newest first, choose **Sort by → Starts (date and time)** and click it again for newest first (the CMS remembers your choice). Use **View filters** (SDLI events, Community events, Cancelled, Postponed, Drafts, by year) and **Group by** (Year, Status).
 
+On the website, lists of SDLI dances show the **next 3** first, with a **Show more SDLI dances** button for the rest, so community events appear sooner. The very next SDLI dance is always featured at the top. Nothing needs to be set for this; it updates on its own as dances pass.
+
 ### Post a band night, pizza night or guest teacher (changing one Tuesday)
 
 Tuesdays are created automatically from the **Tuesday Night Swing** series. To change one date:

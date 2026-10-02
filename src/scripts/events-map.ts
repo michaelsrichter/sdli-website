@@ -20,7 +20,7 @@ interface Place {
   visibleCount: number;
 }
 
-const MAX_EVENTS = 6;
+const MAX_EVENTS = 3;
 const SVG = 'http://www.w3.org/2000/svg';
 const nyDate = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
 
