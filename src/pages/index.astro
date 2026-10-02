@@ -148,7 +148,7 @@ const tel = settings.hotlinePhone.replace(/[^0-9]/g, '');
         <p>SDLI membership is just <strong>${settings.membershipFee} a year</strong> ({settings.membershipYear}). Members pay less at the door and help keep an all-volunteer group dancing.</p>
         <ul class="stat-row">
           {settings.standardPrices.map((p) => (
-            <li><strong>${p.member}</strong> members on {p.label.toLowerCase()}s <span class="visually-hidden">(non-members ${p.nonMember}, students ${p.student})</span></li>
+            <li><strong>${p.member}</strong> members on {p.label}s <span class="visually-hidden">(non-members ${p.nonMember}, students ${p.student})</span></li>
           ))}
         </ul>
         <div class="btn-row">

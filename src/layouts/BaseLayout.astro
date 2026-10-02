@@ -38,7 +38,7 @@ const analytics = {
   ga: import.meta.env.PUBLIC_GA4_ID ?? '',
   clarity: import.meta.env.PUBLIC_CLARITY_ID ?? '',
   consent: import.meta.env.PUBLIC_ANALYTICS_CONSENT_MODE ?? 'opt-in',
-  telemetry: import.meta.env.PUBLIC_TELEMETRY_ENDPOINT ?? '/api/telemetry',
+  telemetry: import.meta.env.PUBLIC_TELEMETRY_ENDPOINT === 'off' ? '' : import.meta.env.PUBLIC_TELEMETRY_ENDPOINT || '/api/telemetry',
   release: import.meta.env.PUBLIC_RELEASE ?? 'local',
 };
 ---

@@ -7,6 +7,7 @@ interface Props {
 const { settings: s } = Astro.props;
 const tel = s.hotlinePhone.replace(/[^0-9+]/g, '');
 const year = new Date().getFullYear();
+const hasConsent = Boolean(import.meta.env.PUBLIC_GA4_ID || import.meta.env.PUBLIC_CLARITY_ID);
 ---
 <footer class="site-footer">
   <div class="container">
@@ -51,8 +52,8 @@ const year = new Date().getFullYear();
       <p>© {year} {s.legalName}. An all-volunteer, not-for-profit organization.</p>
       <p>
         <a href="/privacy/">Privacy</a>
-        <span aria-hidden="true"> · </span>
-        <button type="button" class="link-button js-only" data-consent-open>Privacy choices</button>
+        {hasConsent && <span aria-hidden="true"> · </span>}
+        {hasConsent && <button type="button" class="link-button js-only" data-consent-open>Privacy choices</button>}
       </p>
     </div>
   </div>

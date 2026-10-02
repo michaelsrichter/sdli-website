@@ -45,6 +45,7 @@ jobs:
           PUBLIC_GA4_ID: ${{ vars.PUBLIC_GA4_ID }}
           PUBLIC_CLARITY_ID: ${{ vars.PUBLIC_CLARITY_ID }}
           PUBLIC_ANALYTICS_CONSENT_MODE: ${{ vars.PUBLIC_ANALYTICS_CONSENT_MODE || 'opt-in' }}
+          PUBLIC_TELEMETRY_ENDPOINT: ${{ vars.PUBLIC_TELEMETRY_ENDPOINT }}
           PUBLIC_RELEASE: ${{ github.sha }}
       - name: Deploy to Azure Static Web Apps
         id: deploy
