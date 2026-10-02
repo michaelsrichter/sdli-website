@@ -1,0 +1,70 @@
+name: Azure Static Web Apps
+
+# Production deploys on every merge to main. Pull requests get a preview environment
+# (Free plan: up to 3 at a time). A nightly rebuild keeps "upcoming" lists and the
+# homepage "next dance" current, and advances recurring-series dates.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches: [main]
+  schedule:
+    - cron: '15 9 * * *' # 05:15 New York time (EDT) / 04:15 (EST)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: swa-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build_and_deploy:
+    name: Build and deploy
+    if: github.event_name != 'pull_request' || github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: ${{ github.event_name == 'pull_request' && 'preview' || 'production' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Build site
+        run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          # Keep search engines away until DNS cutover (set ALLOW_INDEXING=true afterwards).
+          ALLOW_INDEXING: ${{ github.event_name == 'pull_request' && 'false' || vars.ALLOW_INDEXING }}
+          PUBLIC_GA4_ID: ${{ vars.PUBLIC_GA4_ID }}
+          PUBLIC_CLARITY_ID: ${{ vars.PUBLIC_CLARITY_ID }}
+          PUBLIC_ANALYTICS_CONSENT_MODE: ${{ vars.PUBLIC_ANALYTICS_CONSENT_MODE || 'opt-in' }}
+          PUBLIC_RELEASE: ${{ github.sha }}
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9 # v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: upload
+          app_location: dist
+          api_location: api
+          output_location: ''
+          skip_app_build: true
+
+  close_preview:
+    name: Close preview environment
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9 # v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: close
+          app_location: dist

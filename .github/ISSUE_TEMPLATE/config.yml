@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions about a dance
+    url: https://www.sdli.org/contact/
+    about: Call the 24-hour Dance Hotline at (631) 476-3707 or email info@sdli.org.
+  - name: Edit content yourself (SDLI editors)
+    url: https://www.sdli.org/admin/
+    about: Sign in to the content manager with your GitHub account.
