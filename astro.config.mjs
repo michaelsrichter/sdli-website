@@ -19,6 +19,8 @@ export default defineConfig({
     build: { assetsInlineLimit: 0 },
   },
   prefetch: false,
+  // Built-in sharp service plus precise focus-point crops (position: "35% 40%").
+  image: { service: { entrypoint: './src/lib/focus-image-service.mjs' } },
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/admin/') && !page.includes('/404'),

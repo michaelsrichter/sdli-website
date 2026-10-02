@@ -26,6 +26,13 @@ const tel = s.hotlinePhone.replace(/[^0-9]/g, '');
           <h2 class="h3">Mail</h2>
           <address>{s.legalName}<br />{s.mailingAddress.line1}<br />{s.mailingAddress.city}, {s.mailingAddress.state} {s.mailingAddress.postalCode}</address>
         </li>
+        {s.facebookUrl && (
+          <li class="card card--accent">
+            <h2 class="h3"><Icon name="facebook" class="visually-hidden" />Facebook group</h2>
+            <p><a href={s.facebookUrl} target="_blank" rel="noopener" data-track="outbound_click" data-track-method="facebook" data-track-location="contact" data-track-target="facebook.com">{s.facebookLabel ?? 'SDLI Facebook group'}<span class="visually-hidden"> (opens in a new tab)</span></a></p>
+            <p>Photos, news and swing events shared by members. Over 900 dancers.</p>
+          </li>
+        )}
       </ul>
     </div>
   </Fragment>
@@ -36,6 +43,6 @@ const tel = s.hotlinePhone.replace(/[^0-9]/g, '');
     {s.newsletterUrl && <a class="btn btn--primary" href={s.newsletterUrl} rel="noopener" data-track="newsletter_click" data-track-location="contact"><Icon name="mail" />Sign up for emails</a>}
   </section>
   <Fragment slot="aside">
-    <Photo photo={photos.sdliBand} sizes="(min-width: 56rem) 35vw, 92vw" widths={[480, 720, 960]} aspect={4 / 3} />
+    <Photo photo={photos.sdliGroup} sizes="(min-width: 56rem) 35vw, 92vw" widths={[480, 720, 960]} aspect={2} caption="SDLI dancers dressed up for a holiday dance." />
   </Fragment>
 </ContentPage>

@@ -4,6 +4,7 @@ kind: band
 role: Fronted by Roy Wilson
 image: ../../assets/uploads/the-buzzards-roy-wilson.jpg
 imageAlt: Roy Wilson of the Buzzards playing an orange electric guitar on stage.
+imageFocus: 55% 22%
 imageCredit: Band promotional photo, as published on the previous SDLI website.
 legacyUrl: /index.php/sdli/bands/the_buzzards/
 facebookUrl: https://www.facebook.com/roywilsonandthebuzzards/

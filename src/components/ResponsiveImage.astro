@@ -8,16 +8,21 @@ interface Props {
   sizes: string;
   class?: string;
   loading?: 'eager' | 'lazy';
-  /** Crop to an aspect ratio (width / height) so card collections stay consistent. */
+  /** Crop to an aspect ratio (width / height). Leave out to show the whole photo. */
   aspect?: number;
-  /** Crop focus for cover crops: "attention" picks the most interesting region (faces). */
-  position?: string;
+  /**
+   * Point to keep in frame when cropping, as "x% y%" from the top-left ("50% 30%" keeps the upper middle).
+   * Chosen by hand per photo; automatic "interesting area" guesses produced odd crops.
+   */
+  focus?: string;
 }
-const { src, alt, widths, sizes, class: className, loading = 'lazy', aspect, position = 'attention' } = Astro.props;
-const usable = widths.filter((w) => w <= src.width);
-const finalWidths = usable.length ? usable : [src.width];
-const maxW = Math.max(...finalWidths);
-const height = aspect ? Math.round(maxW / aspect) : Math.round((maxW * src.height) / src.width);
+const { src, alt, widths, sizes, class: className, loading = 'lazy', aspect, focus = '50% 50%' } = Astro.props;
+// Never ask for a crop bigger than the source can provide (that would upscale and blur the photo).
+const maxW = aspect ? Math.min(src.width, Math.floor(src.height * aspect)) : src.width;
+const usable = widths.filter((w) => w <= maxW);
+const finalWidths = usable.length ? usable : [maxW];
+const width = Math.max(...finalWidths);
+const height = aspect ? Math.round(width / aspect) : Math.round((width * src.height) / src.width);
 ---
 <Picture
   src={src}
@@ -26,10 +31,10 @@ const height = aspect ? Math.round(maxW / aspect) : Math.round((maxW * src.heigh
   fallbackFormat="jpg"
   widths={finalWidths}
   sizes={sizes}
-  width={maxW}
+  width={width}
   height={height}
   fit={aspect ? 'cover' : undefined}
-  position={aspect ? position : undefined}
+  position={aspect ? focus : undefined}
   loading={loading}
   decoding={loading === 'eager' ? 'sync' : 'async'}
   fetchpriority={loading === 'eager' ? 'high' : undefined}

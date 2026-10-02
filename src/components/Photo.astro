@@ -6,14 +6,16 @@ interface Props {
   widths?: number[];
   sizes: string;
   aspect?: number;
+  /** Overrides the photo's own focus point for this crop. */
+  focus?: string;
   loading?: 'eager' | 'lazy';
   class?: string;
   caption?: string;
 }
-const { photo, widths = [400, 640, 960, 1280], sizes, aspect, loading = 'lazy', class: className, caption } = Astro.props;
+const { photo, widths = [400, 640, 960, 1280], sizes, aspect, focus, loading = 'lazy', class: className, caption } = Astro.props;
 ---
 <figure class:list={['photo', className]}>
-  <ResponsiveImage src={photo.src} alt={photo.alt} widths={widths} sizes={sizes} aspect={aspect} loading={loading} />
+  <ResponsiveImage src={photo.src} alt={photo.alt} widths={widths} sizes={sizes} aspect={aspect} focus={focus ?? photo.focus} loading={loading} />
   {(caption || photo.credit) && (
     <figcaption class="photo__caption">
       {caption && <span>{caption} </span>}

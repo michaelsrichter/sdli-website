@@ -5,6 +5,7 @@ role: Swing dance teacher, Triple Step Swing
 website: https://triplestepswing.com/
 image: ../../assets/uploads/carol-fraser.jpg
 imageAlt: Portrait of swing dance instructor Carol Fraser with a flower in her hair.
+imageFocus: 45% 40%
 imageCredit: Photo as published on the previous SDLI website.
 danceStyles:
   - east-coast-swing

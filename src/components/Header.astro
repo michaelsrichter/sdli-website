@@ -1,7 +1,9 @@
 ---
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
+import { getSettings } from '../lib/content';
 
+const settings = await getSettings();
 const nav = [
   { href: '/', label: 'Home' },
   { href: '/events/', label: 'Events' },
@@ -40,6 +42,12 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
         </ul>
       </div>
     </nav>
+    {settings.facebookUrl && (
+      <a class="header-social" href={settings.facebookUrl} target="_blank" rel="noopener" data-track="outbound_click" data-track-method="facebook" data-track-location="header" data-track-target="facebook.com" title={settings.facebookLabel ?? 'SDLI Facebook group'}>
+        <Icon name="facebook" />
+        <span class="visually-hidden">{settings.facebookLabel ?? 'SDLI Facebook group'} (opens in a new tab)</span>
+      </a>
+    )}
   </div>
 </header>
 <script>

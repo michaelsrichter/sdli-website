@@ -92,7 +92,7 @@ const filterData = {
   </div>
   {!compact && e.image && e.imageAlt && e.imageFrom !== 'series' && (
     <div class="event-card__thumb">
-      <ResponsiveImage src={e.image} alt="" widths={[208]} sizes="104px" aspect={1} />
+      <ResponsiveImage src={e.image} alt="" widths={[208]} sizes="104px" aspect={1} focus={e.imageFocus ?? '50% 30%'} />
     </div>
   )}
 </li>

@@ -132,9 +132,16 @@ const organizerName = e.organizerEntry?.data.name ?? c.name;
           </div>
         </div>
         {e.image && e.imageAlt && (
-          <div class="event-hero__media">
-            <ResponsiveImage src={e.image} alt={e.imageAlt} widths={[480, 720, 960, 1280]} sizes="(min-width: 44rem) 40rem, 94vw" aspect={16 / 9} loading="eager" />
-          </div>
+          e.imageFrom === 'performer' ? (
+            <figure class="event-hero__media event-hero__media--portrait">
+              <ResponsiveImage src={e.image} alt={e.imageAlt} widths={[320, 480, 640]} sizes="(min-width: 44rem) 20rem, 70vw" loading="eager" />
+              {e.imagePerson && <figcaption class="photo__caption">{e.band?.name === e.imagePerson ? 'Live band' : 'Teacher'}: {e.imagePerson}</figcaption>}
+            </figure>
+          ) : (
+            <div class="event-hero__media">
+              <ResponsiveImage src={e.image} alt={e.imageAlt} widths={[480, 720, 960, 1280]} sizes="(min-width: 44rem) 40rem, 94vw" aspect={e.image.width / e.image.height > 2 ? 2.2 : 16 / 9} focus={e.imageFocus ?? '50% 40%'} loading="eager" />
+            </div>
+          )
         )}
       </div>
     </header>

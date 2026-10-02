@@ -36,6 +36,7 @@ admissionNotes: DJ nights. Band nights are $15 for members, $10 for students and
 sponsor: Swing Dance Long Island, Inc.
 featuredImage: ../../assets/uploads/tuesday-dance-floor.jpg
 featuredImageAlt: Dancers smiling and swing dancing on a busy floor at an SDLI dance.
+featuredImageFocus: 52% 40%
 seoTitle: Tuesday Night Swing Dance in Greenlawn, Long Island | SDLI
 seoDescription: Swing dance every Tuesday at the Huntington Moose Lodge in Greenlawn, NY. Lesson at 7:30 PM, dancing 8 to 10 PM. Beginners welcome, no partner needed.
 editorialReview: Occurrences are generated from the standing weekly schedule on the old site. Add an override entry for each pizza night, guest teacher, band night, holiday closure or weather cancellation. October 2026 themes were not yet published on the old site.

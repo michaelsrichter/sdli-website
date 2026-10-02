@@ -4,6 +4,7 @@ kind: band
 facebookUrl: https://www.facebook.com/lonesharks/
 image: ../../assets/uploads/gene-casey-and-the-lone-sharks.jpg
 imageAlt: Gene Casey and the Lone Sharks performing on stage.
+imageFocus: 62% 30%
 imageCredit: Band promotional photo, as published on the previous SDLI website.
 danceStyles:
   - east-coast-swing

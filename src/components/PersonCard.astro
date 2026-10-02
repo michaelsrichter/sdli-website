@@ -14,7 +14,7 @@ const kindLabel = p.kind === 'band' ? 'Band' : p.kind === 'dj' ? 'DJ' : 'Teacher
 ---
 <li class="card person-card">
   {p.image && p.imageAlt ? (
-    <ResponsiveImage src={p.image} alt="" widths={[176]} sizes="88px" aspect={1} class="avatar" />
+    <ResponsiveImage src={p.image} alt="" widths={[176]} sizes="88px" aspect={1} focus={p.imageFocus ?? '50% 30%'} class="avatar" />
   ) : (
     <span class="avatar avatar--placeholder" aria-hidden="true"><Icon name={p.kind === 'instructor' ? 'people' : 'music'} /></span>
   )}
