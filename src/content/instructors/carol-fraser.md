@@ -1,8 +1,8 @@
 ---
 name: Carol Fraser
 kind: instructor
-role: Lead instructor and creative director, Long Island Swing Syndicate
-website: https://www.liswingsyndicate.com
+role: Swing dance teacher, Triple Step Swing
+website: https://triplestepswing.com/
 image: ../../assets/uploads/carol-fraser.jpg
 imageAlt: Portrait of swing dance instructor Carol Fraser with a flower in her hair.
 imageCredit: Photo as published on the previous SDLI website.
@@ -11,7 +11,17 @@ danceStyles:
   - lindy-hop
   - other
 legacyUrl: /index.php/sdli/bands/carol_callahan_fraser/
-editorialReview: Also listed on the old site as Carol Callahan Fraser. Please confirm her preferred name and bio.
+editorialReview: Also listed on the old site as Carol Callahan Fraser. The old Long Island Swing Syndicate site (liswingsyndicate.com) is now a parked domain, so links point to Triple Step Swing. Please confirm her preferred name, title and bio.
+instagramUrl: https://www.instagram.com/triplestepswing/
+facebookUrl: https://www.facebook.com/profile.php?id=61587427315908
+moreLinks:
+  - label: Swing calendar
+    url: https://triplestepswing.com/calendar
+  - label: Meetup group
+    url: https://www.meetup.com/triplestepswing-longisland/
+organizer: triple-step-swing
 ---
 
-Carol Fraser regularly teaches the Tuesday lesson at SDLI, including East Coast Swing, Lindy Hop, Charleston and the Shim Sham. She is a US Open champion and the lead instructor and creative director of the Long Island Swing Syndicate (LISS), which has offered swing classes, workshops and performances on Long Island since 2015.
+Carol Fraser regularly teaches the Tuesday lesson at SDLI, including East Coast Swing, Lindy Hop, Charleston and the Shim Sham. She is a US Open champion who previously led the Long Island Swing Syndicate (LISS).
+
+Today Carol runs [Triple Step Swing](https://triplestepswing.com/), which offers Lindy Hop classes, private lessons and monthly swing dances on Long Island. Her [swing calendar](https://triplestepswing.com/calendar) lists swing events around Long Island and New York City.

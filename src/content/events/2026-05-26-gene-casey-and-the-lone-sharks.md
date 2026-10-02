@@ -20,6 +20,12 @@ partnerRequired: false
 sponsor: Swing Dance Long Island, Inc.
 legacyUrl: /index.php/sdli/events_archive/gene_casey_the_lone_sharks/
 editorialReview: 'Old site listed more than one entry for this night: "Gene Casey & The Lone Sharks", "Get Ready to Swing the Night Away!".'
+danceStyles:
+  - east-coast-swing
+admissionNonMember: 20
+admissionNotes: Discounts for members.
+sourceName: The Dance Calendar, May 2026
+sourceUrl: https://www.thedancecalendar.com/_files/ugd/bda0a7_53e4faff1f53484fbfaf8b5b7561b284.pdf
 ---
 
 Swing dance lesson at 7:30PM by Carol Fraser. Social swing dancing at 8:00PM to the music of Gene Casey and the Lone Sharks. Beginners welcome and no partner is necessary.

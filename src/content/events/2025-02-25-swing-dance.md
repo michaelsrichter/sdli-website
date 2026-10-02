@@ -12,6 +12,13 @@ eventTypes:
   - dj-night
 sponsor: Swing Dance Long Island, Inc.
 legacyUrl: /index.php/sdli/events_archive/swing_dance32/
+danceEndTime: "22:00"
+instructorNames:
+  - carol-fraser
+admissionNonMember: 15
+admissionNotes: Discounts for members.
+sourceName: The Dance Calendar, February 2025
+sourceUrl: https://www.thedancecalendar.com/_files/ugd/bda0a7_2dd2746885a843a799245b2dfbc6e1d4.pdf
 ---
 
 Swing Dance every Tuesday at the Huntington Moose Lodge at 631 Pulaski Road, in Greenlawn, Long Island. Group dance lesson at 7:30PM. Social dancing to DJ music at 8PM.

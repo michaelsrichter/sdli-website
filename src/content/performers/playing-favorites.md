@@ -15,6 +15,7 @@ danceStyles:
   - west-coast-swing
 legacyUrl: /index.php/sdli/bands/playing_favorites/
 editorialReview: Band member list comes from the old website. Please confirm it is current.
+website: https://playingfavoritesband.com/
 ---
 
 A Long Island band that loves to play for dancers: East Coast Swing, West Coast Swing and some Latin favorites.

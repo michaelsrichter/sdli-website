@@ -18,6 +18,11 @@ eventTypes:
 sponsor: Swing Dance Long Island, Inc.
 legacyUrl: /index.php/sdli/events_archive/pl/
 editorialReview: "Old site listed more than one entry for this night: \"Playing Favorites at SDLI's Swing Dance\", \"Swing Dance with WCS Lesson by Ellen\"."
+danceEndTime: "22:00"
+admissionNonMember: 20
+admissionMember: 15
+sourceName: The Dance Calendar, March 2024
+sourceUrl: https://www.thedancecalendar.com/_files/ugd/bda0a7_d205eb636d1a4d0790e0b351c4516796.pdf
 ---
 
 The band, Playing Favorites will be appearing this evening. Swing dance lesson at 7:30PM. The band goes on at 8PM.

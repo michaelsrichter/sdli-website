@@ -16,12 +16,12 @@ editorialReview: Please confirm whether the lesson is included in the price of a
 Lessons rotate through different teachers and styles. Recent Tuesdays have included:
 
 - **East Coast Swing** fundamentals, the best starting point for new dancers
-- **West Coast Swing** lessons with Lourdes Cruz
-- **East Coast Swing, Lindy Hop and special lessons** such as the Shim Sham with Carol Fraser
+- **West Coast Swing** lessons with [Lourdes Cruz](/performers/lourdes-cruz/)
+- **East Coast Swing, Lindy Hop and special lessons** such as the Shim Sham with [Carol Fraser](https://triplestepswing.com/)
 - Fun extras such as the Jitterbug Stroll and seasonal line dances
 
 Each event page lists that night's lesson when it is known. You can also call the 24-hour Dance Hotline at (631) 476-3707.
 
 ## Want to learn more?
 
-The [Long Island Swing Syndicate (LISS)](https://www.liswingsyndicate.com), led by Carol Fraser, offers weekly group classes, private lessons and workshops in Lindy Hop, Charleston, Balboa and other Jazz Age swing dances.
+Carol Fraser's [Triple Step Swing](https://triplestepswing.com/) offers Lindy Hop class series, private lessons and monthly swing dances on Long Island. Lourdes Cruz teaches [Monday West Coast Swing classes at Club Brumidi](https://sonsofitalyli.com/event/group-and-private-dance-lessons/) in Deer Park. See [the Long Island dance community page](/community/#classes) for more classes.

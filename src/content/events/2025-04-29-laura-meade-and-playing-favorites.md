@@ -14,6 +14,11 @@ eventTypes:
 beginnerFriendly: true
 sponsor: Swing Dance Long Island, Inc.
 legacyUrl: /index.php/sdli/events_archive/laura_meade_friends/
+danceEndTime: "22:00"
+admissionNonMember: 20
+admissionNotes: Discounts for members.
+sourceName: The Dance Calendar, April 2025
+sourceUrl: https://www.thedancecalendar.com/_files/ugd/bda0a7_19b2c8d9fae543a899ba4788b4b011b0.pdf
 ---
 
 Join us for the 5th Tuesday Swing Dance with a live band. 

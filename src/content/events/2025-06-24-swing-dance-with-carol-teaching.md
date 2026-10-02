@@ -16,6 +16,11 @@ beginnerFriendly: true
 partnerRequired: false
 sponsor: Swing Dance Long Island, Inc.
 legacyUrl: /index.php/sdli/events_archive/swing_dan1/
+danceEndTime: "22:00"
+admissionNonMember: 15
+admissionNotes: Discounts for members.
+sourceName: The Dance Calendar, June 2025
+sourceUrl: https://www.thedancecalendar.com/_files/ugd/bda0a7_4e107dd01c184ee9a32942330384555e.pdf
 ---
 
 Join Swing Dance Long Island for an evening of dancing. Lesson at 7:30PM to get you on the floor. Social dancing to DJ music starts at 8PM. No partner necessary and beginners are always welcome.

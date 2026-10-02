@@ -13,6 +13,11 @@ eventTypes:
   - live-band
 sponsor: Swing Dance Long Island, Inc.
 legacyUrl: /index.php/sdli/events_archive/the_lustre_kings_band/
+danceEndTime: "22:00"
+admissionNonMember: 20
+admissionMember: 15
+sourceName: The Dance Calendar, February 2024
+sourceUrl: https://www.thedancecalendar.com/_files/ugd/bda0a7_953e9134240142d2b8712ba1ac7dc499.pdf
 ---
 
 Join Swing Dance Long Island for a Tuesday evening Swing Dance at the Huntington Moose Lodge in Greenlawn, Long Island. Swing Dance lesson at 7:30 and The Lustre Kings Band starts playing at 8 PM.

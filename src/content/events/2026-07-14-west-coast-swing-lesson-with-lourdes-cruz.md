@@ -15,6 +15,11 @@ eventTypes:
 beginnerFriendly: true
 sponsor: Swing Dance Long Island, Inc.
 legacyUrl: /index.php/sdli/events_archive/west_coast_swing_lesson_with_lourdes_cruz/
+danceStartTime: "20:00"
+admissionNonMember: 15
+admissionNotes: Discounts for members.
+sourceName: The Dance Calendar, July 2026
+sourceUrl: https://www.thedancecalendar.com/_files/ugd/bda0a7_e5a09578394546799fb4ce0d5fe8ad22.pdf
 ---
 
 Ready to shake, slide, and swing your way into the night? Join us for an evening built around rhythm, connection, and pure dance joy!

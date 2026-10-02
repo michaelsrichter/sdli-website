@@ -16,6 +16,14 @@ beginnerFriendly: true
 partnerRequired: false
 sponsor: Swing Dance Long Island, Inc.
 legacyUrl: /index.php/sdli/events_archive/swing_dance_at_the_moose_lodge2/
+instructorNames:
+  - carol-fraser
+danceStyles:
+  - east-coast-swing
+admissionNonMember: 15
+admissionNotes: Discounts for members.
+sourceName: The Dance Calendar, March 2026
+sourceUrl: https://www.thedancecalendar.com/_files/ugd/bda0a7_2bf32320f46f4545bfb38ef958febb71.pdf
 ---
 
 Join us for a swing dance lesson at 7:30 and then general dancing at 8 PM until 10 PM. Singles and beginners are welcome. No partner needed.
