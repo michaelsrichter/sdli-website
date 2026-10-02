@@ -9,7 +9,7 @@
         "http://127.0.0.1:4322/events/series/tuesday-night-swing/",
         "http://127.0.0.1:4322/new-to-swing/"
       ],
-      "numberOfRuns": 1,
+      "numberOfRuns": 3,
       "settings": {
         "chromeFlags": "--no-sandbox --headless=new",
         "onlyCategories": ["performance", "accessibility", "best-practices", "seo"]
