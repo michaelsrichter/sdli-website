@@ -26,3 +26,6 @@
 | 22 | 2026-10-01 | Commits authored with the GitHub noreply address | Avoid publishing a work email in a public repo's history | — |
 | 23 | 2026-10-01 | Code license not chosen | SDLI should decide (content is © SDLI). Repo is public but "all rights reserved" by default. | Add a LICENSE file |
 | 24 | 2026-10-01 | `gitleaks` binary (checksum-verified) instead of the gitleaks Action | The Action crashed on harmless git warnings | — |
+| 25 | 2026-10-02 | Decap CMS is a **devDependency** (its bundle is copied into `/admin/` at build) | Its dependency tree carries ~30 npm advisories that only affect the editor bundle in the browser, not the public site or the API. Production `npm audit` is clean apart from build-time `fflate`. | Track Decap releases via Dependabot |
+| 26 | 2026-10-02 | Do **not** override `fflate` to 0.8 | Satori uses it to decode WOFF fonts; 0.8 broke social-image text (caught visually, now guarded by `tests/unit/og.test.ts`). The remaining moderate advisory concerns malformed ZIP64 archives, which the build never processes. | Revisit when Satori updates |
+| 27 | 2026-10-02 | Explicit `published: true` in every entry | Decap shows a missing boolean as "off"; saving could hide an event. Guarded by a unit test. | — |

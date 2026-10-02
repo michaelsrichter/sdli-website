@@ -22,3 +22,9 @@ Out of scope: third-party services (GitHub, Azure, Mailchimp, Google Analytics, 
 | Dependencies | Dependabot updates and alerts; CodeQL code scanning; Actions pinned to commit SHAs; workflows use least-privilege `permissions`. |
 | Privacy | No advertising trackers. GA4 and Clarity load only after consent; Global Privacy Control honored. |
 | Content | Inline Markdown in FAQs is HTML-escaped; JSON-LD is escaped before embedding. |
+
+## Known dependency advisories
+
+- **Decap CMS editor bundle** (`/admin/` only): Decap's own dependency tree has moderate/high npm advisories (for example `trim`, `uuid`, `@platejs/core`). They affect only the editor UI used by signed-in editors, not the public site or the API. Decap is a devDependency; Dependabot will propose updates as Decap publishes fixes.
+- **`fflate` (build time only, via Satori)**: moderate advisory about malformed ZIP64 archives. The build only decodes bundled font files. Do not force-upgrade it (see decision log #26).
+- **API (`api/`)**: no known advisories.

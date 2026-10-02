@@ -78,7 +78,7 @@ function tree(card: SocialCard, w: number, hgt: number): Node {
       ]),
       h('div', { display: 'flex', flexDirection: square ? 'column' : 'row', gap: 44, alignItems: square ? 'flex-start' : 'center' }, [
         ...(card.day ? [ticket(card, s)] : []),
-        h('div', { display: 'flex', flexDirection: 'column', gap: 14, flex: 1 }, [
+        h('div', { display: 'flex', flexDirection: 'column', gap: 14, ...(square ? {} : { flex: 1 }) }, [
           ...(card.status ? [h('div', { fontSize: 34, fontWeight: 700, color: C.red, letterSpacing: 2 }, card.status.toUpperCase())] : []),
           h('div', { fontFamily: 'Fraunces', fontSize: square ? titleSize * 1.05 : titleSize, lineHeight: 1.05 }, card.title),
           ...card.lines.map((l) => h('div', { fontSize: square ? 38 : 34, color: C.soft }, l)),
@@ -95,7 +95,7 @@ function tree(card: SocialCard, w: number, hgt: number): Node {
 export async function renderSocialPng(card: SocialCard, size: 'og' | 'square'): Promise<Buffer> {
   const [w, hgt] = size === 'og' ? [1200, 630] : [1080, 1080];
   const svg = await satori(tree(card, w, hgt) as never, { width: w, height: hgt, fonts: getFonts() });
-  return sharp(Buffer.from(svg)).png({ compressionLevel: 9, palette: true, quality: 90 }).toBuffer();
+  return sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toBuffer();
 }
 
 import type { ResolvedEvent } from './content';

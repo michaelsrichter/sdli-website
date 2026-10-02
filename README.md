@@ -99,7 +99,7 @@ Revert the commit (or re-run a previous good deployment); DNS can be pointed bac
 
 | Layer | Coverage |
 | --- | --- |
-| Unit (Vitest, 82 tests) | Timezones and DST, recurrence, overrides, upcoming vs past, cancelled/postponed, empty states, `.ics` (CRLF, folding, escaping), calendar links, share text, JSON-LD, redirects config, CMS config validity, schema rejection of invalid content, validation of every real content file |
+| Unit (Vitest, 85 tests) | Timezones and DST, recurrence, overrides, upcoming vs past, cancelled/postponed, empty states, `.ics` (CRLF, folding, escaping), calendar links, share text, JSON-LD, redirects config, CMS config validity, schema rejection of invalid content, validation of every real content file, social-image glyph rendering |
 | API (node:test, 11 tests) | OAuth state/CSRF, host allow-listing, scope limiting, telemetry validation, origin checks, rate limiting |
 | End-to-end (Playwright, 121 tests) | The 12 required journeys, filters, calendar, no-JS mode, legacy redirects, 404, axe on 20 page types × 2 devices, keyboard, 320 px, touch targets, SEO metadata, Event structured data |
 | Links | 11,000+ internal references and anchors per build; weekly external check |
