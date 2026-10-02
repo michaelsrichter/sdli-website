@@ -99,7 +99,11 @@ Everything an event has (except title/status overrides), plus:
 
 ## Venues
 
-`googleMapsUrl` adds a "Photos & reviews" button. `parkingNotes`, `accessibilityNotes` and `factsSource` (where those facts came from) appear in the venue panel. Venues used only by community events appear under "Other dance venues around Long Island".
+`googleMapsUrl` adds a "Photos & reviews" button. `parkingNotes`, `accessibilityNotes` and `factsSource` (where those facts came from) appear in the venue panel. Venues used only by community events appear under "Other dance venues around Long Island". `latitude`, `longitude` and `coordinatesSource` place the venue on the dance map; `npm run geocode` (and the "Venue map locations" GitHub Action) fills them in from the street address.
+
+## Photos
+
+Gallery album photos (`images[]`) have `image`, `alt` (required), `caption`, `credit`, `creditUrl`, `focus` (`"x% y%"` crop focus point) and an optional `video` (`/media/videos/<file>.mp4`, a short silent clip with the photo as its poster). Albums with `homepageSlideshow: true` feed the homepage slideshow, in album `order`. Events have `featuredImageFocus` and people have `imageFocus` for the same purpose.
 
 ## URLs
 
@@ -116,6 +120,7 @@ Everything an event has (except title/status overrides), plus:
 | Teacher, band or DJ | `/performers/<id>/` |
 | Dance community (organizers) | `/community/` (each group at `/community/#<id>`) |
 | Feeds | `/events/rss.xml` (SDLI), `/events/sdli-events.ics` (SDLI), `/events/community-events.ics` (community) |
+| Dance map | `/events/map/` (each place at `/events/map/#place-<venue id>`; filters `?host=sdli`, `?when=week`) |
 
 ## Validation
 

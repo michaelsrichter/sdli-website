@@ -35,7 +35,7 @@ Tracked declaratively with `data-track` attributes and in `src/scripts/*.ts`. Al
 | `consent_update` | Analytics choice | `value`, `mode` |
 | `web_vital` | Core Web Vitals (OTel only) | `metric` (LCP, INP, CLS, FCP, TTFB), `rating`, value |
 
-Locations used: `home_next`, `home`, `home_venue`, `event`, `event_aside`, `action_bar`, `events`, `events_community`, `card`, `calendar`, `venue`, `venue_panel`, `performer`, `performers`, `community`, `contact`, `footer`.
+Locations used: `home_next`, `home`, `home_venue`, `event`, `event_aside`, `action_bar`, `events`, `events_community`, `card`, `calendar`, `map`, `map_pin`, `map_list`, `map_popup`, `venue`, `venue_panel`, `performer`, `performers`, `community`, `contact`, `header`, `footer`.
 
 ## OpenTelemetry metrics (Application Insights `customMetrics`)
 

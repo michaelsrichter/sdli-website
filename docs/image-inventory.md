@@ -47,3 +47,29 @@ Rules for new images (also shown in the CMS):
 ## Placeholders
 
 When an event has no photo, the site shows the event's date ticket and text, not a fake photo. Recurring Tuesday dances use a real SDLI dance-floor photo; band nights use the band's photo when one is on file.
+
+## Cropping and focus points (October 2026)
+
+Photos are no longer cropped by the browser. When a page needs a photo in a fixed shape, the build crops it around a hand-picked **focus point** (ocus: "x% y%", for example 50% 30% keeps faces near the top). Teacher and band photos on event pages are shown whole. The homepage slideshow shows each photo whole, with a blurred copy filling any space around it. Editors can set a focus point on any photo in the CMS (**Photo focus point**).
+
+## Huntington Moose Lodge photos and videos (src/assets/uploads/lodge/, public/media/videos/)
+
+Provided by the site owner in October 2026: photos and two short phone videos shared by SDLI members in the SDLI Facebook group, plus photos of the Moose Lodge. Only photos of people dancing at the Lodge were used (14 photos, 2 videos). Party setups, vendor tables and close-ups of individuals were left out. Files were resized to 1600 px and re-encoded, which **removed camera and location metadata**. The videos were trimmed to 16 seconds, made silent and compressed (under 1 MB each).
+
+| File | Shows | Status |
+| --- | --- | --- |
+| lodge/moose-lodge-couples-swing-dancing-holiday.jpg | Two couples swing dancing at a holiday dance | **Confirm photographer and permission** |
+| lodge/sdli-moose-lodge-110th-anniversary-dance.jpg | Group photo with the band, Lodge 110th anniversary | **Confirm** |
+| lodge/sdli-couple-swing-dancing.jpg | A couple mid-turn | **Confirm** |
+| lodge/sdli-band-night-group-photo.jpg, lodge/sdli-rockabilly-night-group-photo.jpg | Group selfies in front of the band | **Confirm** |
+| lodge/sdli-st-patricks-day-dance-group.jpg | St. Patrick's Day group photo on the dance floor | **Confirm** |
+| lodge/sdli-swing-lesson-circle.jpg | Beginner lesson in a circle | **Confirm** |
+| lodge/sdli-dancers-selfie.jpg | Dancers' selfie in the hall | **Confirm** |
+| lodge/moose-lodge-*.jpg (6 more) | Couples and line dances on the Lodge floor | **Confirm** |
+| media/videos/sdli-dance-floor-1.mp4, -2.mp4 (+ posters in lodge/) | Social dancing, band night | **Confirm** |
+
+Several of these photos show people's faces clearly. Before launch, confirm each photographer's permission, add a credit in **Photo credit**, and remove any photo if someone in it asks.
+
+## Open-licensed photos added (October 2026)
+
+Seven more Lindy Hop photos by Thomas Quine (Wikimedia Commons, **CC BY 2.0**, 2018 Lindy Bout, Vancouver): lindy-couple-dance-fun.jpg, lindy-couple-black-and-yellow.jpg, lindy-dancer-teal-top-at-the-dance-hop.jpg, lindy-same-sex-couple.jpg, lindy-dancer-green-jumpsuit-skip-hop.jpg, lindy-dancer-black-dress.jpg, solo-jazz-dancer-hop-and-a-skip.jpg. They appear in the gallery album "Swing style at other dances" with credit and license links, and are labeled "not SDLI".

@@ -88,6 +88,20 @@ Open **Teachers** or **Bands and DJs** and fill in **Website**, **Facebook**, **
 
 **Dance styles** are the tags on events. Set **Kind of dance** to *Swing* for styles danced at SDLI (they appear in "The dances you will see" and on New to Swing) or *Other* for ballroom, Latin, tango, country and so on.
 
+### Venues and the dance map
+
+Every venue with an address appears on the **Dance map** (`/events/map/`). You never have to look up coordinates: save the venue with its street address and, a minute or two later, a robot fills in **Latitude** and **Longitude** from the U.S. Census Bureau's free address lookup (it commits them to the same change). If you change a venue's address, empty Latitude and Longitude so the pin moves. If a pin is in the wrong place, type the right coordinates (right-click the spot in Google Maps to copy them) and set **Where the map location came from** to "Checked by hand".
+
+### Homepage slideshow
+
+The rotating photos at the top of the homepage come from **Photo albums** that have **Show in the homepage slideshow** turned on (currently "Tuesday nights at the Moose Lodge"). To add photos, open that album, click **Add Photos**, upload the photo, and write the description and a short caption. Put the best photos first. If faces get cut off anywhere a photo is trimmed, set **Photo focus point** (for example `50% 30%` keeps the top middle). Short silent video clips can play in the slideshow too; ask the website administrator to add the video file.
+
+Only use photos SDLI has permission to use, credit the photographer, and remove a photo if someone in it asks.
+
+### The banner at the top of the page
+
+**Announcements** shows a banner on every page. There is a hidden example; turn on **Show on website** (and set **Show until**) for weather closures or big news.
+
 ### Archive
 
 Past events move to **Past events** automatically. You never need to delete them. To hide an event completely, turn off **Show on website**.
@@ -142,6 +156,8 @@ Decap CMS needs a GitHub OAuth App so editors can sign in. This is a one-time st
 7. Visit `/admin/` and click **Login with GitHub**.
 
 After DNS cutover, change the OAuth App's Homepage and callback URLs to `https://www.sdli.org` and add `www.sdli.org` to the `ALLOWED_HOSTS` app setting.
+
+> **Pending (October 2, 2026): move sign-in to sdli.mikerichter.app.** `ALLOWED_HOSTS` already includes `sdli.mikerichter.app`. The owner needs to edit the OAuth App: **Homepage URL** `https://sdli.mikerichter.app` and **Authorization callback URL** `https://sdli.mikerichter.app/api/callback`, then **Update application**. After that, editors sign in at `https://sdli.mikerichter.app/admin/` (the azurestaticapps.net address stops working for sign-in).
 
 **Limitation:** GitHub allows one callback host per OAuth App, so sign-in works on the production address only, not on preview websites. Editors always edit at the production `/admin/`; previews are for checking changes.
 

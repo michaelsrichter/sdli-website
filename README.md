@@ -2,13 +2,13 @@
 
 The website for **Swing Dance Long Island (SDLI)**, an all-volunteer, not-for-profit organization dedicated to the promotion of swing dancing on Long Island, New York.
 
-- **Live (pre-launch):** https://witty-smoke-095ea140f.2.azurestaticapps.net
+- **Live (pre-launch):** https://sdli.mikerichter.app (also https://witty-smoke-095ea140f.2.azurestaticapps.net)
 - **Future address:** https://www.sdli.org (after the [DNS cutover](docs/dns-cutover.md))
 - **Content manager:** `/admin/` ([editor guide](docs/editor-guide.md))
 
 ## Purpose
 
-Help people answer, in seconds: *Is there a dance coming up? When and where? Is there a lesson? How much? Do I need a partner? Is it beginner-friendly?* And make it easy to add the dance to a calendar, get directions and share it. SDLI's own dances always come first; other groups' dances around Long Island are listed after them as clearly labeled **community events** (see [/community/](https://witty-smoke-095ea140f.2.azurestaticapps.net/community/)).
+Help people answer, in seconds: *Is there a dance coming up? When and where? Is there a lesson? How much? Do I need a partner? Is it beginner-friendly?* And make it easy to add the dance to a calendar, get directions and share it. SDLI's own dances always come first; other groups' dances around Long Island are listed after them as clearly labeled **community events** (see [/community/](https://sdli.mikerichter.app/community/)), and the [dance map](https://sdli.mikerichter.app/events/map/) shows every venue with upcoming dances.
 
 ## Architecture
 
@@ -89,7 +89,7 @@ Merging to `main` deploys production; pull requests get preview sites; a nightly
 
 ## Custom domain setup and DNS cutover
 
-Manual and deliberately not automated. Add `www.sdli.org` to the Static Web App, create a `CNAME www → witty-smoke-095ea140f.2.azurestaticapps.net`, forward the apex to `www`, then set `SITE_URL=https://www.sdli.org` and `ALLOW_INDEXING=true`. Step-by-step: [docs/dns-cutover.md](docs/dns-cutover.md).
+The pre-launch custom domain **sdli.mikerichter.app** is live (CNAME `sdli` → the Static Web App, TXT `_dnsauth.sdli` for validation, managed HTTPS certificate; `SITE_URL` is set to it). For the final launch: add `www.sdli.org` to the Static Web App, create a `CNAME www → witty-smoke-095ea140f.2.azurestaticapps.net`, forward the apex to `www`, then set `SITE_URL=https://www.sdli.org` and `ALLOW_INDEXING=true`. Step-by-step: [docs/dns-cutover.md](docs/dns-cutover.md).
 
 ## Rollback
 

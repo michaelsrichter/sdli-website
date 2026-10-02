@@ -4,7 +4,7 @@
 
 | Environment | URL | Trigger |
 | --- | --- | --- |
-| Production | `https://witty-smoke-095ea140f.2.azurestaticapps.net` (custom domain after cutover: `https://www.sdli.org`) | Push to `main`, nightly at 05:15 New York time, or manual run |
+| Production | `https://sdli.mikerichter.app` (pre-launch custom domain; also `https://witty-smoke-095ea140f.2.azurestaticapps.net`; final: `https://www.sdli.org`) | Push to `main`, nightly at 05:15 New York time, or manual run |
 | Pull-request previews | `https://witty-smoke-095ea140f-<PR number>.eastus2.2.azurestaticapps.net` (posted on the PR) | Every pull request to `main` (Free plan: 3 at a time) |
 | Local | `http://localhost:4321` | `npm run dev` |
 
