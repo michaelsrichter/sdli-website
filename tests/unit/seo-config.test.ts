@@ -175,9 +175,10 @@ describe('Decap CMS configuration', () => {
       for (const key of shape) if (!skip.includes(key)) expect(cms.has(key), `${name}.${key}`).toBe(true);
     }
   });
-  it('lists events newest first and can filter SDLI and community events', () => {
+  it('can sort events and filter SDLI and community events (Decap needs sortable_fields to be a list)', () => {
+    for (const c of config.collections) if (c.sortable_fields !== undefined) expect(Array.isArray(c.sortable_fields), `${c.name}.sortable_fields`).toBe(true);
     const events = config.collections.find((c: any) => c.name === 'events');
-    expect(events.sortable_fields.default).toEqual({ field: 'startDateTime', direction: 'descending' });
+    expect(events.sortable_fields).toContain('startDateTime');
     expect(events.view_filters.map((f: any) => f.label)).toEqual(expect.arrayContaining(['SDLI events', 'Community events']));
   });
   it('requires alt text alongside every image field', () => {

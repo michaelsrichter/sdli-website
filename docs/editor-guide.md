@@ -23,7 +23,7 @@ Every change is recorded with your name and can be undone.
 
 ### See what is coming up
 
-Open **Events**. The newest events are listed first. Use **View filters** (SDLI events, Community events, Cancelled, Postponed, Drafts, by year) and **Group by** (Year, Status).
+Open **Events**. To see the newest first, choose **Sort by → Starts (date and time)** and click it again for newest first (the CMS remembers your choice). Use **View filters** (SDLI events, Community events, Cancelled, Postponed, Drafts, by year) and **Group by** (Year, Status).
 
 ### Post a band night, pizza night or guest teacher (changing one Tuesday)
 

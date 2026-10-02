@@ -235,6 +235,11 @@ test.describe('event discovery', () => {
 });
 
 test.describe('legacy URLs and errors', () => {
+  test('the CMS loads its configuration without errors and offers GitHub sign-in', async ({ page }) => {
+    await page.goto('/admin/');
+    await expect(page.getByText(/Login with GitHub|Sign in with GitHub/i)).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByText('Error loading the CMS configuration')).toHaveCount(0);
+  });
   test('old sdli.org event URLs land on the new event page', async ({ page }) => {
     await page.goto('/index.php/sdli/events_archive/gail_storm_band5/');
     await expect(page).toHaveURL(/\/events\/2026-08-18-gail-storm-band\/$/);

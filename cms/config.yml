@@ -182,9 +182,7 @@ collections:
     format: frontmatter
     slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
     summary: '{{startDateTime}}{{occurrenceDate}} · {{title}} · {{host}} · {{status}}'
-    sortable_fields:
-      default: { field: startDateTime, direction: descending }
-      fields: [startDateTime, occurrenceDate, title, status, host]
+    sortable_fields: [startDateTime, occurrenceDate, title, status, host]
     view_filters:
       - { label: 'SDLI events', field: host, pattern: '^(sdli)?$' }
       - { label: 'Community events', field: host, pattern: community }
